@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Private Wishlist</title>
+    <title>Wishlist & Tabungan - Kelola Impian dan Keuangan</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,38 +22,6 @@
         --success: #00b894;
         --warning: #fdcb6e;
         --danger: #e74c3c;
-      }
-
-      .login-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--secondary) 100%
-        );
-      }
-
-      .login-card {
-        background: white;
-        border-radius: 20px;
-        padding: 3rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 400px;
-        text-align: center;
-      }
-
-      .login-icon {
-        font-size: 4rem;
-        color: var(--primary);
-        margin-bottom: 1rem;
-      }
-
-      .app-content {
-        display: none;
       }
 
       body {
@@ -506,702 +474,602 @@
     </style>
   </head>
   <body>
-    <!-- Setup Password Screen (First Time) -->
-    <div class="login-container" id="setupPasswordScreen">
-      <div class="login-card">
-        <i class="fas fa-key login-icon"></i>
-        <h2 class="mb-4">Setup Password</h2>
-        <p class="text-muted mb-4">
-          Buat password untuk mengamankan wishlist Anda
-        </p>
-        <div class="mb-3">
-          <label for="newPassword" class="form-label">Password Baru</label>
-          <input
-            type="password"
-            class="form-control"
-            id="newPassword"
-            placeholder="Masukkan password baru"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="confirmPassword" class="form-label"
-            >Konfirmasi Password</label
-          >
-          <input
-            type="password"
-            class="form-control"
-            id="confirmPassword"
-            placeholder="Ulangi password"
-          />
-        </div>
-        <button class="btn btn-primary w-100" id="setupPasswordBtn">
-          <i class="fas fa-save me-2"></i>Simpan Password
-        </button>
-        <div
-          class="alert alert-danger mt-3"
-          id="setupError"
-          style="display: none"
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#" style="color: var(--primary)">
+          <i class="fas fa-piggy-bank me-2"></i>Wishlist & Tabungan
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
         >
-          <i class="fas fa-exclamation-triangle me-2"></i
-          ><span id="setupErrorText">Password tidak cocok!</span>
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#wishlists">Wishlist Saya</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#budget">Tabungan</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
-    <!-- Login Screen -->
-    <div class="login-container" id="loginScreen">
-      <div class="login-card">
-        <i class="fas fa-lock login-icon"></i>
-        <h2 class="mb-4">Private Wishlist</h2>
-        <p class="text-muted mb-4">
-          Masukkan password untuk mengakses wishlist pribadi Anda
-        </p>
-        <div class="mb-3">
-          <input
-            type="password"
-            class="form-control"
-            id="passwordInput"
-            placeholder="Masukkan password"
-          />
-        </div>
-        <button class="btn btn-primary w-100" id="loginBtn">
-          <i class="fas fa-unlock me-2"></i>Masuk
-        </button>
-        <div
-          class="alert alert-danger mt-3"
-          id="loginError"
-          style="display: none"
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container text-center position-relative">
+        <h1 class="display-4 fw-bold mb-4">Wishlist & Tabungan Terpusat</h1>
+        <p class="lead mb-4">Kelola wishlist dan tabunganmu di satu tempat</p>
+        <button
+          class="btn btn-light btn-lg"
+          data-bs-toggle="modal"
+          data-bs-target="#addWishlistModal"
         >
-          <i class="fas fa-exclamation-triangle me-2"></i>Password salah!
+          <i class="fas fa-plus me-2"></i>Buat Wishlist Baru
+        </button>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="container my-5">
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number" id="totalWishlists">0</div>
+            <div class="stats-label">Total Wishlist</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number" id="totalCategories">0</div>
+            <div class="stats-label">Total Kategori</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number" id="totalItems">0</div>
+            <div class="stats-label">Total Item</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stats-card">
+            <div class="stats-number" id="totalNeeded">Rp 0</div>
+            <div class="stats-label">Total Dibutuhkan</div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- App Content (Hidden until login) -->
-    <div class="app-content" id="appContent">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-        <div class="container">
-          <a
-            class="navbar-brand fw-bold"
-            href="#"
-            style="color: var(--primary)"
-          >
-            <i class="fas fa-piggy-bank me-2"></i>Wishlist & Tabungan
-          </a>
+    <!-- Savings Section -->
+    <section class="container my-5" id="savings">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="savings-card">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <h3 class="mb-3">Tabungan Saat Ini</h3>
+                <div class="savings-amount" id="currentSavings">Rp 0</div>
+                <p class="mb-0">Tabungan untuk semua wishlist</p>
+              </div>
+              <div class="col-md-6 text-end">
+                <button
+                  class="btn btn-light btn-lg me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addSavingsModal"
+                >
+                  <i class="fas fa-plus me-2"></i>Tambah
+                </button>
+                <button
+                  class="btn btn-light btn-lg"
+                  data-bs-toggle="modal"
+                  data-bs-target="#withdrawSavingsModal"
+                >
+                  <i class="fas fa-minus me-2"></i>Kurangi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="budget-summary">
+            <h4 class="mb-3">Ringkasan Budget</h4>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Total Dibutuhkan:</span>
+              <strong id="summaryNeeded">Rp 0</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Tabungan Saat Ini:</span>
+              <strong id="summarySavings">Rp 0</strong>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>Kekurangan:</span>
+              <strong id="summaryRemaining">Rp 0</strong>
+            </div>
+            <div class="progress mb-2">
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                id="summaryProgress"
+                style="width: 0%"
+              ></div>
+            </div>
+            <small class="text-muted" id="summaryPercentage">0% tercapai</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="container my-5">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
           <button
-            class="navbar-toggler"
+            class="nav-link active"
+            id="wishlists-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#wishlists"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
+            role="tab"
           >
-            <span class="navbar-toggler-icon"></span>
+            <i class="fas fa-th-list me-2"></i>Wishlist Saya
           </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#wishlists">Wishlist Saya</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#budget">Tabungan</a>
-              </li>
-              <li class="nav-item">
-                <button
-                  class="btn btn-outline-danger btn-sm ms-2"
-                  id="logoutBtn"
-                >
-                  <i class="fas fa-sign-out-alt me-1"></i>Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="container text-center position-relative">
-          <h1 class="display-4 fw-bold mb-4">Wishlist & Tabungan Terpusat</h1>
-          <p class="lead mb-4">Kelola wishlist dan tabunganmu di satu tempat</p>
+        </li>
+        <li class="nav-item" role="presentation">
           <button
-            class="btn btn-light btn-lg"
-            data-bs-toggle="modal"
-            data-bs-target="#addWishlistModal"
+            class="nav-link"
+            id="transactions-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#transactions"
+            type="button"
+            role="tab"
           >
-            <i class="fas fa-plus me-2"></i>Buat Wishlist Baru
+            <i class="fas fa-history me-2"></i>Riwayat Transaksi
           </button>
-        </div>
-      </section>
+        </li>
+      </ul>
 
-      <!-- Stats Section -->
-      <section class="container my-5">
-        <div class="row g-4">
-          <div class="col-md-3">
-            <div class="stats-card">
-              <div class="stats-number" id="totalWishlists">0</div>
-              <div class="stats-label">Total Wishlist</div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="stats-card">
-              <div class="stats-number" id="totalCategories">0</div>
-              <div class="stats-label">Total Kategori</div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="stats-card">
-              <div class="stats-number" id="totalItems">0</div>
-              <div class="stats-label">Total Item</div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="stats-card">
-              <div class="stats-number" id="totalNeeded">Rp 0</div>
-              <div class="stats-label">Total Dibutuhkan</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Savings Section -->
-      <section class="container my-5" id="savings">
-        <div class="row">
-          <div class="col-lg-8">
-            <div class="savings-card">
-              <div class="row align-items-center">
-                <div class="col-md-6">
-                  <h3 class="mb-3">Tabungan Saat Ini</h3>
-                  <div class="savings-amount" id="currentSavings">Rp 0</div>
-                  <p class="mb-0">Tabungan untuk semua wishlist</p>
-                </div>
-                <div class="col-md-6 text-end">
-                  <button
-                    class="btn btn-light btn-lg me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addSavingsModal"
-                  >
-                    <i class="fas fa-plus me-2"></i>Tambah
-                  </button>
-                  <button
-                    class="btn btn-light btn-lg"
-                    data-bs-toggle="modal"
-                    data-bs-target="#withdrawSavingsModal"
-                  >
-                    <i class="fas fa-minus me-2"></i>Kurangi
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="budget-summary">
-              <h4 class="mb-3">Ringkasan Budget</h4>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Total Dibutuhkan:</span>
-                <strong id="summaryNeeded">Rp 0</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Tabungan Saat Ini:</span>
-                <strong id="summarySavings">Rp 0</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-3">
-                <span>Kekurangan:</span>
-                <strong id="summaryRemaining">Rp 0</strong>
-              </div>
-              <div class="progress mb-2">
-                <div
-                  class="progress-bar bg-success"
-                  role="progressbar"
-                  id="summaryProgress"
-                  style="width: 0%"
-                ></div>
-              </div>
-              <small class="text-muted" id="summaryPercentage"
-                >0% tercapai</small
+      <div class="tab-content" id="myTabContent">
+        <!-- Wishlists Tab -->
+        <div class="tab-pane fade show active" id="wishlists" role="tabpanel">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Daftar Wishlist Saya</h2>
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-primary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
               >
+                <i class="fas fa-filter me-2"></i>Filter
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item filter-option"
+                    data-filter="all"
+                    href="#"
+                    >Semua</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item filter-option"
+                    data-filter="completed"
+                    href="#"
+                    >Selesai</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item filter-option"
+                    data-filter="in-progress"
+                    href="#"
+                    >Dalam Proses</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="wishlistsContainer" class="row">
+            <!-- Wishlist items will be dynamically added here -->
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyState" class="empty-state">
+            <i class="fas fa-layer-group"></i>
+            <h3>Belum Ada Wishlist</h3>
+            <p>
+              Mulai buat wishlist impianmu dengan struktur hierarki yang
+              lengkap!
+            </p>
+            <button
+              class="btn btn-primary mt-3"
+              data-bs-toggle="modal"
+              data-bs-target="#addWishlistModal"
+            >
+              <i class="fas fa-plus me-2"></i>Buat Wishlist Pertama
+            </button>
+          </div>
+        </div>
+
+        <!-- Transactions Tab -->
+        <div class="tab-pane fade" id="transactions" role="tabpanel">
+          <h2 class="fw-bold mb-4">Riwayat Transaksi Tabungan</h2>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="transaction-history" id="transactionHistory">
+                <!-- Transaction items will be dynamically added here -->
+              </div>
+
+              <div id="emptyTransactionState" class="empty-state py-4">
+                <i class="fas fa-history"></i>
+                <h5>Belum Ada Transaksi</h5>
+                <p>
+                  Mulai tambahkan atau kurangi tabungan untuk melihat riwayat
+                  transaksi!
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Main Content -->
-      <section class="container my-5">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link active"
-              id="wishlists-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#wishlists"
-              type="button"
-              role="tab"
-            >
-              <i class="fas fa-th-list me-2"></i>Wishlist Saya
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button
-              class="nav-link"
-              id="transactions-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#transactions"
-              type="button"
-              role="tab"
-            >
-              <i class="fas fa-history me-2"></i>Riwayat Transaksi
-            </button>
-          </li>
-        </ul>
+    <!-- Footer -->
+    <footer>
+      <div class="container text-center">
+        <p>
+          &copy; 2023 Wishlist & Tabungan App. Kelola impian dan keuanganmu
+          dengan mudah!
+        </p>
+      </div>
+    </footer>
 
-        <div class="tab-content" id="myTabContent">
-          <!-- Wishlists Tab -->
-          <div class="tab-pane fade show active" id="wishlists" role="tabpanel">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h2 class="fw-bold">Daftar Wishlist Saya</h2>
-              <div class="dropdown">
-                <button
-                  class="btn btn-outline-primary dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
+    <!-- Floating Action Button -->
+    <div
+      class="floating-btn"
+      data-bs-toggle="modal"
+      data-bs-target="#addWishlistModal"
+    >
+      <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Add Wishlist Modal -->
+    <div class="modal fade" id="addWishlistModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Buat Wishlist Baru</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addWishlistForm">
+              <div class="mb-3">
+                <label for="wishlistName" class="form-label"
+                  >Nama Wishlist</label
                 >
-                  <i class="fas fa-filter me-2"></i>Filter
-                </button>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a
-                      class="dropdown-item filter-option"
-                      data-filter="all"
-                      href="#"
-                      >Semua</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      class="dropdown-item filter-option"
-                      data-filter="completed"
-                      href="#"
-                      >Selesai</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      class="dropdown-item filter-option"
-                      data-filter="in-progress"
-                      href="#"
-                      >Dalam Proses</a
-                    >
-                  </li>
-                </ul>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="wishlistName"
+                  placeholder="Contoh: Blooket Transformers"
+                  required
+                />
               </div>
-            </div>
-
-            <div id="wishlistsContainer" class="row">
-              <!-- Wishlist items will be dynamically added here -->
-            </div>
-
-            <!-- Empty State -->
-            <div id="emptyState" class="empty-state">
-              <i class="fas fa-layer-group"></i>
-              <h3>Belum Ada Wishlist</h3>
-              <p>
-                Mulai buat wishlist impianmu dengan struktur hierarki yang
-                lengkap!
-              </p>
-              <button
-                class="btn btn-primary mt-3"
-                data-bs-toggle="modal"
-                data-bs-target="#addWishlistModal"
-              >
-                <i class="fas fa-plus me-2"></i>Buat Wishlist Pertama
-              </button>
-            </div>
-          </div>
-
-          <!-- Transactions Tab -->
-          <div class="tab-pane fade" id="transactions" role="tabpanel">
-            <h2 class="fw-bold mb-4">Riwayat Transaksi Tabungan</h2>
-
-            <div class="card">
-              <div class="card-body">
-                <div class="transaction-history" id="transactionHistory">
-                  <!-- Transaction items will be dynamically added here -->
-                </div>
-
-                <div id="emptyTransactionState" class="empty-state py-4">
-                  <i class="fas fa-history"></i>
-                  <h5>Belum Ada Transaksi</h5>
-                  <p>
-                    Mulai tambahkan atau kurangi tabungan untuk melihat riwayat
-                    transaksi!
-                  </p>
-                </div>
+              <div class="mb-3">
+                <label for="wishlistDescription" class="form-label"
+                  >Deskripsi (Opsional)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="wishlistDescription"
+                  rows="3"
+                  placeholder="Deskripsi tentang wishlist ini..."
+                ></textarea>
               </div>
-            </div>
+              <div class="mb-3">
+                <label for="wishlistImage" class="form-label"
+                  >URL Gambar (Opsional)</label
+                >
+                <input
+                  type="url"
+                  class="form-control"
+                  id="wishlistImage"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+            </form>
           </div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer>
-        <div class="container text-center">
-          <p>
-            &copy; 2023 Wishlist & Tabungan App. Kelola impian dan keuanganmu
-            dengan mudah!
-          </p>
-        </div>
-      </footer>
-
-      <!-- Floating Action Button -->
-      <div
-        class="floating-btn"
-        data-bs-toggle="modal"
-        data-bs-target="#addWishlistModal"
-      >
-        <i class="fas fa-plus"></i>
-      </div>
-
-      <!-- Add Wishlist Modal -->
-      <div class="modal fade" id="addWishlistModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Buat Wishlist Baru</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form id="addWishlistForm">
-                <div class="mb-3">
-                  <label for="wishlistName" class="form-label"
-                    >Nama Wishlist</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="wishlistName"
-                    placeholder="Contoh: Blooket Transformers"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="wishlistDescription" class="form-label"
-                    >Deskripsi (Opsional)</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="wishlistDescription"
-                    rows="3"
-                    placeholder="Deskripsi tentang wishlist ini..."
-                  ></textarea>
-                </div>
-                <div class="mb-3">
-                  <label for="wishlistImage" class="form-label"
-                    >URL Gambar (Opsional)</label
-                  >
-                  <input
-                    type="url"
-                    class="form-control"
-                    id="wishlistImage"
-                    placeholder="https://example.com/image.jpg"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                id="saveWishlistBtn"
-              >
-                Simpan Wishlist
-              </button>
-            </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveWishlistBtn">
+              Simpan Wishlist
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Add Category Modal -->
-      <div class="modal fade" id="addCategoryModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Tambah Kategori</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form id="addCategoryForm">
-                <input type="hidden" id="categoryWishlistId" />
-                <div class="mb-3">
-                  <label for="categoryName" class="form-label"
-                    >Nama Kategori</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="categoryName"
-                    placeholder="Contoh: Blooket 1"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="categoryDescription" class="form-label"
-                    >Deskripsi (Opsional)</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="categoryDescription"
-                    rows="3"
-                    placeholder="Deskripsi tentang kategori ini..."
-                  ></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                id="saveCategoryBtn"
-              >
-                Simpan Kategori
-              </button>
-            </div>
+    <!-- Add Category Modal -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Kategori</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addCategoryForm">
+              <input type="hidden" id="categoryWishlistId" />
+              <div class="mb-3">
+                <label for="categoryName" class="form-label"
+                  >Nama Kategori</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="categoryName"
+                  placeholder="Contoh: Blooket 1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="categoryDescription" class="form-label"
+                  >Deskripsi (Opsional)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="categoryDescription"
+                  rows="3"
+                  placeholder="Deskripsi tentang kategori ini..."
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveCategoryBtn">
+              Simpan Kategori
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Add Item Modal -->
-      <div class="modal fade" id="addItemModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Tambah Item</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form id="addItemForm">
-                <input type="hidden" id="itemWishlistId" />
-                <input type="hidden" id="itemCategoryId" />
-                <div class="mb-3">
-                  <label for="itemName" class="form-label">Nama Item</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="itemName"
-                    placeholder="Contoh: Optimus Prime"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="itemPrice" class="form-label">Harga (Rp)</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="itemPrice"
-                    min="1"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="itemDescription" class="form-label"
-                    >Deskripsi (Opsional)</label
-                  >
-                  <textarea
-                    class="form-control"
-                    id="itemDescription"
-                    rows="3"
-                    placeholder="Deskripsi tentang item ini..."
-                  ></textarea>
-                </div>
-                <div class="mb-3">
-                  <label for="itemImage" class="form-label"
-                    >URL Gambar (Opsional)</label
-                  >
-                  <input
-                    type="url"
-                    class="form-control"
-                    id="itemImage"
-                    placeholder="https://example.com/image.jpg"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Batal
-              </button>
-              <button type="button" class="btn btn-primary" id="saveItemBtn">
-                Simpan Item
-              </button>
-            </div>
+    <!-- Add Item Modal -->
+    <div class="modal fade" id="addItemModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Item</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addItemForm">
+              <input type="hidden" id="itemWishlistId" />
+              <input type="hidden" id="itemCategoryId" />
+              <div class="mb-3">
+                <label for="itemName" class="form-label">Nama Item</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="itemName"
+                  placeholder="Contoh: Optimus Prime"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="itemPrice" class="form-label">Harga (Rp)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="itemPrice"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="itemDescription" class="form-label"
+                  >Deskripsi (Opsional)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="itemDescription"
+                  rows="3"
+                  placeholder="Deskripsi tentang item ini..."
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="itemImage" class="form-label"
+                  >URL Gambar (Opsional)</label
+                >
+                <input
+                  type="url"
+                  class="form-control"
+                  id="itemImage"
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveItemBtn">
+              Simpan Item
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Add Savings Modal -->
-      <div class="modal fade" id="addSavingsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Tambah Tabungan</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form id="addSavingsForm">
-                <div class="mb-3">
-                  <label for="savingsAmount" class="form-label"
-                    >Jumlah Tabungan (Rp)</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="savingsAmount"
-                    min="1"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="savingsDescription" class="form-label"
-                    >Keterangan (Opsional)</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="savingsDescription"
-                    placeholder="Contoh: Gaji bulanan, Hadiah, dll"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Batal
-              </button>
-              <button type="button" class="btn btn-success" id="saveSavingsBtn">
-                Tambah Tabungan
-              </button>
-            </div>
+    <!-- Add Savings Modal -->
+    <div class="modal fade" id="addSavingsModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Tabungan</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addSavingsForm">
+              <div class="mb-3">
+                <label for="savingsAmount" class="form-label"
+                  >Jumlah Tabungan (Rp)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="savingsAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="savingsDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="savingsDescription"
+                  placeholder="Contoh: Gaji bulanan, Hadiah, dll"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-success" id="saveSavingsBtn">
+              Tambah Tabungan
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Withdraw Savings Modal -->
-      <div class="modal fade" id="withdrawSavingsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Kurangi Tabungan</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form id="withdrawSavingsForm">
-                <div class="mb-3">
-                  <label for="withdrawAmount" class="form-label"
-                    >Jumlah Penarikan (Rp)</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="withdrawAmount"
-                    min="1"
-                    required
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="withdrawDescription" class="form-label"
-                    >Keterangan (Opsional)</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="withdrawDescription"
-                    placeholder="Contoh: Keperluan mendadak, Beli kebutuhan, dll"
-                  />
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                class="btn btn-warning"
-                id="saveWithdrawBtn"
-              >
-                Kurangi Tabungan
-              </button>
-            </div>
+    <!-- Withdraw Savings Modal -->
+    <div class="modal fade" id="withdrawSavingsModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Kurangi Tabungan</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="withdrawSavingsForm">
+              <div class="mb-3">
+                <label for="withdrawAmount" class="form-label"
+                  >Jumlah Penarikan (Rp)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="withdrawAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="withdrawDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="withdrawDescription"
+                  placeholder="Contoh: Keperluan mendadak, Beli kebutuhan, dll"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-warning" id="saveWithdrawBtn">
+              Kurangi Tabungan
+            </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Success Modal -->
-      <div class="modal fade" id="successModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-body text-center p-5">
-              <i
-                class="fas fa-check-circle text-success mb-3"
-                style="font-size: 4rem"
-              ></i>
-              <h3 class="mb-3">Berhasil!</h3>
-              <p id="successMessage">Wishlist berhasil ditambahkan!</p>
-              <button
-                type="button"
-                class="btn btn-primary mt-3"
-                data-bs-dismiss="modal"
-              >
-                Tutup
-              </button>
-            </div>
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body text-center p-5">
+            <i
+              class="fas fa-check-circle text-success mb-3"
+              style="font-size: 4rem"
+            ></i>
+            <h3 class="mb-3">Berhasil!</h3>
+            <p id="successMessage">Wishlist berhasil ditambahkan!</p>
+            <button
+              type="button"
+              class="btn btn-primary mt-3"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
           </div>
         </div>
       </div>
@@ -1209,30 +1077,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Password system - User can set their own password
-      let userPassword = localStorage.getItem("userPassword");
-      let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-
       // Data storage
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
       // DOM Elements
-      const setupPasswordScreen = document.getElementById(
-        "setupPasswordScreen"
-      );
-      const loginScreen = document.getElementById("loginScreen");
-      const appContent = document.getElementById("appContent");
-      const newPasswordInput = document.getElementById("newPassword");
-      const confirmPasswordInput = document.getElementById("confirmPassword");
-      const setupPasswordBtn = document.getElementById("setupPasswordBtn");
-      const setupError = document.getElementById("setupError");
-      const setupErrorText = document.getElementById("setupErrorText");
-      const passwordInput = document.getElementById("passwordInput");
-      const loginBtn = document.getElementById("loginBtn");
-      const loginError = document.getElementById("loginError");
-      const logoutBtn = document.getElementById("logoutBtn");
       const wishlistsContainer = document.getElementById("wishlistsContainer");
       const emptyState = document.getElementById("emptyState");
       const emptyTransactionState = document.getElementById(
@@ -1262,141 +1112,17 @@
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
 
-      // Check if password is set and user is logged in
-      function checkAuthStatus() {
-        if (!userPassword) {
-          // First time user - show setup password screen
-          showSetupPassword();
-        } else if (isLoggedIn) {
-          // User is already logged in - show app directly
-          showApp();
-        } else {
-          // Returning user - show login screen
-          showLogin();
-        }
-      }
-
-      // Setup password function
-      function setupPassword() {
-        const newPassword = newPasswordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-
-        if (!newPassword) {
-          setupErrorText.textContent = "Password tidak boleh kosong!";
-          setupError.style.display = "block";
-          return;
-        }
-
-        if (newPassword !== confirmPassword) {
-          setupErrorText.textContent = "Password tidak cocok!";
-          setupError.style.display = "block";
-          return;
-        }
-
-        if (newPassword.length < 4) {
-          setupErrorText.textContent = "Password minimal 4 karakter!";
-          setupError.style.display = "block";
-          return;
-        }
-
-        // Save password and login status
-        localStorage.setItem("userPassword", newPassword);
-        localStorage.setItem("isLoggedIn", "true");
-        userPassword = newPassword;
-        isLoggedIn = true;
-
-        // Show app
-        showApp();
-      }
-
-      // Login function
-      function login() {
-        const password = passwordInput.value;
-
-        if (password === userPassword) {
-          localStorage.setItem("isLoggedIn", "true");
-          isLoggedIn = true;
-          showApp();
-        } else {
-          loginError.style.display = "block";
-          passwordInput.value = "";
-          passwordInput.focus();
-        }
-      }
-
-      // Logout function
-      function logout() {
-        localStorage.setItem("isLoggedIn", "false");
-        isLoggedIn = false;
-        showLogin();
-      }
-
-      // Show setup password screen
-      function showSetupPassword() {
-        setupPasswordScreen.style.display = "flex";
-        loginScreen.style.display = "none";
-        appContent.style.display = "none";
-        newPasswordInput.value = "";
-        confirmPasswordInput.value = "";
-        setupError.style.display = "none";
-      }
-
-      // Show login screen
-      function showLogin() {
-        setupPasswordScreen.style.display = "none";
-        loginScreen.style.display = "flex";
-        appContent.style.display = "none";
-        passwordInput.value = "";
-        loginError.style.display = "none";
-      }
-
-      // Show app content
-      function showApp() {
-        setupPasswordScreen.style.display = "none";
-        loginScreen.style.display = "none";
-        appContent.style.display = "block";
-        initializeApp();
-      }
-
-      // Initialize the app after login
-      function initializeApp() {
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", function () {
         renderWishlists();
         updateStats();
         updateSavingsDisplay();
         renderTransactions();
         setupEventListeners();
-      }
+      });
 
       // Setup event listeners
       function setupEventListeners() {
-        // Setup password button
-        setupPasswordBtn.addEventListener("click", setupPassword);
-
-        // Login button
-        loginBtn.addEventListener("click", login);
-
-        // Logout button
-        logoutBtn.addEventListener("click", logout);
-
-        // Enter key for login/setup
-        newPasswordInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            setupPassword();
-          }
-        });
-
-        confirmPasswordInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            setupPassword();
-          }
-        });
-
-        passwordInput.addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            login();
-          }
-        });
-
         // Save wishlist button
         saveWishlistBtn.addEventListener("click", addWishlist);
 
@@ -1463,6 +1189,9 @@
           document.getElementById("addWishlistModal")
         );
         addWishlistModal.hide();
+
+        // Add confetti animation
+        createConfetti();
       }
 
       // Add a category to a wishlist
@@ -1556,6 +1285,13 @@
           document.getElementById("successModal")
         );
         successModal.show();
+
+        // Reset form
+        addItemForm.reset();
+        const addItemModal = bootstrap.Modal.getInstance(
+          document.getElementById("addItemModal")
+        );
+        addItemModal.hide();
       }
 
       // Add savings
@@ -1602,6 +1338,11 @@
           document.getElementById("addSavingsModal")
         );
         addSavingsModal.hide();
+
+        // Add confetti animation for large deposits
+        if (amount >= 100000) {
+          createConfetti();
+        }
       }
 
       // Withdraw savings
@@ -1659,11 +1400,223 @@
         withdrawSavingsModal.hide();
       }
 
-      // Save to localStorage
-      function saveToLocalStorage() {
-        localStorage.setItem("wishlists", JSON.stringify(wishlists));
-        localStorage.setItem("savings", savings.toString());
-        localStorage.setItem("transactions", JSON.stringify(transactions));
+      // Delete a wishlist
+      function deleteWishlist(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus wishlist ini?")) {
+          wishlists = wishlists.filter((w) => w.id !== id);
+          saveToLocalStorage();
+          renderWishlists();
+          updateStats();
+        }
+      }
+
+      // Delete a category
+      function deleteCategory(wishlistId, categoryId) {
+        if (confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
+          const wishlist = wishlists.find((w) => w.id === wishlistId);
+          if (wishlist) {
+            wishlist.categories = wishlist.categories.filter(
+              (c) => c.id !== categoryId
+            );
+            saveToLocalStorage();
+            renderWishlists();
+            updateStats();
+          }
+        }
+      }
+
+      // Delete an item
+      function deleteItem(wishlistId, categoryId, itemId) {
+        if (confirm("Apakah Anda yakin ingin menghapus item ini?")) {
+          const wishlist = wishlists.find((w) => w.id === wishlistId);
+          if (wishlist) {
+            const category = wishlist.categories.find(
+              (c) => c.id === categoryId
+            );
+            if (category) {
+              category.items = category.items.filter((i) => i.id !== itemId);
+              saveToLocalStorage();
+              renderWishlists();
+              updateStats();
+            }
+          }
+        }
+      }
+
+      // Toggle categories visibility
+      function toggleCategories(wishlistId) {
+        const categoriesContainer = document.getElementById(
+          `categories-${wishlistId}`
+        );
+        const toggleIcon = document.getElementById(`toggle-icon-${wishlistId}`);
+
+        if (categoriesContainer.classList.contains("show")) {
+          categoriesContainer.classList.remove("show");
+          toggleIcon.className = "fas fa-chevron-down";
+        } else {
+          categoriesContainer.classList.add("show");
+          toggleIcon.className = "fas fa-chevron-up";
+        }
+      }
+
+      // Toggle items visibility
+      function toggleItems(categoryId) {
+        const itemsContainer = document.getElementById(`items-${categoryId}`);
+        const toggleIcon = document.getElementById(
+          `item-toggle-icon-${categoryId}`
+        );
+
+        if (itemsContainer.classList.contains("show")) {
+          itemsContainer.classList.remove("show");
+          toggleIcon.className = "fas fa-chevron-down";
+        } else {
+          itemsContainer.classList.add("show");
+          toggleIcon.className = "fas fa-chevron-up";
+        }
+      }
+
+      // Edit wishlist name
+      function editWishlistName(wishlistId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const titleElement = document.getElementById(
+          `wishlist-title-${wishlistId}`
+        );
+        const currentName = wishlist.name;
+
+        titleElement.innerHTML = `
+                <input type="text" class="editable-input" value="${currentName}" id="edit-wishlist-${wishlistId}">
+                <button class="btn btn-sm btn-success ms-2" onclick="saveWishlistName(${wishlistId})">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary ms-1" onclick="cancelEditWishlistName(${wishlistId}, '${currentName}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+        document.getElementById(`edit-wishlist-${wishlistId}`).focus();
+      }
+
+      // Save wishlist name
+      function saveWishlistName(wishlistId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const newName = document.getElementById(
+          `edit-wishlist-${wishlistId}`
+        ).value;
+        if (!newName.trim()) {
+          alert("Nama wishlist tidak boleh kosong!");
+          return;
+        }
+
+        wishlist.name = newName;
+        saveToLocalStorage();
+        renderWishlists();
+      }
+
+      // Cancel edit wishlist name
+      function cancelEditWishlistName(wishlistId, originalName) {
+        const titleElement = document.getElementById(
+          `wishlist-title-${wishlistId}`
+        );
+        titleElement.innerHTML = `
+                ${originalName}
+                <button class="btn btn-sm edit-btn ms-2" onclick="editWishlistName(${wishlistId})">
+                    <i class="fas fa-edit"></i>
+                </button>
+            `;
+      }
+
+      // Edit category name
+      function editCategoryName(wishlistId, categoryId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const titleElement = document.getElementById(
+          `category-title-${categoryId}`
+        );
+        const currentName = category.name;
+
+        titleElement.innerHTML = `
+                <input type="text" class="editable-input" value="${currentName}" id="edit-category-${categoryId}">
+                <button class="btn btn-sm btn-success ms-2" onclick="saveCategoryName(${wishlistId}, ${categoryId})">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button class="btn btn-sm btn-secondary ms-1" onclick="cancelEditCategoryName(${wishlistId}, ${categoryId}, '${currentName}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+        document.getElementById(`edit-category-${categoryId}`).focus();
+      }
+
+      // Save category name
+      function saveCategoryName(wishlistId, categoryId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const newName = document.getElementById(
+          `edit-category-${categoryId}`
+        ).value;
+        if (!newName.trim()) {
+          alert("Nama kategori tidak boleh kosong!");
+          return;
+        }
+
+        category.name = newName;
+        saveToLocalStorage();
+        renderWishlists();
+      }
+
+      // Cancel edit category name
+      function cancelEditCategoryName(wishlistId, categoryId, originalName) {
+        const titleElement = document.getElementById(
+          `category-title-${categoryId}`
+        );
+        titleElement.innerHTML = `
+                ${originalName}
+                <button class="btn btn-sm edit-btn ms-2" onclick="editCategoryName(${wishlistId}, ${categoryId})">
+                    <i class="fas fa-edit"></i>
+                </button>
+            `;
+      }
+
+      // Mark item as achieved
+      function markItemAchieved(wishlistId, categoryId, itemId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const item = category.items.find((i) => i.id === itemId);
+        if (!item) return;
+
+        item.achieved = !item.achieved;
+        saveToLocalStorage();
+        renderWishlists();
+
+        // Show success message
+        if (item.achieved) {
+          document.getElementById(
+            "successMessage"
+          ).textContent = `Selamat! Item "${item.name}" berhasil dicapai!`;
+          const successModal = new bootstrap.Modal(
+            document.getElementById("successModal")
+          );
+          successModal.show();
+
+          // Add confetti animation
+          createConfetti();
+        }
       }
 
       // Render wishlists
@@ -1672,6 +1625,7 @@
 
         if (filter === "completed") {
           filteredWishlists = wishlists.filter((w) => {
+            // A wishlist is completed if all items in all categories are achieved
             return (
               w.categories.length > 0 &&
               w.categories.every(
@@ -1681,6 +1635,7 @@
           });
         } else if (filter === "in-progress") {
           filteredWishlists = wishlists.filter((w) => {
+            // A wishlist is in progress if it has at least one item that's not achieved
             return w.categories.some((c) => c.items.some((i) => !i.achieved));
           });
         }
@@ -1695,25 +1650,356 @@
           wishlistsContainer.innerHTML = "";
 
           filteredWishlists.forEach((wishlist, index) => {
+            // Calculate totals for this wishlist
+            let totalPrice = 0;
+            let totalItems = 0;
+            let achievedItems = 0;
+
+            wishlist.categories.forEach((category) => {
+              category.items.forEach((item) => {
+                totalPrice += item.price;
+                totalItems++;
+                if (item.achieved) achievedItems++;
+              });
+            });
+
+            const progressPercentage =
+              totalPrice > 0 ? Math.min((savings / totalPrice) * 100, 100) : 0;
+            const isCompleted = totalItems > 0 && achievedItems === totalItems;
+
             const wishlistCard = document.createElement("div");
             wishlistCard.className = `col-12 wishlist-card`;
             wishlistCard.style.animationDelay = `${index * 0.1}s`;
 
             wishlistCard.innerHTML = `
                         <div class="card">
-                            <div class="card-body">
-                                <h4>${wishlist.name}</h4>
-                                <p class="text-muted">${
-                                  wishlist.description || "Tidak ada deskripsi"
-                                }</p>
-                                <p><small>${
-                                  wishlist.categories.length
-                                } kategori</small></p>
-                                <button class="btn btn-sm btn-outline-primary" onclick="openAddCategoryModal(${
+                            <div class="card-body p-0">
+                                <div class="wishlist-header d-flex justify-content-between align-items-center p-4" onclick="toggleCategories(${
                                   wishlist.id
                                 })">
-                                    <i class="fas fa-plus me-1"></i>Tambah Kategori
-                                </button>
+                                    <div class="d-flex align-items-center">
+                                        <img src="${
+                                          wishlist.image
+                                        }" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="${
+              wishlist.name
+            }">
+                                        <div>
+                                            <h4 class="mb-1">
+                                                <span id="wishlist-title-${
+                                                  wishlist.id
+                                                }" class="editable-title">
+                                                    ${wishlist.name}
+                                                    <button class="btn btn-sm edit-btn ms-2" onclick="event.stopPropagation(); editWishlistName(${
+                                                      wishlist.id
+                                                    })">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </span>
+                                                ${
+                                                  isCompleted
+                                                    ? '<span class="achievement-badge"><i class="fas fa-trophy me-1"></i>Selesai!</span>'
+                                                    : ""
+                                                }
+                                            </h4>
+                                            <p class="text-muted mb-0">${
+                                              wishlist.categories.length
+                                            } kategori, ${totalItems} item</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-3 fw-bold">Rp ${totalPrice.toLocaleString(
+                                          "id-ID"
+                                        )}</span>
+                                        <i id="toggle-icon-${
+                                          wishlist.id
+                                        }" class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="categories-container" id="categories-${
+                                  wishlist.id
+                                }">
+                                    <div class="p-4 pt-0">
+                                        ${
+                                          wishlist.description
+                                            ? `<p class="mb-3">${wishlist.description}</p>`
+                                            : ""
+                                        }
+                                        
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="flex-grow-1 me-3">
+                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                    <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                                      "id-ID"
+                                                    )} / Rp ${totalPrice.toLocaleString(
+              "id-ID"
+            )}</small>
+                                                    <small class="text-muted">${progressPercentage.toFixed(
+                                                      1
+                                                    )}%</small>
+                                                </div>
+                                                <div class="progress">
+                                                    <div class="progress-bar ${
+                                                      isCompleted
+                                                        ? "bg-success"
+                                                        : "bg-primary"
+                                                    }" role="progressbar" style="width: ${progressPercentage}%"></div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddCategoryModal(${
+                                                  wishlist.id
+                                                })">
+                                                    <i class="fas fa-plus me-1"></i>Kategori
+                                                </button>
+                                                <button class="btn btn-sm delete-btn" onclick="deleteWishlist(${
+                                                  wishlist.id
+                                                })">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="categories-list mt-3">
+                                            ${
+                                              wishlist.categories.length > 0
+                                                ? wishlist.categories
+                                                    .map((category) => {
+                                                      // Calculate totals for this category
+                                                      let categoryTotalPrice = 0;
+                                                      let categoryTotalItems = 0;
+                                                      let categoryAchievedItems = 0;
+
+                                                      category.items.forEach(
+                                                        (item) => {
+                                                          categoryTotalPrice +=
+                                                            item.price;
+                                                          categoryTotalItems++;
+                                                          if (item.achieved)
+                                                            categoryAchievedItems++;
+                                                        }
+                                                      );
+
+                                                      const categoryProgress =
+                                                        categoryTotalPrice > 0
+                                                          ? Math.min(
+                                                              (savings /
+                                                                categoryTotalPrice) *
+                                                                100,
+                                                              100
+                                                            )
+                                                          : 0;
+                                                      const categoryCompleted =
+                                                        categoryTotalItems >
+                                                          0 &&
+                                                        categoryAchievedItems ===
+                                                          categoryTotalItems;
+
+                                                      return `
+                                                        <div class="category-item hierarchy-indent">
+                                                            <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
+                                                              category.id
+                                                            })">
+                                                                <div class="flex-grow-1">
+                                                                    <h5 class="mb-1">
+                                                                        <span id="category-title-${
+                                                                          category.id
+                                                                        }" class="editable-title">
+                                                                            ${
+                                                                              category.name
+                                                                            }
+                                                                            <button class="btn btn-sm edit-btn ms-2" onclick="event.stopPropagation(); editCategoryName(${
+                                                                              wishlist.id
+                                                                            }, ${
+                                                        category.id
+                                                      })">
+                                                                                <i class="fas fa-edit"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                        ${
+                                                                          categoryCompleted
+                                                                            ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                                                            : ""
+                                                                        }
+                                                                    </h5>
+                                                                    ${
+                                                                      category.description
+                                                                        ? `<small class="text-muted">${category.description}</small>`
+                                                                        : ""
+                                                                    }
+                                                                </div>
+                                                                <div class="d-flex align-items-center">
+                                                                    <span class="me-3 text-muted">${
+                                                                      category
+                                                                        .items
+                                                                        .length
+                                                                    } item</span>
+                                                                    <i id="item-toggle-icon-${
+                                                                      category.id
+                                                                    }" class="fas fa-chevron-down"></i>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                <div class="flex-grow-1 me-3">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                        <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                                                          "id-ID"
+                                                                        )} / Rp ${categoryTotalPrice.toLocaleString(
+                                                        "id-ID"
+                                                      )}</small>
+                                                                        <small class="text-muted">${categoryProgress.toFixed(
+                                                                          1
+                                                                        )}%</small>
+                                                                    </div>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar ${
+                                                                          categoryCompleted
+                                                                            ? "bg-success"
+                                                                            : "bg-info"
+                                                                        }" role="progressbar" style="width: ${categoryProgress}%"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddItemModal(${
+                                                                      wishlist.id
+                                                                    }, ${
+                                                        category.id
+                                                      })">
+                                                                        <i class="fas fa-plus me-1"></i>Item
+                                                                    </button>
+                                                                    <button class="btn btn-sm delete-btn" onclick="deleteCategory(${
+                                                                      wishlist.id
+                                                                    }, ${
+                                                        category.id
+                                                      })">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="items-container" id="items-${
+                                                              category.id
+                                                            }">
+                                                                <div class="items-list mt-3">
+                                                                    ${
+                                                                      category
+                                                                        .items
+                                                                        .length >
+                                                                      0
+                                                                        ? category.items
+                                                                            .map(
+                                                                              (
+                                                                                item
+                                                                              ) => {
+                                                                                const itemProgress =
+                                                                                  item.price >
+                                                                                  0
+                                                                                    ? Math.min(
+                                                                                        (savings /
+                                                                                          item.price) *
+                                                                                          100,
+                                                                                        100
+                                                                                      )
+                                                                                    : 0;
+                                                                                return `
+                                                                                <div class="item-row hierarchy-indent-2">
+                                                                                    <div class="d-flex align-items-center">
+                                                                                        <div class="me-3">
+                                                                                            <img src="${
+                                                                                              item.image
+                                                                                            }" class="rounded" style="width: 60px; height: 45px; object-fit: cover;" alt="${
+                                                                                  item.name
+                                                                                }">
+                                                                                        </div>
+                                                                                        <div class="flex-grow-1">
+                                                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                                                <h6 class="mb-1">${
+                                                                                                  item.name
+                                                                                                } ${
+                                                                                  item.achieved
+                                                                                    ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Tercapai</span>'
+                                                                                    : ""
+                                                                                }</h6>
+                                                                                                <div>
+                                                                                                    <button class="btn btn-sm ${
+                                                                                                      item.achieved
+                                                                                                        ? "btn-warning"
+                                                                                                        : "btn-success"
+                                                                                                    } me-2" onclick="markItemAchieved(${
+                                                                                  wishlist.id
+                                                                                }, ${
+                                                                                  category.id
+                                                                                }, ${
+                                                                                  item.id
+                                                                                })">
+                                                                                                        <i class="fas ${
+                                                                                                          item.achieved
+                                                                                                            ? "fa-undo"
+                                                                                                            : "fa-check"
+                                                                                                        }"></i>
+                                                                                                    </button>
+                                                                                                    <button class="btn btn-sm delete-btn" onclick="deleteItem(${
+                                                                                                      wishlist.id
+                                                                                                    }, ${
+                                                                                  category.id
+                                                                                }, ${
+                                                                                  item.id
+                                                                                })">
+                                                                                                        <i class="fas fa-times"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                                                <small class="text-muted">Rp ${item.price.toLocaleString(
+                                                                                                  "id-ID"
+                                                                                                )}</small>
+                                                                                                <small class="text-muted">${itemProgress.toFixed(
+                                                                                                  1
+                                                                                                )}%</small>
+                                                                                            </div>
+                                                                                            <div class="item-progress">
+                                                                                                <div class="item-progress-bar" style="width: ${itemProgress}%"></div>
+                                                                                            </div>
+                                                                                            ${
+                                                                                              item.description
+                                                                                                ? `<small class="text-muted">${item.description}</small>`
+                                                                                                : ""
+                                                                                            }
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            `;
+                                                                              }
+                                                                            )
+                                                                            .join(
+                                                                              ""
+                                                                            )
+                                                                        : `<div class="text-center py-3 text-muted">
+                                                                            <i class="fas fa-box-open fa-2x mb-2"></i>
+                                                                            <p>Belum ada item</p>
+                                                                            <button class="btn btn-sm btn-outline-primary" onclick="openAddItemModal(${wishlist.id}, ${category.id})">
+                                                                                <i class="fas fa-plus me-1"></i>Tambah Item Pertama
+                                                                            </button>
+                                                                        </div>`
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    `;
+                                                    })
+                                                    .join("")
+                                                : `<div class="text-center py-3 text-muted">
+                                                    <i class="fas fa-folder-open fa-2x mb-2"></i>
+                                                    <p>Belum ada kategori</p>
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="openAddCategoryModal(${wishlist.id})">
+                                                        <i class="fas fa-plus me-1"></i>Tambah Kategori Pertama
+                                                    </button>
+                                                </div>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1723,6 +2009,92 @@
         }
       }
 
+      // Filter wishlists
+      function filterWishlists(filter) {
+        renderWishlists(filter);
+      }
+
+      // Render transactions
+      function renderTransactions() {
+        if (transactions.length === 0) {
+          transactionHistory.style.display = "none";
+          emptyTransactionState.style.display = "block";
+        } else {
+          transactionHistory.style.display = "block";
+          emptyTransactionState.style.display = "none";
+
+          transactionHistory.innerHTML = "";
+
+          transactions.forEach((transaction) => {
+            const transactionItem = document.createElement("div");
+            transactionItem.className = "transaction-item";
+
+            const date = new Date(transaction.date);
+            const formattedDate = `${date
+              .getDate()
+              .toString()
+              .padStart(2, "0")}/${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, "0")}/${date.getFullYear()} ${date
+              .getHours()
+              .toString()
+              .padStart(2, "0")}:${date
+              .getMinutes()
+              .toString()
+              .padStart(2, "0")}`;
+
+            transactionItem.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">${transaction.description}</h6>
+                                <small class="text-muted">${formattedDate}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="${
+                                  transaction.type === "deposit"
+                                    ? "transaction-positive"
+                                    : "transaction-negative"
+                                }">
+                                    ${
+                                      transaction.type === "deposit" ? "+" : "-"
+                                    } Rp ${transaction.amount.toLocaleString(
+              "id-ID"
+            )}
+                                </div>
+                                <small class="text-muted">${
+                                  transaction.type === "deposit"
+                                    ? "Tabungan"
+                                    : "Penarikan"
+                                }</small>
+                            </div>
+                        </div>
+                    `;
+
+            transactionHistory.appendChild(transactionItem);
+          });
+        }
+      }
+
+      // Open add category modal
+      function openAddCategoryModal(wishlistId) {
+        document.getElementById("categoryWishlistId").value = wishlistId;
+        const addCategoryModal = new bootstrap.Modal(
+          document.getElementById("addCategoryModal")
+        );
+        addCategoryModal.show();
+      }
+
+      // Open add item modal
+      function openAddItemModal(wishlistId, categoryId) {
+        document.getElementById("itemWishlistId").value = wishlistId;
+        document.getElementById("itemCategoryId").value = categoryId;
+        const addItemModal = new bootstrap.Modal(
+          document.getElementById("addItemModal")
+        );
+        addItemModal.show();
+      }
+
+      // Update statistics
       function updateStats() {
         const totalWishlists = wishlists.length;
         let totalCategories = 0;
@@ -1745,42 +2117,69 @@
         totalNeededEl.textContent = `Rp ${totalNeeded.toLocaleString("id-ID")}`;
       }
 
+      // Update savings display
       function updateSavingsDisplay() {
+        // Calculate total needed
+        let totalNeeded = 0;
+        wishlists.forEach((wishlist) => {
+          wishlist.categories.forEach((category) => {
+            category.items.forEach((item) => {
+              totalNeeded += item.price;
+            });
+          });
+        });
+
+        // Update savings display
         currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+
+        // Update summary
+        summaryNeededEl.textContent = `Rp ${totalNeeded.toLocaleString(
+          "id-ID"
+        )}`;
+        summarySavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+
+        const remaining = Math.max(0, totalNeeded - savings);
+        summaryRemainingEl.textContent = `Rp ${remaining.toLocaleString(
+          "id-ID"
+        )}`;
+
+        const progressPercentage =
+          totalNeeded > 0 ? Math.min((savings / totalNeeded) * 100, 100) : 0;
+        summaryProgressEl.style.width = `${progressPercentage}%`;
+        summaryPercentageEl.textContent = `${progressPercentage.toFixed(
+          1
+        )}% tercapai`;
       }
 
-      function renderTransactions() {
-        // Simplified for demo
+      // Save to localStorage
+      function saveToLocalStorage() {
+        localStorage.setItem("wishlists", JSON.stringify(wishlists));
+        localStorage.setItem("savings", savings.toString());
+        localStorage.setItem("transactions", JSON.stringify(transactions));
       }
 
-      // Open add category modal
-      function openAddCategoryModal(wishlistId) {
-        document.getElementById("categoryWishlistId").value = wishlistId;
-        const addCategoryModal = new bootstrap.Modal(
-          document.getElementById("addCategoryModal")
-        );
-        addCategoryModal.show();
-      }
+      // Create confetti animation
+      function createConfetti() {
+        const colors = ["#6c5ce7", "#a29bfe", "#fd79a8", "#00b894", "#fdcb6e"];
 
-      // Open add item modal
-      function openAddItemModal(wishlistId, categoryId) {
-        document.getElementById("itemWishlistId").value = wishlistId;
-        document.getElementById("itemCategoryId").value = categoryId;
-        const addItemModal = new bootstrap.Modal(
-          document.getElementById("addItemModal")
-        );
-        addItemModal.show();
-      }
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.left = Math.random() * 100 + "vw";
+          confetti.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.width = Math.random() * 10 + 5 + "px";
+          confetti.style.height = Math.random() * 10 + 5 + "px";
+          confetti.style.animationDelay = Math.random() * 5 + "s";
 
-      // Filter wishlists
-      function filterWishlists(filter) {
-        renderWishlists(filter);
-      }
+          document.body.appendChild(confetti);
 
-      // Initialize the app
-      document.addEventListener("DOMContentLoaded", function () {
-        checkAuthStatus();
-      });
+          // Remove confetti after animation
+          setTimeout(() => {
+            confetti.remove();
+          }, 5000);
+        }
+      }
     </script>
   </body>
 </html>
