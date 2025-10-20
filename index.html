@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Private Wishlist</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #6c5ce7;
+        --secondary: #a29bfe;
+        --accent: #fd79a8;
+        --light: #f8f9fa;
+        --dark: #2d3436;
+        --success: #00b894;
+        --warning: #fdcb6e;
+        --danger: #e74c3c;
+      }
+
+      .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+      }
+
+      .login-card {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      .login-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 1rem;
+      }
+
+      .app-content {
+        display: none;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--dark);
+        overflow-x: hidden;
+      }
+
+      .navbar {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        color: white;
+        padding: 5rem 0;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,197.3C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+        background-size: cover;
+        background-position: center;
+      }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      .wishlist-card {
+        animation: fadeIn 0.5s ease forwards;
+        opacity: 0;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .progress {
+        height: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--secondary);
+        transform: scale(1.05);
+      }
+
+      .btn-success {
+        background: var(--success);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-success:hover {
+        transform: scale(1.05);
+      }
+
+      .btn-warning {
+        background: var(--warning);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: var(--dark);
+      }
+
+      .btn-warning:hover {
+        transform: scale(1.05);
+      }
+
+      .floating-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+      }
+
+      .floating-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(253, 121, 168, 0.7);
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
+        }
+        50% {
+          box-shadow: 0 5px 30px rgba(253, 121, 168, 0.8);
+        }
+        100% {
+          box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
+        }
+      }
+
+      .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+      }
+
+      .stats-card {
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: #dee2e6;
+      }
+
+      .delete-btn {
+        color: #e74c3c;
+        background: none;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .delete-btn:hover {
+        color: #c0392b;
+        transform: scale(1.2);
+      }
+
+      .edit-btn {
+        color: var(--primary);
+        background: none;
+        border: none;
+        transition: all 0.3s ease;
+      }
+
+      .edit-btn:hover {
+        color: var(--secondary);
+        transform: scale(1.2);
+      }
+
+      .category-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid var(--primary);
+        transition: all 0.3s ease;
+      }
+
+      .category-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+      }
+
+      .item-row {
+        background: white;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        border-left: 3px solid var(--secondary);
+        transition: all 0.3s ease;
+      }
+
+      .item-row:hover {
+        background: #f8f9fa;
+        transform: translateX(3px);
+      }
+
+      .wishlist-header {
+        cursor: pointer;
+        padding: 20px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-header:hover {
+        background: rgba(108, 92, 231, 0.05);
+      }
+
+      .categories-container {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .categories-container.show {
+        max-height: 1000px;
+      }
+
+      .items-container {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .items-container.show {
+        max-height: 1000px;
+      }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: var(--accent);
+        opacity: 0;
+        z-index: 9999;
+        animation: confetti-fall 5s ease-in-out forwards;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-100px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(1000px) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      .achievement-badge {
+        display: inline-block;
+        background: var(--warning);
+        color: var(--dark);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 10px;
+        animation: bounce 1s infinite alternate;
+      }
+
+      @keyframes bounce {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-5px);
+        }
+      }
+
+      footer {
+        background: var(--dark);
+        color: white;
+        padding: 3rem 0;
+        margin-top: 5rem;
+      }
+
+      .tab-content {
+        padding: 20px 0;
+      }
+
+      .nav-tabs .nav-link {
+        border: none;
+        color: var(--dark);
+        font-weight: 600;
+        padding: 12px 25px;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .nav-tabs .nav-link.active {
+        background: var(--primary);
+        color: white;
+      }
+
+      .item-progress {
+        height: 8px;
+        border-radius: 4px;
+        background: #e9ecef;
+        margin: 5px 0;
+        overflow: hidden;
+      }
+
+      .item-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        border-radius: 4px;
+        transition: width 0.5s ease;
+      }
+
+      .editable-title {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 5px 10px;
+        border-radius: 5px;
+      }
+
+      .editable-title:hover {
+        background: rgba(108, 92, 231, 0.1);
+      }
+
+      .editable-input {
+        border: 2px solid var(--primary);
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-weight: bold;
+        width: 100%;
+      }
+
+      .hierarchy-indent {
+        margin-left: 20px;
+      }
+
+      .hierarchy-indent-2 {
+        margin-left: 40px;
+      }
+
+      .savings-card {
+        background: linear-gradient(135deg, var(--success), #00a085);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .savings-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 184, 148, 0.4);
+      }
+
+      .savings-amount {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .transaction-history {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      .transaction-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+
+      .transaction-item:hover {
+        background: #f8f9fa;
+      }
+
+      .transaction-positive {
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      .transaction-negative {
+        color: var(--danger);
+        font-weight: 600;
+      }
+
+      .budget-summary {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Setup Password Screen (First Time) -->
+    <div class="login-container" id="setupPasswordScreen">
+      <div class="login-card">
+        <i class="fas fa-key login-icon"></i>
+        <h2 class="mb-4">Setup Password</h2>
+        <p class="text-muted mb-4">
+          Buat password untuk mengamankan wishlist Anda
+        </p>
+        <div class="mb-3">
+          <label for="newPassword" class="form-label">Password Baru</label>
+          <input
+            type="password"
+            class="form-control"
+            id="newPassword"
+            placeholder="Masukkan password baru"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="form-label"
+            >Konfirmasi Password</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            placeholder="Ulangi password"
+          />
+        </div>
+        <button class="btn btn-primary w-100" id="setupPasswordBtn">
+          <i class="fas fa-save me-2"></i>Simpan Password
+        </button>
+        <div
+          class="alert alert-danger mt-3"
+          id="setupError"
+          style="display: none"
+        >
+          <i class="fas fa-exclamation-triangle me-2"></i
+          ><span id="setupErrorText">Password tidak cocok!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+      <div class="login-card">
+        <i class="fas fa-lock login-icon"></i>
+        <h2 class="mb-4">Private Wishlist</h2>
+        <p class="text-muted mb-4">
+          Masukkan password untuk mengakses wishlist pribadi Anda
+        </p>
+        <div class="mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="passwordInput"
+            placeholder="Masukkan password"
+          />
+        </div>
+        <button class="btn btn-primary w-100" id="loginBtn">
+          <i class="fas fa-unlock me-2"></i>Masuk
+        </button>
+        <div
+          class="alert alert-danger mt-3"
+          id="loginError"
+          style="display: none"
+        >
+          <i class="fas fa-exclamation-triangle me-2"></i>Password salah!
+        </div>
+      </div>
+    </div>
+
+    <!-- App Content (Hidden until login) -->
+    <div class="app-content" id="appContent">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+          <a
+            class="navbar-brand fw-bold"
+            href="#"
+            style="color: var(--primary)"
+          >
+            <i class="fas fa-piggy-bank me-2"></i>Wishlist & Tabungan
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#wishlists">Wishlist Saya</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#budget">Tabungan</a>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="btn btn-outline-danger btn-sm ms-2"
+                  id="logoutBtn"
+                >
+                  <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="container text-center position-relative">
+          <h1 class="display-4 fw-bold mb-4">Wishlist & Tabungan Terpusat</h1>
+          <p class="lead mb-4">Kelola wishlist dan tabunganmu di satu tempat</p>
+          <button
+            class="btn btn-light btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#addWishlistModal"
+          >
+            <i class="fas fa-plus me-2"></i>Buat Wishlist Baru
+          </button>
+        </div>
+      </section>
+
+      <!-- Stats Section -->
+      <section class="container my-5">
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="totalWishlists">0</div>
+              <div class="stats-label">Total Wishlist</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="totalCategories">0</div>
+              <div class="stats-label">Total Kategori</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="totalItems">0</div>
+              <div class="stats-label">Total Item</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="totalNeeded">Rp 0</div>
+              <div class="stats-label">Total Dibutuhkan</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Savings Section -->
+      <section class="container my-5" id="savings">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="savings-card">
+              <div class="row align-items-center">
+                <div class="col-md-6">
+                  <h3 class="mb-3">Tabungan Saat Ini</h3>
+                  <div class="savings-amount" id="currentSavings">Rp 0</div>
+                  <p class="mb-0">Tabungan untuk semua wishlist</p>
+                </div>
+                <div class="col-md-6 text-end">
+                  <button
+                    class="btn btn-light btn-lg me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addSavingsModal"
+                  >
+                    <i class="fas fa-plus me-2"></i>Tambah
+                  </button>
+                  <button
+                    class="btn btn-light btn-lg"
+                    data-bs-toggle="modal"
+                    data-bs-target="#withdrawSavingsModal"
+                  >
+                    <i class="fas fa-minus me-2"></i>Kurangi
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="budget-summary">
+              <h4 class="mb-3">Ringkasan Budget</h4>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Dibutuhkan:</span>
+                <strong id="summaryNeeded">Rp 0</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Tabungan Saat Ini:</span>
+                <strong id="summarySavings">Rp 0</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-3">
+                <span>Kekurangan:</span>
+                <strong id="summaryRemaining">Rp 0</strong>
+              </div>
+              <div class="progress mb-2">
+                <div
+                  class="progress-bar bg-success"
+                  role="progressbar"
+                  id="summaryProgress"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <small class="text-muted" id="summaryPercentage"
+                >0% tercapai</small
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content -->
+      <section class="container my-5">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link active"
+              id="wishlists-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#wishlists"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-th-list me-2"></i>Wishlist Saya
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="transactions-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#transactions"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-history me-2"></i>Riwayat Transaksi
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+          <!-- Wishlists Tab -->
+          <div class="tab-pane fade show active" id="wishlists" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="fw-bold">Daftar Wishlist Saya</h2>
+              <div class="dropdown">
+                <button
+                  class="btn btn-outline-primary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="fas fa-filter me-2"></i>Filter
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item filter-option"
+                      data-filter="all"
+                      href="#"
+                      >Semua</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item filter-option"
+                      data-filter="completed"
+                      href="#"
+                      >Selesai</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item filter-option"
+                      data-filter="in-progress"
+                      href="#"
+                      >Dalam Proses</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div id="wishlistsContainer" class="row">
+              <!-- Wishlist items will be dynamically added here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+              <i class="fas fa-layer-group"></i>
+              <h3>Belum Ada Wishlist</h3>
+              <p>
+                Mulai buat wishlist impianmu dengan struktur hierarki yang
+                lengkap!
+              </p>
+              <button
+                class="btn btn-primary mt-3"
+                data-bs-toggle="modal"
+                data-bs-target="#addWishlistModal"
+              >
+                <i class="fas fa-plus me-2"></i>Buat Wishlist Pertama
+              </button>
+            </div>
+          </div>
+
+          <!-- Transactions Tab -->
+          <div class="tab-pane fade" id="transactions" role="tabpanel">
+            <h2 class="fw-bold mb-4">Riwayat Transaksi Tabungan</h2>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="transaction-history" id="transactionHistory">
+                  <!-- Transaction items will be dynamically added here -->
+                </div>
+
+                <div id="emptyTransactionState" class="empty-state py-4">
+                  <i class="fas fa-history"></i>
+                  <h5>Belum Ada Transaksi</h5>
+                  <p>
+                    Mulai tambahkan atau kurangi tabungan untuk melihat riwayat
+                    transaksi!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+        <div class="container text-center">
+          <p>
+            &copy; 2023 Wishlist & Tabungan App. Kelola impian dan keuanganmu
+            dengan mudah!
+          </p>
+        </div>
+      </footer>
+
+      <!-- Floating Action Button -->
+      <div
+        class="floating-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#addWishlistModal"
+      >
+        <i class="fas fa-plus"></i>
+      </div>
+
+      <!-- Add Wishlist Modal -->
+      <div class="modal fade" id="addWishlistModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Buat Wishlist Baru</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="addWishlistForm">
+                <div class="mb-3">
+                  <label for="wishlistName" class="form-label"
+                    >Nama Wishlist</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="wishlistName"
+                    placeholder="Contoh: Blooket Transformers"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="wishlistDescription" class="form-label"
+                    >Deskripsi (Opsional)</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="wishlistDescription"
+                    rows="3"
+                    placeholder="Deskripsi tentang wishlist ini..."
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="wishlistImage" class="form-label"
+                    >URL Gambar (Opsional)</label
+                  >
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="wishlistImage"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="saveWishlistBtn"
+              >
+                Simpan Wishlist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Category Modal -->
+      <div class="modal fade" id="addCategoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tambah Kategori</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="addCategoryForm">
+                <input type="hidden" id="categoryWishlistId" />
+                <div class="mb-3">
+                  <label for="categoryName" class="form-label"
+                    >Nama Kategori</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="categoryName"
+                    placeholder="Contoh: Blooket 1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="categoryDescription" class="form-label"
+                    >Deskripsi (Opsional)</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="categoryDescription"
+                    rows="3"
+                    placeholder="Deskripsi tentang kategori ini..."
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="saveCategoryBtn"
+              >
+                Simpan Kategori
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Item Modal -->
+      <div class="modal fade" id="addItemModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tambah Item</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="addItemForm">
+                <input type="hidden" id="itemWishlistId" />
+                <input type="hidden" id="itemCategoryId" />
+                <div class="mb-3">
+                  <label for="itemName" class="form-label">Nama Item</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="itemName"
+                    placeholder="Contoh: Optimus Prime"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="itemPrice" class="form-label">Harga (Rp)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="itemPrice"
+                    min="1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="itemDescription" class="form-label"
+                    >Deskripsi (Opsional)</label
+                  >
+                  <textarea
+                    class="form-control"
+                    id="itemDescription"
+                    rows="3"
+                    placeholder="Deskripsi tentang item ini..."
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="itemImage" class="form-label"
+                    >URL Gambar (Opsional)</label
+                  >
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="itemImage"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button type="button" class="btn btn-primary" id="saveItemBtn">
+                Simpan Item
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Savings Modal -->
+      <div class="modal fade" id="addSavingsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tambah Tabungan</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="addSavingsForm">
+                <div class="mb-3">
+                  <label for="savingsAmount" class="form-label"
+                    >Jumlah Tabungan (Rp)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="savingsAmount"
+                    min="1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="savingsDescription" class="form-label"
+                    >Keterangan (Opsional)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="savingsDescription"
+                    placeholder="Contoh: Gaji bulanan, Hadiah, dll"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button type="button" class="btn btn-success" id="saveSavingsBtn">
+                Tambah Tabungan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Withdraw Savings Modal -->
+      <div class="modal fade" id="withdrawSavingsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Kurangi Tabungan</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="withdrawSavingsForm">
+                <div class="mb-3">
+                  <label for="withdrawAmount" class="form-label"
+                    >Jumlah Penarikan (Rp)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="withdrawAmount"
+                    min="1"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="withdrawDescription" class="form-label"
+                    >Keterangan (Opsional)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="withdrawDescription"
+                    placeholder="Contoh: Keperluan mendadak, Beli kebutuhan, dll"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="saveWithdrawBtn"
+              >
+                Kurangi Tabungan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Modal -->
+      <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body text-center p-5">
+              <i
+                class="fas fa-check-circle text-success mb-3"
+                style="font-size: 4rem"
+              ></i>
+              <h3 class="mb-3">Berhasil!</h3>
+              <p id="successMessage">Wishlist berhasil ditambahkan!</p>
+              <button
+                type="button"
+                class="btn btn-primary mt-3"
+                data-bs-dismiss="modal"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Password system - User can set their own password
+      let userPassword = localStorage.getItem("userPassword");
+      let isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+      // Data storage
+      let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
+      let savings = parseInt(localStorage.getItem("savings")) || 0;
+      let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+      // DOM Elements
+      const setupPasswordScreen = document.getElementById(
+        "setupPasswordScreen"
+      );
+      const loginScreen = document.getElementById("loginScreen");
+      const appContent = document.getElementById("appContent");
+      const newPasswordInput = document.getElementById("newPassword");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const setupPasswordBtn = document.getElementById("setupPasswordBtn");
+      const setupError = document.getElementById("setupError");
+      const setupErrorText = document.getElementById("setupErrorText");
+      const passwordInput = document.getElementById("passwordInput");
+      const loginBtn = document.getElementById("loginBtn");
+      const loginError = document.getElementById("loginError");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const wishlistsContainer = document.getElementById("wishlistsContainer");
+      const emptyState = document.getElementById("emptyState");
+      const emptyTransactionState = document.getElementById(
+        "emptyTransactionState"
+      );
+      const transactionHistory = document.getElementById("transactionHistory");
+      const addWishlistForm = document.getElementById("addWishlistForm");
+      const saveWishlistBtn = document.getElementById("saveWishlistBtn");
+      const addCategoryForm = document.getElementById("addCategoryForm");
+      const saveCategoryBtn = document.getElementById("saveCategoryBtn");
+      const addItemForm = document.getElementById("addItemForm");
+      const saveItemBtn = document.getElementById("saveItemBtn");
+      const addSavingsForm = document.getElementById("addSavingsForm");
+      const saveSavingsBtn = document.getElementById("saveSavingsBtn");
+      const withdrawSavingsForm = document.getElementById(
+        "withdrawSavingsForm"
+      );
+      const saveWithdrawBtn = document.getElementById("saveWithdrawBtn");
+      const totalWishlistsEl = document.getElementById("totalWishlists");
+      const totalCategoriesEl = document.getElementById("totalCategories");
+      const totalItemsEl = document.getElementById("totalItems");
+      const totalNeededEl = document.getElementById("totalNeeded");
+      const currentSavingsEl = document.getElementById("currentSavings");
+      const summaryNeededEl = document.getElementById("summaryNeeded");
+      const summarySavingsEl = document.getElementById("summarySavings");
+      const summaryRemainingEl = document.getElementById("summaryRemaining");
+      const summaryProgressEl = document.getElementById("summaryProgress");
+      const summaryPercentageEl = document.getElementById("summaryPercentage");
+
+      // Check if password is set and user is logged in
+      function checkAuthStatus() {
+        if (!userPassword) {
+          // First time user - show setup password screen
+          showSetupPassword();
+        } else if (isLoggedIn) {
+          // User is already logged in - show app directly
+          showApp();
+        } else {
+          // Returning user - show login screen
+          showLogin();
+        }
+      }
+
+      // Setup password function
+      function setupPassword() {
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (!newPassword) {
+          setupErrorText.textContent = "Password tidak boleh kosong!";
+          setupError.style.display = "block";
+          return;
+        }
+
+        if (newPassword !== confirmPassword) {
+          setupErrorText.textContent = "Password tidak cocok!";
+          setupError.style.display = "block";
+          return;
+        }
+
+        if (newPassword.length < 4) {
+          setupErrorText.textContent = "Password minimal 4 karakter!";
+          setupError.style.display = "block";
+          return;
+        }
+
+        // Save password and login status
+        localStorage.setItem("userPassword", newPassword);
+        localStorage.setItem("isLoggedIn", "true");
+        userPassword = newPassword;
+        isLoggedIn = true;
+
+        // Show app
+        showApp();
+      }
+
+      // Login function
+      function login() {
+        const password = passwordInput.value;
+
+        if (password === userPassword) {
+          localStorage.setItem("isLoggedIn", "true");
+          isLoggedIn = true;
+          showApp();
+        } else {
+          loginError.style.display = "block";
+          passwordInput.value = "";
+          passwordInput.focus();
+        }
+      }
+
+      // Logout function
+      function logout() {
+        localStorage.setItem("isLoggedIn", "false");
+        isLoggedIn = false;
+        showLogin();
+      }
+
+      // Show setup password screen
+      function showSetupPassword() {
+        setupPasswordScreen.style.display = "flex";
+        loginScreen.style.display = "none";
+        appContent.style.display = "none";
+        newPasswordInput.value = "";
+        confirmPasswordInput.value = "";
+        setupError.style.display = "none";
+      }
+
+      // Show login screen
+      function showLogin() {
+        setupPasswordScreen.style.display = "none";
+        loginScreen.style.display = "flex";
+        appContent.style.display = "none";
+        passwordInput.value = "";
+        loginError.style.display = "none";
+      }
+
+      // Show app content
+      function showApp() {
+        setupPasswordScreen.style.display = "none";
+        loginScreen.style.display = "none";
+        appContent.style.display = "block";
+        initializeApp();
+      }
+
+      // Initialize the app after login
+      function initializeApp() {
+        renderWishlists();
+        updateStats();
+        updateSavingsDisplay();
+        renderTransactions();
+        setupEventListeners();
+      }
+
+      // Setup event listeners
+      function setupEventListeners() {
+        // Setup password button
+        setupPasswordBtn.addEventListener("click", setupPassword);
+
+        // Login button
+        loginBtn.addEventListener("click", login);
+
+        // Logout button
+        logoutBtn.addEventListener("click", logout);
+
+        // Enter key for login/setup
+        newPasswordInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            setupPassword();
+          }
+        });
+
+        confirmPasswordInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            setupPassword();
+          }
+        });
+
+        passwordInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            login();
+          }
+        });
+
+        // Save wishlist button
+        saveWishlistBtn.addEventListener("click", addWishlist);
+
+        // Save category button
+        saveCategoryBtn.addEventListener("click", addCategory);
+
+        // Save item button
+        saveItemBtn.addEventListener("click", addItem);
+
+        // Save savings button
+        saveSavingsBtn.addEventListener("click", addSavings);
+
+        // Save withdraw button
+        saveWithdrawBtn.addEventListener("click", withdrawSavings);
+
+        // Filter options
+        document.querySelectorAll(".filter-option").forEach((option) => {
+          option.addEventListener("click", function (e) {
+            e.preventDefault();
+            const filter = this.getAttribute("data-filter");
+            filterWishlists(filter);
+          });
+        });
+      }
+
+      // Add a new wishlist
+      function addWishlist() {
+        const name = document.getElementById("wishlistName").value;
+        const description = document.getElementById(
+          "wishlistDescription"
+        ).value;
+        const image = document.getElementById("wishlistImage").value;
+
+        if (!name) {
+          alert("Nama wishlist harus diisi!");
+          return;
+        }
+
+        const newWishlist = {
+          id: Date.now(),
+          name,
+          description,
+          image: image || "https://via.placeholder.com/300x200?text=No+Image",
+          categories: [],
+          createdAt: new Date().toISOString(),
+        };
+
+        wishlists.push(newWishlist);
+        saveToLocalStorage();
+        renderWishlists();
+        updateStats();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Wishlist berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addWishlistForm.reset();
+        const addWishlistModal = bootstrap.Modal.getInstance(
+          document.getElementById("addWishlistModal")
+        );
+        addWishlistModal.hide();
+      }
+
+      // Add a category to a wishlist
+      function addCategory() {
+        const wishlistId = parseInt(
+          document.getElementById("categoryWishlistId").value
+        );
+        const name = document.getElementById("categoryName").value;
+        const description = document.getElementById(
+          "categoryDescription"
+        ).value;
+
+        if (!wishlistId || !name) {
+          alert("Nama kategori harus diisi!");
+          return;
+        }
+
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const newCategory = {
+          id: Date.now(),
+          name,
+          description,
+          items: [],
+        };
+
+        wishlist.categories.push(newCategory);
+        saveToLocalStorage();
+        renderWishlists();
+        updateStats();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Kategori berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addCategoryForm.reset();
+        const addCategoryModal = bootstrap.Modal.getInstance(
+          document.getElementById("addCategoryModal")
+        );
+        addCategoryModal.hide();
+      }
+
+      // Add an item to a category
+      function addItem() {
+        const wishlistId = parseInt(
+          document.getElementById("itemWishlistId").value
+        );
+        const categoryId = parseInt(
+          document.getElementById("itemCategoryId").value
+        );
+        const name = document.getElementById("itemName").value;
+        const price = parseInt(document.getElementById("itemPrice").value);
+        const description = document.getElementById("itemDescription").value;
+        const image = document.getElementById("itemImage").value;
+
+        if (!wishlistId || !categoryId || !name || !price) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const newItem = {
+          id: Date.now(),
+          name,
+          price,
+          description,
+          image: image || "https://via.placeholder.com/200x150?text=No+Image",
+          achieved: false,
+        };
+
+        category.items.push(newItem);
+        saveToLocalStorage();
+        renderWishlists();
+        updateStats();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Item berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+      }
+
+      // Add savings
+      function addSavings() {
+        const amount = parseInt(document.getElementById("savingsAmount").value);
+        const description = document.getElementById("savingsDescription").value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah tabungan harus diisi dengan angka positif!");
+          return;
+        }
+
+        savings += amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "deposit",
+          amount,
+          description: description || "Tabungan",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+
+        saveToLocalStorage();
+        updateSavingsDisplay();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Tabungan berhasil ditambahkan sebesar Rp ${amount.toLocaleString(
+          "id-ID"
+        )}!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addSavingsForm.reset();
+        const addSavingsModal = bootstrap.Modal.getInstance(
+          document.getElementById("addSavingsModal")
+        );
+        addSavingsModal.hide();
+      }
+
+      // Withdraw savings
+      function withdrawSavings() {
+        const amount = parseInt(
+          document.getElementById("withdrawAmount").value
+        );
+        const description = document.getElementById(
+          "withdrawDescription"
+        ).value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah penarikan harus diisi dengan angka positif!");
+          return;
+        }
+
+        if (amount > savings) {
+          alert("Jumlah penarikan melebihi tabungan yang tersedia!");
+          return;
+        }
+
+        savings -= amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "withdrawal",
+          amount,
+          description: description || "Penarikan",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+
+        saveToLocalStorage();
+        updateSavingsDisplay();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Tabungan berhasil dikurangi sebesar Rp ${amount.toLocaleString(
+          "id-ID"
+        )}!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        withdrawSavingsForm.reset();
+        const withdrawSavingsModal = bootstrap.Modal.getInstance(
+          document.getElementById("withdrawSavingsModal")
+        );
+        withdrawSavingsModal.hide();
+      }
+
+      // Save to localStorage
+      function saveToLocalStorage() {
+        localStorage.setItem("wishlists", JSON.stringify(wishlists));
+        localStorage.setItem("savings", savings.toString());
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+      }
+
+      // Render wishlists
+      function renderWishlists(filter = "all") {
+        let filteredWishlists = wishlists;
+
+        if (filter === "completed") {
+          filteredWishlists = wishlists.filter((w) => {
+            return (
+              w.categories.length > 0 &&
+              w.categories.every(
+                (c) => c.items.length > 0 && c.items.every((i) => i.achieved)
+              )
+            );
+          });
+        } else if (filter === "in-progress") {
+          filteredWishlists = wishlists.filter((w) => {
+            return w.categories.some((c) => c.items.some((i) => !i.achieved));
+          });
+        }
+
+        if (filteredWishlists.length === 0) {
+          wishlistsContainer.style.display = "none";
+          emptyState.style.display = "block";
+        } else {
+          wishlistsContainer.style.display = "flex";
+          emptyState.style.display = "none";
+
+          wishlistsContainer.innerHTML = "";
+
+          filteredWishlists.forEach((wishlist, index) => {
+            const wishlistCard = document.createElement("div");
+            wishlistCard.className = `col-12 wishlist-card`;
+            wishlistCard.style.animationDelay = `${index * 0.1}s`;
+
+            wishlistCard.innerHTML = `
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>${wishlist.name}</h4>
+                                <p class="text-muted">${
+                                  wishlist.description || "Tidak ada deskripsi"
+                                }</p>
+                                <p><small>${
+                                  wishlist.categories.length
+                                } kategori</small></p>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openAddCategoryModal(${
+                                  wishlist.id
+                                })">
+                                    <i class="fas fa-plus me-1"></i>Tambah Kategori
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+            wishlistsContainer.appendChild(wishlistCard);
+          });
+        }
+      }
+
+      function updateStats() {
+        const totalWishlists = wishlists.length;
+        let totalCategories = 0;
+        let totalItems = 0;
+        let totalNeeded = 0;
+
+        wishlists.forEach((wishlist) => {
+          totalCategories += wishlist.categories.length;
+          wishlist.categories.forEach((category) => {
+            totalItems += category.items.length;
+            category.items.forEach((item) => {
+              totalNeeded += item.price;
+            });
+          });
+        });
+
+        totalWishlistsEl.textContent = totalWishlists;
+        totalCategoriesEl.textContent = totalCategories;
+        totalItemsEl.textContent = totalItems;
+        totalNeededEl.textContent = `Rp ${totalNeeded.toLocaleString("id-ID")}`;
+      }
+
+      function updateSavingsDisplay() {
+        currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+      }
+
+      function renderTransactions() {
+        // Simplified for demo
+      }
+
+      // Open add category modal
+      function openAddCategoryModal(wishlistId) {
+        document.getElementById("categoryWishlistId").value = wishlistId;
+        const addCategoryModal = new bootstrap.Modal(
+          document.getElementById("addCategoryModal")
+        );
+        addCategoryModal.show();
+      }
+
+      // Open add item modal
+      function openAddItemModal(wishlistId, categoryId) {
+        document.getElementById("itemWishlistId").value = wishlistId;
+        document.getElementById("itemCategoryId").value = categoryId;
+        const addItemModal = new bootstrap.Modal(
+          document.getElementById("addItemModal")
+        );
+        addItemModal.show();
+      }
+
+      // Filter wishlists
+      function filterWishlists(filter) {
+        renderWishlists(filter);
+      }
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", function () {
+        checkAuthStatus();
+      });
+    </script>
+  </body>
+</html>
