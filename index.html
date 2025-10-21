@@ -302,6 +302,7 @@
         max-height: 1000px;
       }
 
+      /* PERBAIKAN: Mengubah items-container untuk mendukung scroll */
       .items-container {
         max-height: 0;
         overflow: hidden;
@@ -309,7 +310,8 @@
       }
 
       .items-container.show {
-        max-height: 1000px;
+        max-height: 300px; /* Tinggi tetap untuk container items */
+        overflow-y: auto; /* Tambahkan scroll vertikal */
       }
 
       .confetti {
