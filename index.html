@@ -482,6 +482,13 @@
       .item-link:hover {
         text-decoration: underline;
       }
+
+      .edit-item-form {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
@@ -1600,7 +1607,7 @@
             `;
       }
 
-      // Edit item name and price
+      // Edit item
       function editItem(wishlistId, categoryId, itemId) {
         const wishlist = wishlists.find((w) => w.id === wishlistId);
         if (!wishlist) return;
@@ -1612,28 +1619,48 @@
         if (!item) return;
 
         const itemElement = document.getElementById(`item-${itemId}`);
-        const currentName = item.name;
-        const currentPrice = item.price;
 
         itemElement.innerHTML = `
-            <div class="d-flex align-items-center">
-                <div class="flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="flex-grow-1 me-3">
-                            <input type="text" class="form-control mb-2" value="${currentName}" id="edit-item-name-${itemId}">
-                            <input type="number" class="form-control" value="${currentPrice}" id="edit-item-price-${itemId}">
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
-                                <i class="fas fa-check"></i>
-                            </button>
-                            <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          <div class="edit-item-form">
+            <div class="mb-3">
+              <label class="form-label">Nama Item</label>
+              <input type="text" class="form-control" id="edit-item-name-${itemId}" value="${
+          item.name
+        }" required>
             </div>
+            <div class="mb-3">
+              <label class="form-label">Harga (Rp)</label>
+              <input type="number" class="form-control" id="edit-item-price-${itemId}" value="${
+          item.price
+        }" min="1" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Link TikTok</label>
+              <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
+          item.tiktokLink || ""
+        }" placeholder="https://www.tiktok.com/...">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Link Shopee</label>
+              <input type="url" class="form-control" id="edit-item-shopee-${itemId}" value="${
+          item.shopeeLink || ""
+        }" placeholder="https://shopee.co.id/...">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Deskripsi</label>
+              <textarea class="form-control" id="edit-item-description-${itemId}" rows="2">${
+          item.description || ""
+        }</textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
+                <i class="fas fa-check me-1"></i>Simpan
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
+                <i class="fas fa-times me-1"></i>Batal
+              </button>
+            </div>
+          </div>
         `;
 
         document.getElementById(`edit-item-name-${itemId}`).focus();
@@ -1656,6 +1683,15 @@
         const newPrice = parseInt(
           document.getElementById(`edit-item-price-${itemId}`).value
         );
+        const newTiktokLink = document.getElementById(
+          `edit-item-tiktok-${itemId}`
+        ).value;
+        const newShopeeLink = document.getElementById(
+          `edit-item-shopee-${itemId}`
+        ).value;
+        const newDescription = document.getElementById(
+          `edit-item-description-${itemId}`
+        ).value;
 
         if (!newName.trim()) {
           alert("Nama item tidak boleh kosong!");
@@ -1669,8 +1705,20 @@
 
         item.name = newName;
         item.price = newPrice;
+        item.tiktokLink = newTiktokLink;
+        item.shopeeLink = newShopeeLink;
+        item.description = newDescription;
+
         saveToLocalStorage();
         renderWishlists();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Item berhasil diupdate!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
       }
 
       // Cancel edit item
@@ -2052,16 +2100,18 @@
                                                                                             <div class="item-progress">
                                                                                                 <div class="item-progress-bar" style="width: ${itemProgress}%"></div>
                                                                                             </div>
-                                                                                            ${
-                                                                                              item.tiktokLink
-                                                                                                ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
-                                                                                                : ""
-                                                                                            }
-                                                                                            ${
-                                                                                              item.shopeeLink
-                                                                                                ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
-                                                                                                : ""
-                                                                                            }
+                                                                                            <div class="mt-1">
+                                                                                              ${
+                                                                                                item.tiktokLink
+                                                                                                  ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
+                                                                                                  : ""
+                                                                                              }
+                                                                                              ${
+                                                                                                item.shopeeLink
+                                                                                                  ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
+                                                                                                  : ""
+                                                                                              }
+                                                                                            </div>
                                                                                             ${
                                                                                               item.description
                                                                                                 ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
