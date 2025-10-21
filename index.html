@@ -471,6 +471,17 @@
         padding: 1.5rem;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
       }
+
+      .item-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-right: 10px;
+      }
+
+      .item-link:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -781,17 +792,6 @@
                   placeholder="Deskripsi tentang wishlist ini..."
                 ></textarea>
               </div>
-              <div class="mb-3">
-                <label for="wishlistImage" class="form-label"
-                  >URL Gambar (Opsional)</label
-                >
-                <input
-                  type="url"
-                  class="form-control"
-                  id="wishlistImage"
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -903,6 +903,28 @@
                 />
               </div>
               <div class="mb-3">
+                <label for="itemTiktokLink" class="form-label"
+                  >Link TikTok (Opsional)</label
+                >
+                <input
+                  type="url"
+                  class="form-control"
+                  id="itemTiktokLink"
+                  placeholder="https://www.tiktok.com/..."
+                />
+              </div>
+              <div class="mb-3">
+                <label for="itemShopeeLink" class="form-label"
+                  >Link Shopee (Opsional)</label
+                >
+                <input
+                  type="url"
+                  class="form-control"
+                  id="itemShopeeLink"
+                  placeholder="https://shopee.co.id/..."
+                />
+              </div>
+              <div class="mb-3">
                 <label for="itemDescription" class="form-label"
                   >Deskripsi (Opsional)</label
                 >
@@ -912,17 +934,6 @@
                   rows="3"
                   placeholder="Deskripsi tentang item ini..."
                 ></textarea>
-              </div>
-              <div class="mb-3">
-                <label for="itemImage" class="form-label"
-                  >URL Gambar (Opsional)</label
-                >
-                <input
-                  type="url"
-                  class="form-control"
-                  id="itemImage"
-                  placeholder="https://example.com/image.jpg"
-                />
               </div>
             </form>
           </div>
@@ -1154,7 +1165,6 @@
         const description = document.getElementById(
           "wishlistDescription"
         ).value;
-        const image = document.getElementById("wishlistImage").value;
 
         if (!name) {
           alert("Nama wishlist harus diisi!");
@@ -1165,7 +1175,6 @@
           id: Date.now(),
           name,
           description,
-          image: image || "https://via.placeholder.com/300x200?text=No+Image",
           categories: [],
           createdAt: new Date().toISOString(),
         };
@@ -1250,11 +1259,12 @@
         );
         const name = document.getElementById("itemName").value;
         const price = parseInt(document.getElementById("itemPrice").value);
+        const tiktokLink = document.getElementById("itemTiktokLink").value;
+        const shopeeLink = document.getElementById("itemShopeeLink").value;
         const description = document.getElementById("itemDescription").value;
-        const image = document.getElementById("itemImage").value;
 
         if (!wishlistId || !categoryId || !name || !price) {
-          alert("Semua field harus diisi!");
+          alert("Nama dan harga item harus diisi!");
           return;
         }
 
@@ -1268,8 +1278,9 @@
           id: Date.now(),
           name,
           price,
+          tiktokLink,
+          shopeeLink,
           description,
-          image: image || "https://via.placeholder.com/200x150?text=No+Image",
           achieved: false,
         };
 
@@ -1589,6 +1600,84 @@
             `;
       }
 
+      // Edit item name and price
+      function editItem(wishlistId, categoryId, itemId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const item = category.items.find((i) => i.id === itemId);
+        if (!item) return;
+
+        const itemElement = document.getElementById(`item-${itemId}`);
+        const currentName = item.name;
+        const currentPrice = item.price;
+
+        itemElement.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1 me-3">
+                            <input type="text" class="form-control mb-2" value="${currentName}" id="edit-item-name-${itemId}">
+                            <input type="number" class="form-control" value="${currentPrice}" id="edit-item-price-${itemId}">
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById(`edit-item-name-${itemId}`).focus();
+      }
+
+      // Save item changes
+      function saveItem(wishlistId, categoryId, itemId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        if (!category) return;
+
+        const item = category.items.find((i) => i.id === itemId);
+        if (!item) return;
+
+        const newName = document.getElementById(
+          `edit-item-name-${itemId}`
+        ).value;
+        const newPrice = parseInt(
+          document.getElementById(`edit-item-price-${itemId}`).value
+        );
+
+        if (!newName.trim()) {
+          alert("Nama item tidak boleh kosong!");
+          return;
+        }
+
+        if (!newPrice || newPrice <= 0) {
+          alert("Harga item harus diisi dengan angka positif!");
+          return;
+        }
+
+        item.name = newName;
+        item.price = newPrice;
+        saveToLocalStorage();
+        renderWishlists();
+      }
+
+      // Cancel edit item
+      function cancelEditItem(wishlistId, categoryId, itemId) {
+        renderWishlists();
+      }
+
       // Mark item as achieved
       function markItemAchieved(wishlistId, categoryId, itemId) {
         const wishlist = wishlists.find((w) => w.id === wishlistId);
@@ -1678,11 +1767,9 @@
                                   wishlist.id
                                 })">
                                     <div class="d-flex align-items-center">
-                                        <img src="${
-                                          wishlist.image
-                                        }" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;" alt="${
-              wishlist.name
-            }">
+                                        <div class="me-3">
+                                            <i class="fas fa-list-alt fa-2x" style="color: var(--primary);"></i>
+                                        </div>
                                         <div>
                                             <h4 class="mb-1">
                                                 <span id="wishlist-title-${
@@ -1903,15 +1990,10 @@
                                                                                       )
                                                                                     : 0;
                                                                                 return `
-                                                                                <div class="item-row hierarchy-indent-2">
-                                                                                    <div class="d-flex align-items-center">
-                                                                                        <div class="me-3">
-                                                                                            <img src="${
-                                                                                              item.image
-                                                                                            }" class="rounded" style="width: 60px; height: 45px; object-fit: cover;" alt="${
-                                                                                  item.name
+                                                                                <div class="item-row hierarchy-indent-2" id="item-${
+                                                                                  item.id
                                                                                 }">
-                                                                                        </div>
+                                                                                    <div class="d-flex align-items-center">
                                                                                         <div class="flex-grow-1">
                                                                                             <div class="d-flex justify-content-between align-items-center">
                                                                                                 <h6 class="mb-1">${
@@ -1922,6 +2004,15 @@
                                                                                     : ""
                                                                                 }</h6>
                                                                                                 <div>
+                                                                                                    <button class="btn btn-sm edit-btn me-2" onclick="editItem(${
+                                                                                                      wishlist.id
+                                                                                                    }, ${
+                                                                                  category.id
+                                                                                }, ${
+                                                                                  item.id
+                                                                                })">
+                                                                                                        <i class="fas fa-edit"></i>
+                                                                                                    </button>
                                                                                                     <button class="btn btn-sm ${
                                                                                                       item.achieved
                                                                                                         ? "btn-warning"
@@ -1962,8 +2053,18 @@
                                                                                                 <div class="item-progress-bar" style="width: ${itemProgress}%"></div>
                                                                                             </div>
                                                                                             ${
+                                                                                              item.tiktokLink
+                                                                                                ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
+                                                                                                : ""
+                                                                                            }
+                                                                                            ${
+                                                                                              item.shopeeLink
+                                                                                                ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
+                                                                                                : ""
+                                                                                            }
+                                                                                            ${
                                                                                               item.description
-                                                                                                ? `<small class="text-muted">${item.description}</small>`
+                                                                                                ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
                                                                                                 : ""
                                                                                             }
                                                                                         </div>
