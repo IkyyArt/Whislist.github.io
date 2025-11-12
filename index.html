@@ -516,6 +516,17 @@
         border-radius: 8px;
         margin-top: 10px;
       }
+
+      /* PERBAIKAN: Menghilangkan statistik total dibutuhkan */
+      .stats-row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .stats-row .col-md-3 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+      }
     </style>
   </head>
   <body>
@@ -566,29 +577,24 @@
 
     <!-- Stats Section -->
     <section class="container my-5">
-      <div class="row g-4">
-        <div class="col-md-3">
+      <div class="row stats-row g-4">
+        <!-- PERBAIKAN: Menghapus statistik total dibutuhkan -->
+        <div class="col-md-4">
           <div class="stats-card">
             <div class="stats-number" id="totalWishlists">0</div>
             <div class="stats-label">Total Wishlist</div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="stats-card">
             <div class="stats-number" id="totalCategories">0</div>
             <div class="stats-label">Total Kategori</div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="stats-card">
             <div class="stats-number" id="totalItems">0</div>
             <div class="stats-label">Total Item</div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="stats-card">
-            <div class="stats-number" id="totalNeeded">Rp 0</div>
-            <div class="stats-label">Total Dibutuhkan</div>
           </div>
         </div>
       </div>
@@ -1149,7 +1155,6 @@
       const totalWishlistsEl = document.getElementById("totalWishlists");
       const totalCategoriesEl = document.getElementById("totalCategories");
       const totalItemsEl = document.getElementById("totalItems");
-      const totalNeededEl = document.getElementById("totalNeeded");
       const currentSavingsEl = document.getElementById("currentSavings");
       const summaryNeededEl = document.getElementById("summaryNeeded");
       const summarySavingsEl = document.getElementById("summarySavings");
@@ -1767,6 +1772,7 @@
         item.achieved = !item.achieved;
         saveToLocalStorage();
         renderWishlists();
+        updateSavingsDisplay();
 
         // Show success message
         if (item.achieved) {
@@ -1821,7 +1827,10 @@
 
             wishlist.categories.forEach((category) => {
               category.items.forEach((item) => {
-                totalPrice += item.price;
+                // PERBAIKAN: Hanya hitung item yang belum tercapai
+                if (!item.achieved) {
+                  totalPrice += item.price;
+                }
                 totalItems++;
                 if (item.achieved) achievedItems++;
               });
@@ -1869,6 +1878,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center">
+                                        <!-- PERBAIKAN: Menampilkan total harga di samping wishlist -->
                                         <span class="me-3 fw-bold">Rp ${totalPrice.toLocaleString(
                                           "id-ID"
                                         )}</span>
@@ -1934,8 +1944,11 @@
 
                                                       category.items.forEach(
                                                         (item) => {
-                                                          categoryTotalPrice +=
-                                                            item.price;
+                                                          // PERBAIKAN: Hanya hitung item yang belum tercapai
+                                                          if (!item.achieved) {
+                                                            categoryTotalPrice +=
+                                                              item.price;
+                                                          }
                                                           categoryTotalItems++;
                                                           if (item.achieved)
                                                             categoryAchievedItems++;
@@ -1991,11 +2004,10 @@
                                                                     }
                                                                 </div>
                                                                 <div class="d-flex align-items-center">
-                                                                    <span class="me-3 text-muted">${
-                                                                      category
-                                                                        .items
-                                                                        .length
-                                                                    } item</span>
+                                                                    <!-- PERBAIKAN: Menampilkan total harga kategori -->
+                                                                    <span class="me-3 fw-bold">Rp ${categoryTotalPrice.toLocaleString(
+                                                                      "id-ID"
+                                                                    )}</span>
                                                                     <i id="item-toggle-icon-${
                                                                       category.id
                                                                     }" class="fas fa-chevron-down"></i>
@@ -2277,32 +2289,29 @@
         const totalWishlists = wishlists.length;
         let totalCategories = 0;
         let totalItems = 0;
-        let totalNeeded = 0;
 
         wishlists.forEach((wishlist) => {
           totalCategories += wishlist.categories.length;
           wishlist.categories.forEach((category) => {
             totalItems += category.items.length;
-            category.items.forEach((item) => {
-              totalNeeded += item.price;
-            });
           });
         });
 
         totalWishlistsEl.textContent = totalWishlists;
         totalCategoriesEl.textContent = totalCategories;
         totalItemsEl.textContent = totalItems;
-        totalNeededEl.textContent = `Rp ${totalNeeded.toLocaleString("id-ID")}`;
       }
 
       // Update savings display
       function updateSavingsDisplay() {
-        // Calculate total needed
+        // Calculate total needed (hanya item yang belum tercapai)
         let totalNeeded = 0;
         wishlists.forEach((wishlist) => {
           wishlist.categories.forEach((category) => {
             category.items.forEach((item) => {
-              totalNeeded += item.price;
+              if (!item.achieved) {
+                totalNeeded += item.price;
+              }
             });
           });
         });
