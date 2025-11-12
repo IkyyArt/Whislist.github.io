@@ -292,6 +292,7 @@
         background: rgba(108, 92, 231, 0.05);
       }
 
+      /* PERBAIKAN: Mengubah categories-container untuk mendukung scroll */
       .categories-container {
         max-height: 0;
         overflow: hidden;
@@ -299,7 +300,8 @@
       }
 
       .categories-container.show {
-        max-height: 1000px;
+        max-height: 500px; /* Tinggi maksimum untuk container kategori */
+        overflow-y: auto; /* Tambahkan scroll vertikal */
       }
 
       /* PERBAIKAN: Mengubah items-container untuk mendukung scroll */
@@ -312,6 +314,29 @@
       .items-container.show {
         max-height: 300px; /* Tinggi tetap untuk container items */
         overflow-y: auto; /* Tambahkan scroll vertikal */
+      }
+
+      /* Styling untuk scrollbar yang lebih baik */
+      .categories-container::-webkit-scrollbar,
+      .items-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .categories-container::-webkit-scrollbar-track,
+      .items-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .categories-container::-webkit-scrollbar-thumb,
+      .items-container::-webkit-scrollbar-thumb {
+        background: var(--secondary);
+        border-radius: 10px;
+      }
+
+      .categories-container::-webkit-scrollbar-thumb:hover,
+      .items-container::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
       }
 
       .confetti {
