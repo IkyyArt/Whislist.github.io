@@ -292,7 +292,6 @@
         background: rgba(108, 92, 231, 0.05);
       }
 
-      /* PERBAIKAN: Mengubah categories-container untuk mendukung scroll */
       .categories-container {
         max-height: 0;
         overflow: hidden;
@@ -300,11 +299,10 @@
       }
 
       .categories-container.show {
-        max-height: 500px; /* Tinggi maksimum untuk container kategori */
-        overflow-y: auto; /* Tambahkan scroll vertikal */
+        max-height: 500px;
+        overflow-y: auto;
       }
 
-      /* PERBAIKAN: Mengubah items-container untuk mendukung scroll */
       .items-container {
         max-height: 0;
         overflow: hidden;
@@ -312,11 +310,10 @@
       }
 
       .items-container.show {
-        max-height: 300px; /* Tinggi tetap untuk container items */
-        overflow-y: auto; /* Tambahkan scroll vertikal */
+        max-height: 300px;
+        overflow-y: auto;
       }
 
-      /* Styling untuk scrollbar yang lebih baik */
       .categories-container::-webkit-scrollbar,
       .items-container::-webkit-scrollbar {
         width: 6px;
@@ -517,7 +514,6 @@
         margin-top: 10px;
       }
 
-      /* PERBAIKAN: Menghilangkan statistik total dibutuhkan */
       .stats-row {
         display: flex;
         justify-content: space-between;
@@ -526,6 +522,106 @@
       .stats-row .col-md-3 {
         flex: 0 0 33.333333%;
         max-width: 33.333333%;
+      }
+
+      /* Gaya untuk foto item */
+      .item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+        border: 2px solid var(--secondary);
+        transition: all 0.3s ease;
+      }
+
+      .item-image:hover {
+        transform: scale(1.1);
+        border-color: var(--primary);
+      }
+
+      .item-image-placeholder {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        border-radius: 8px;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        border: 2px dashed var(--secondary);
+      }
+
+      .image-upload-container {
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        margin-bottom: 15px;
+      }
+
+      .image-upload-container:hover {
+        border-color: var(--primary);
+        background: rgba(108, 92, 231, 0.05);
+      }
+
+      .image-upload-container.dragover {
+        border-color: var(--primary);
+        background: rgba(108, 92, 231, 0.1);
+      }
+
+      .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 10px;
+        margin: 10px auto;
+        display: block;
+        border: 2px solid var(--secondary);
+      }
+
+      .purchased-image {
+        max-width: 150px;
+        max-height: 150px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border: 3px solid var(--success);
+        box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+      }
+
+      .photo-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .photo-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .photo-thumbnail:hover {
+        transform: scale(1.1);
+        border-color: var(--primary);
+      }
+
+      .photo-modal .modal-body {
+        text-align: center;
+      }
+
+      .photo-modal img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 10px;
       }
     </style>
   </head>
@@ -578,7 +674,6 @@
     <!-- Stats Section -->
     <section class="container my-5">
       <div class="row stats-row g-4">
-        <!-- PERBAIKAN: Menghapus statistik total dibutuhkan -->
         <div class="col-md-4">
           <div class="stats-card">
             <div class="stats-number" id="totalWishlists">0</div>
@@ -942,6 +1037,26 @@
                   required
                 />
               </div>
+
+              <!-- Upload Foto Item -->
+              <div class="mb-3">
+                <label class="form-label">Foto Item (Opsional)</label>
+                <div class="image-upload-container" id="imageUploadContainer">
+                  <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
+                  <p class="mb-2">Klik atau drag & drop untuk upload foto</p>
+                  <small class="text-muted"
+                    >Format: JPG, PNG, GIF (Max 2MB)</small
+                  >
+                  <input
+                    type="file"
+                    id="itemImage"
+                    accept="image/*"
+                    class="d-none"
+                  />
+                </div>
+                <div id="imagePreview" class="text-center"></div>
+              </div>
+
               <div class="mb-3">
                 <label for="itemTiktokLink" class="form-label"
                   >Link TikTok (Opsional)</label
@@ -1126,6 +1241,25 @@
       </div>
     </div>
 
+    <!-- Photo Modal -->
+    <div class="modal fade photo-modal" id="photoModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Foto Item</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <img id="modalPhoto" src="" alt="Foto Item" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Data storage
@@ -1162,6 +1296,13 @@
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
 
+      // Image upload elements
+      const imageUploadContainer = document.getElementById(
+        "imageUploadContainer"
+      );
+      const itemImageInput = document.getElementById("itemImage");
+      const imagePreview = document.getElementById("imagePreview");
+
       // Initialize the app
       document.addEventListener("DOMContentLoaded", function () {
         renderWishlists();
@@ -1169,6 +1310,7 @@
         updateSavingsDisplay();
         renderTransactions();
         setupEventListeners();
+        setupImageUpload();
       });
 
       // Setup event listeners
@@ -1196,6 +1338,68 @@
             filterWishlists(filter);
           });
         });
+      }
+
+      // Setup image upload functionality
+      function setupImageUpload() {
+        // Click to upload
+        imageUploadContainer.addEventListener("click", function () {
+          itemImageInput.click();
+        });
+
+        // File selection
+        itemImageInput.addEventListener("change", function (e) {
+          handleImageUpload(e.target.files[0]);
+        });
+
+        // Drag and drop
+        imageUploadContainer.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          this.classList.add("dragover");
+        });
+
+        imageUploadContainer.addEventListener("dragleave", function (e) {
+          e.preventDefault();
+          this.classList.remove("dragover");
+        });
+
+        imageUploadContainer.addEventListener("drop", function (e) {
+          e.preventDefault();
+          this.classList.remove("dragover");
+          if (e.dataTransfer.files.length) {
+            handleImageUpload(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      // Handle image upload
+      function handleImageUpload(file) {
+        if (!file || !file.type.startsWith("image/")) {
+          alert("Silakan pilih file gambar yang valid!");
+          return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Ukuran file maksimal 2MB!");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imagePreview.innerHTML = `
+            <img src="${e.target.result}" class="image-preview" alt="Preview">
+            <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
+              <i class="fas fa-times me-1"></i>Hapus Foto
+            </button>
+          `;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Clear image preview
+      function clearImagePreview() {
+        imagePreview.innerHTML = "";
+        itemImageInput.value = "";
       }
 
       // Add a new wishlist
@@ -1313,14 +1517,23 @@
         const category = wishlist.categories.find((c) => c.id === categoryId);
         if (!category) return;
 
+        // Get image data if available
+        let imageData = null;
+        const previewImg = imagePreview.querySelector("img");
+        if (previewImg) {
+          imageData = previewImg.src;
+        }
+
         const newItem = {
           id: Date.now(),
           name,
           price,
+          image: imageData,
           tiktokLink,
           shopeeLink,
           description,
           achieved: false,
+          purchasedPhotos: [], // Array untuk foto barang yang sudah dibeli
         };
 
         category.items.push(newItem);
@@ -1338,6 +1551,7 @@
 
         // Reset form
         addItemForm.reset();
+        clearImagePreview();
         const addItemModal = bootstrap.Modal.getInstance(
           document.getElementById("addItemModal")
         );
@@ -1667,6 +1881,19 @@
         }" min="1" required>
             </div>
             <div class="mb-3">
+              <label class="form-label">Foto Item</label>
+              <div class="image-upload-container" onclick="document.getElementById('edit-item-image-${itemId}').click()">
+                <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
+                <p class="mb-2">Klik untuk ganti foto</p>
+                <input type="file" id="edit-item-image-${itemId}" accept="image/*" class="d-none" onchange="handleEditImageUpload(${wishlistId}, ${categoryId}, ${itemId}, this.files[0])" />
+              </div>
+              ${
+                item.image
+                  ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
+                  : ""
+              }
+            </div>
+            <div class="mb-3">
               <label class="form-label">Link TikTok</label>
               <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
           item.tiktokLink || ""
@@ -1694,8 +1921,31 @@
             </div>
           </div>
         `;
+      }
 
-        document.getElementById(`edit-item-name-${itemId}`).focus();
+      // Handle edit image upload
+      function handleEditImageUpload(wishlistId, categoryId, itemId, file) {
+        if (!file || !file.type.startsWith("image/")) {
+          alert("Silakan pilih file gambar yang valid!");
+          return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Ukuran file maksimal 2MB!");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const wishlist = wishlists.find((w) => w.id === wishlistId);
+          const category = wishlist.categories.find((c) => c.id === categoryId);
+          const item = category.items.find((i) => i.id === itemId);
+
+          item.image = e.target.result;
+          saveToLocalStorage();
+          renderWishlists();
+        };
+        reader.readAsDataURL(file);
       }
 
       // Save item changes
@@ -1789,13 +2039,58 @@
         }
       }
 
+      // Upload purchased photo
+      function uploadPurchasedPhoto(wishlistId, categoryId, itemId) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.onchange = function (e) {
+          const file = e.target.files[0];
+          if (!file || !file.type.startsWith("image/")) {
+            alert("Silakan pilih file gambar yang valid!");
+            return;
+          }
+
+          if (file.size > 2 * 1024 * 1024) {
+            alert("Ukuran file maksimal 2MB!");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const wishlist = wishlists.find((w) => w.id === wishlistId);
+            const category = wishlist.categories.find(
+              (c) => c.id === categoryId
+            );
+            const item = category.items.find((i) => i.id === itemId);
+
+            if (!item.purchasedPhotos) {
+              item.purchasedPhotos = [];
+            }
+            item.purchasedPhotos.push(e.target.result);
+            saveToLocalStorage();
+            renderWishlists();
+          };
+          reader.readAsDataURL(file);
+        };
+        input.click();
+      }
+
+      // View photo in modal
+      function viewPhoto(photoSrc) {
+        document.getElementById("modalPhoto").src = photoSrc;
+        const photoModal = new bootstrap.Modal(
+          document.getElementById("photoModal")
+        );
+        photoModal.show();
+      }
+
       // Render wishlists
       function renderWishlists(filter = "all") {
         let filteredWishlists = wishlists;
 
         if (filter === "completed") {
           filteredWishlists = wishlists.filter((w) => {
-            // A wishlist is completed if all items in all categories are achieved
             return (
               w.categories.length > 0 &&
               w.categories.every(
@@ -1805,7 +2100,6 @@
           });
         } else if (filter === "in-progress") {
           filteredWishlists = wishlists.filter((w) => {
-            // A wishlist is in progress if it has at least one item that's not achieved
             return w.categories.some((c) => c.items.some((i) => !i.achieved));
           });
         }
@@ -1827,7 +2121,6 @@
 
             wishlist.categories.forEach((category) => {
               category.items.forEach((item) => {
-                // PERBAIKAN: Hanya hitung item yang belum tercapai
                 if (!item.achieved) {
                   totalPrice += item.price;
                 }
@@ -1878,7 +2171,6 @@
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center">
-                                        <!-- PERBAIKAN: Menampilkan total harga di samping wishlist -->
                                         <span class="me-3 fw-bold">Rp ${totalPrice.toLocaleString(
                                           "id-ID"
                                         )}</span>
@@ -1937,14 +2229,12 @@
                                               wishlist.categories.length > 0
                                                 ? wishlist.categories
                                                     .map((category) => {
-                                                      // Calculate totals for this category
                                                       let categoryTotalPrice = 0;
                                                       let categoryTotalItems = 0;
                                                       let categoryAchievedItems = 0;
 
                                                       category.items.forEach(
                                                         (item) => {
-                                                          // PERBAIKAN: Hanya hitung item yang belum tercapai
                                                           if (!item.achieved) {
                                                             categoryTotalPrice +=
                                                               item.price;
@@ -2004,7 +2294,6 @@
                                                                     }
                                                                 </div>
                                                                 <div class="d-flex align-items-center">
-                                                                    <!-- PERBAIKAN: Menampilkan total harga kategori -->
                                                                     <span class="me-3 fw-bold">Rp ${categoryTotalPrice.toLocaleString(
                                                                       "id-ID"
                                                                     )}</span>
@@ -2076,11 +2365,44 @@
                                                                                         100
                                                                                       )
                                                                                     : 0;
+
+                                                                                // Photo gallery for purchased items
+                                                                                const photoGallery =
+                                                                                  item.achieved &&
+                                                                                  item.purchasedPhotos &&
+                                                                                  item
+                                                                                    .purchasedPhotos
+                                                                                    .length >
+                                                                                    0
+                                                                                    ? `
+                                                                                  <div class="photo-gallery">
+                                                                                    ${item.purchasedPhotos
+                                                                                      .map(
+                                                                                        (
+                                                                                          photo
+                                                                                        ) => `
+                                                                                      <img src="${photo}" class="photo-thumbnail" onclick="viewPhoto('${photo}')" alt="Foto Barang">
+                                                                                    `
+                                                                                      )
+                                                                                      .join(
+                                                                                        ""
+                                                                                      )}
+                                                                                  </div>
+                                                                                `
+                                                                                    : "";
+
                                                                                 return `
                                                                                 <div class="item-row hierarchy-indent-2" id="item-${
                                                                                   item.id
                                                                                 }">
-                                                                                    <div class="d-flex align-items-center">
+                                                                                    <div class="d-flex align-items-start">
+                                                                                        <div class="me-3">
+                                                                                            ${
+                                                                                              item.image
+                                                                                                ? `<img src="${item.image}" class="item-image" onclick="viewPhoto('${item.image}')" alt="${item.name}">`
+                                                                                                : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
+                                                                                            }
+                                                                                        </div>
                                                                                         <div class="flex-grow-1">
                                                                                             <div class="d-flex justify-content-between align-items-center">
                                                                                                 <h6 class="mb-1">${
@@ -2154,6 +2476,18 @@
                                                                                             ${
                                                                                               item.description
                                                                                                 ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
+                                                                                                : ""
+                                                                                            }
+                                                                                            ${
+                                                                                              item.achieved
+                                                                                                ? `
+                                                                                                <div class="mt-2">
+                                                                                                    <button class="btn btn-sm btn-outline-primary" onclick="uploadPurchasedPhoto(${wishlist.id}, ${category.id}, ${item.id})">
+                                                                                                        <i class="fas fa-camera me-1"></i>Upload Foto Barang
+                                                                                                    </button>
+                                                                                                    ${photoGallery}
+                                                                                                </div>
+                                                                                                `
                                                                                                 : ""
                                                                                             }
                                                                                         </div>
@@ -2304,7 +2638,6 @@
 
       // Update savings display
       function updateSavingsDisplay() {
-        // Calculate total needed (hanya item yang belum tercapai)
         let totalNeeded = 0;
         wishlists.forEach((wishlist) => {
           wishlist.categories.forEach((category) => {
@@ -2316,10 +2649,7 @@
           });
         });
 
-        // Update savings display
         currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
-
-        // Update summary
         summaryNeededEl.textContent = `Rp ${totalNeeded.toLocaleString(
           "id-ID"
         )}`;
@@ -2361,7 +2691,6 @@
 
           document.body.appendChild(confetti);
 
-          // Remove confetti after animation
           setTimeout(() => {
             confetti.remove();
           }, 5000);
