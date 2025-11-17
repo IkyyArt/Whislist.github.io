@@ -997,6 +997,27 @@
                   placeholder="Deskripsi tentang kategori ini..."
                 ></textarea>
               </div>
+              <!-- Upload Foto Kategori -->
+              <div class="mb-3">
+                <label class="form-label">Foto Kategori (Opsional)</label>
+                <div
+                  class="image-upload-container"
+                  id="categoryImageUploadContainer"
+                >
+                  <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
+                  <p class="mb-2">Klik atau drag & drop untuk upload foto</p>
+                  <small class="text-muted"
+                    >Format: JPG, PNG, GIF (Max 2MB)</small
+                  >
+                  <input
+                    type="file"
+                    id="categoryImage"
+                    accept="image/*"
+                    class="d-none"
+                  />
+                </div>
+                <div id="categoryImagePreview" class="text-center"></div>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -1375,6 +1396,15 @@
       const itemImageInput = document.getElementById("itemImage");
       const imagePreview = document.getElementById("imagePreview");
 
+      // Category image upload elements
+      const categoryImageUploadContainer = document.getElementById(
+        "categoryImageUploadContainer"
+      );
+      const categoryImageInput = document.getElementById("categoryImage");
+      const categoryImagePreview = document.getElementById(
+        "categoryImagePreview"
+      );
+
       // Initialize the app
       document.addEventListener("DOMContentLoaded", function () {
         renderWishlists();
@@ -1383,6 +1413,7 @@
         renderTransactions();
         setupEventListeners();
         setupImageUpload();
+        setupCategoryImageUpload();
       });
 
       // Setup event listeners
@@ -1444,6 +1475,41 @@
         });
       }
 
+      // Setup category image upload functionality
+      function setupCategoryImageUpload() {
+        // Click to upload
+        categoryImageUploadContainer.addEventListener("click", function () {
+          categoryImageInput.click();
+        });
+
+        // File selection
+        categoryImageInput.addEventListener("change", function (e) {
+          handleCategoryImageUpload(e.target.files[0]);
+        });
+
+        // Drag and drop
+        categoryImageUploadContainer.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          this.classList.add("dragover");
+        });
+
+        categoryImageUploadContainer.addEventListener(
+          "dragleave",
+          function (e) {
+            e.preventDefault();
+            this.classList.remove("dragover");
+          }
+        );
+
+        categoryImageUploadContainer.addEventListener("drop", function (e) {
+          e.preventDefault();
+          this.classList.remove("dragover");
+          if (e.dataTransfer.files.length) {
+            handleCategoryImageUpload(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
       // Handle image upload
       function handleImageUpload(file) {
         if (!file || !file.type.startsWith("image/")) {
@@ -1468,10 +1534,40 @@
         reader.readAsDataURL(file);
       }
 
+      // Handle category image upload
+      function handleCategoryImageUpload(file) {
+        if (!file || !file.type.startsWith("image/")) {
+          alert("Silakan pilih file gambar yang valid!");
+          return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Ukuran file maksimal 2MB!");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          categoryImagePreview.innerHTML = `
+                    <img src="${e.target.result}" class="image-preview" alt="Preview">
+                    <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearCategoryImagePreview()">
+                        <i class="fas fa-times me-1"></i>Hapus Foto
+                    </button>
+                `;
+        };
+        reader.readAsDataURL(file);
+      }
+
       // Clear image preview
       function clearImagePreview() {
         imagePreview.innerHTML = "";
         itemImageInput.value = "";
+      }
+
+      // Clear category image preview
+      function clearCategoryImagePreview() {
+        categoryImagePreview.innerHTML = "";
+        categoryImageInput.value = "";
       }
 
       // Add a new wishlist
@@ -1536,10 +1632,18 @@
         const wishlist = wishlists.find((w) => w.id === wishlistId);
         if (!wishlist) return;
 
+        // Get image data if available
+        let imageData = null;
+        const previewImg = categoryImagePreview.querySelector("img");
+        if (previewImg) {
+          imageData = previewImg.src;
+        }
+
         const newCategory = {
           id: Date.now(),
           name,
           description,
+          image: imageData,
           items: [],
           photos: [], // Array untuk foto-foto kategori
         };
@@ -1559,6 +1663,7 @@
 
         // Reset form
         addCategoryForm.reset();
+        clearCategoryImagePreview();
         const addCategoryModal = bootstrap.Modal.getInstance(
           document.getElementById("addCategoryModal")
         );
@@ -2490,29 +2595,41 @@
                                             <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
                                               category.id
                                             })">
-                                                <div>
-                                                    <h5 class="mb-1">
-                                                        <span id="category-title-${
-                                                          category.id
-                                                        }">
-                                                            ${category.name}
-                                                            <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
-                                                              wishlist.id
-                                                            }, ${category.id})">
-                                                                <i class="fas fa-edit"></i>
-                                                            </button>
-                                                        </span>
+                                                <div class="d-flex align-items-center">
+                                                    <!-- Gambar kategori -->
+                                                    <div class="me-3">
                                                         ${
-                                                          categoryCompleted
-                                                            ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                                          category.image
+                                                            ? `<img src="${category.image}" class="item-image" onclick="viewPhoto('${category.image}')" alt="${category.name}">`
+                                                            : `<div class="item-image-placeholder"><i class="fas fa-folder"></i></div>`
+                                                        }
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="mb-1">
+                                                            <span id="category-title-${
+                                                              category.id
+                                                            }">
+                                                                ${category.name}
+                                                                <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
+                                                                  wishlist.id
+                                                                }, ${
+                                            category.id
+                                          })">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                            </span>
+                                                            ${
+                                                              categoryCompleted
+                                                                ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                                                : ""
+                                                            }
+                                                        </h5>
+                                                        ${
+                                                          category.description
+                                                            ? `<small class="text-muted">${category.description}</small>`
                                                             : ""
                                                         }
-                                                    </h5>
-                                                    ${
-                                                      category.description
-                                                        ? `<small class="text-muted">${category.description}</small>`
-                                                        : ""
-                                                    }
+                                                    </div>
                                                 </div>
                                                 <div class="d-flex align-items-center">
                                                     <span class="fw-bold">Rp ${categoryTotalPrice.toLocaleString(
