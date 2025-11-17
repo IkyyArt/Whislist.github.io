@@ -451,6 +451,53 @@
         border-color: var(--primary);
       }
 
+      /* Category Gallery */
+      .category-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+
+      .category-photo-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .category-photo-thumbnail:hover {
+        transform: scale(1.1);
+        border-color: var(--primary);
+      }
+
+      /* Modal galeri kategori */
+      .gallery-modal .carousel-item img {
+        max-height: 70vh;
+        object-fit: contain;
+        margin: 0 auto;
+      }
+
+      .gallery-modal .carousel-control-prev,
+      .gallery-modal .carousel-control-next {
+        width: 5%;
+        opacity: 0.8;
+      }
+
+      .gallery-modal .carousel-indicators {
+        bottom: -50px;
+      }
+
+      .gallery-modal .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 0 5px;
+      }
+
       /* Transaction History Mobile */
       .transaction-history {
         max-height: 300px;
@@ -549,6 +596,29 @@
       .badge {
         font-size: 0.7rem;
         padding: 0.25rem 0.5rem;
+      }
+
+      /* Confetti */
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: var(--primary);
+        top: -10px;
+        border-radius: 50%;
+        animation: confetti-fall 5s linear forwards;
+        z-index: 10000;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
       }
     </style>
   </head>
@@ -1204,6 +1274,64 @@
       </div>
     </div>
 
+    <!-- Category Gallery Modal -->
+    <div
+      class="modal fade gallery-modal"
+      id="categoryGalleryModal"
+      tabindex="-1"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Galeri Foto Kategori</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div
+              id="categoryCarousel"
+              class="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-indicators" id="categoryCarouselIndicators">
+                <!-- Indicators akan diisi secara dinamis -->
+              </div>
+              <div class="carousel-inner" id="categoryCarouselInner">
+                <!-- Items akan diisi secara dinamis -->
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#categoryCarousel"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#categoryCarousel"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Data storage
@@ -1413,6 +1541,7 @@
           name,
           description,
           items: [],
+          photos: [], // Array untuk foto-foto kategori
         };
 
         wishlist.categories.push(newCategory);
@@ -1799,6 +1928,129 @@
                     <i class="fas fa-edit"></i>
                 </button>
             `;
+      }
+
+      // Upload photo untuk kategori
+      function uploadCategoryPhoto(wishlistId, categoryId) {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.multiple = true; // Mengizinkan multiple selection
+        input.onchange = function (e) {
+          const files = e.target.files;
+          if (!files || files.length === 0) return;
+
+          let uploadedCount = 0;
+
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!file.type.startsWith("image/")) {
+              alert("Silakan pilih file gambar yang valid!");
+              continue;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+              alert("Ukuran file maksimal 2MB!");
+              continue;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const wishlist = wishlists.find((w) => w.id === wishlistId);
+              const category = wishlist.categories.find(
+                (c) => c.id === categoryId
+              );
+
+              if (!category.photos) {
+                category.photos = [];
+              }
+
+              category.photos.push(e.target.result);
+              uploadedCount++;
+
+              // Jika semua file telah diproses, simpan dan render ulang
+              if (uploadedCount === files.length) {
+                saveToLocalStorage();
+                renderWishlists();
+
+                // Show success message
+                document.getElementById(
+                  "successMessage"
+                ).textContent = `${uploadedCount} foto berhasil ditambahkan ke kategori!`;
+                const successModal = new bootstrap.Modal(
+                  document.getElementById("successModal")
+                );
+                successModal.show();
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        input.click();
+      }
+
+      // Delete photo dari kategori
+      function deleteCategoryPhoto(wishlistId, categoryId, photoIndex) {
+        if (confirm("Apakah Anda yakin ingin menghapus foto ini?")) {
+          const wishlist = wishlists.find((w) => w.id === wishlistId);
+          const category = wishlist.categories.find((c) => c.id === categoryId);
+
+          if (category && category.photos) {
+            category.photos.splice(photoIndex, 1);
+            saveToLocalStorage();
+            renderWishlists();
+          }
+        }
+      }
+
+      // View category photo gallery
+      function viewCategoryGallery(wishlistId, categoryId, startIndex = 0) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (!category || !category.photos || category.photos.length === 0) {
+          return;
+        }
+
+        const carouselInner = document.getElementById("categoryCarouselInner");
+        const carouselIndicators = document.getElementById(
+          "categoryCarouselIndicators"
+        );
+
+        // Kosongkan konten sebelumnya
+        carouselInner.innerHTML = "";
+        carouselIndicators.innerHTML = "";
+
+        // Tambahkan foto ke carousel
+        category.photos.forEach((photo, index) => {
+          const isActive = index === startIndex;
+
+          // Tambahkan indicator
+          const indicator = document.createElement("button");
+          indicator.type = "button";
+          indicator.setAttribute("data-bs-target", "#categoryCarousel");
+          indicator.setAttribute("data-bs-slide-to", index);
+          indicator.className = isActive ? "active" : "";
+          indicator.setAttribute("aria-current", isActive ? "true" : "false");
+          indicator.setAttribute("aria-label", `Slide ${index + 1}`);
+          carouselIndicators.appendChild(indicator);
+
+          // Tambahkan item carousel
+          const carouselItem = document.createElement("div");
+          carouselItem.className = `carousel-item ${isActive ? "active" : ""}`;
+          carouselItem.innerHTML = `
+            <img src="${photo}" class="d-block w-100" alt="Foto kategori ${
+            index + 1
+          }">
+          `;
+          carouselInner.appendChild(carouselItem);
+        });
+
+        // Tampilkan modal
+        const galleryModal = new bootstrap.Modal(
+          document.getElementById("categoryGalleryModal")
+        );
+        galleryModal.show();
       }
 
       // Edit item
@@ -2197,6 +2449,42 @@
                                             categoryAchievedItems ===
                                               categoryTotalItems;
 
+                                          // Galeri foto untuk kategori
+                                          const categoryGallery =
+                                            category.photos &&
+                                            category.photos.length > 0
+                                              ? `
+                                              <div class="category-gallery mb-2">
+                                                ${category.photos
+                                                  .map(
+                                                    (photo, index) => `
+                                                  <div class="position-relative d-inline-block">
+                                                    <img src="${photo}" class="category-photo-thumbnail" 
+                                                         onclick="viewCategoryGallery(${
+                                                           wishlist.id
+                                                         }, ${
+                                                      category.id
+                                                    }, ${index})" 
+                                                         alt="Foto kategori ${
+                                                           index + 1
+                                                         }">
+                                                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
+                                                            style="width: 20px; height: 20px; font-size: 0.7rem;"
+                                                            onclick="event.stopPropagation(); deleteCategoryPhoto(${
+                                                              wishlist.id
+                                                            }, ${
+                                                      category.id
+                                                    }, ${index})">
+                                                      <i class="fas fa-times"></i>
+                                                    </button>
+                                                  </div>
+                                                `
+                                                  )
+                                                  .join("")}
+                                              </div>
+                                            `
+                                              : "";
+
                                           return `
                                         <div class="category-item mb-3 p-3 border rounded">
                                             <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
@@ -2236,6 +2524,8 @@
                                                 </div>
                                             </div>
                                             
+                                            ${categoryGallery}
+                                            
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <div class="flex-grow-1 me-3">
                                                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -2261,6 +2551,11 @@
                                                       wishlist.id
                                                     }, ${category.id})">
                                                         <i class="fas fa-plus me-1"></i>Item
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="uploadCategoryPhoto(${
+                                                      wishlist.id
+                                                    }, ${category.id})">
+                                                        <i class="fas fa-camera me-1"></i>Foto
                                                     </button>
                                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${
                                                       wishlist.id
