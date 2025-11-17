@@ -620,6 +620,37 @@
           opacity: 0;
         }
       }
+
+      /* Cover Photo Indicator */
+      .cover-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: var(--success);
+        color: white;
+        font-size: 0.6rem;
+        padding: 2px 4px;
+        border-radius: 4px 0 4px 0;
+        z-index: 1;
+      }
+
+      .photo-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* Category Photo Management */
+      .category-photo-management {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .category-photo-management h6 {
+        margin-bottom: 0.75rem;
+        color: var(--dark);
+      }
     </style>
   </head>
   <body>
@@ -1353,12 +1384,60 @@
       </div>
     </div>
 
+    <!-- Category Photo Management Modal -->
+    <div class="modal fade" id="categoryPhotoManagementModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Kelola Foto Kategori</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="category-photo-management">
+              <h6>Foto Kategori</h6>
+              <div class="mb-3">
+                <button
+                  class="btn btn-primary btn-sm"
+                  onclick="uploadCategoryPhotos()"
+                >
+                  <i class="fas fa-plus me-1"></i>Tambah Foto
+                </button>
+              </div>
+              <div id="categoryPhotosContainer" class="category-gallery">
+                <!-- Foto kategori akan ditampilkan di sini -->
+              </div>
+              <div class="mt-3">
+                <small class="text-muted"
+                  >Foto pertama akan menjadi foto cover. Drag & drop untuk
+                  mengubah urutan foto.</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Data storage
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+      let currentCategoryForPhotoManagement = null;
 
       // DOM Elements
       const wishlistsContainer = document.getElementById("wishlistsContainer");
@@ -1388,6 +1467,9 @@
       const summaryRemainingEl = document.getElementById("summaryRemaining");
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
+      const categoryPhotosContainer = document.getElementById(
+        "categoryPhotosContainer"
+      );
 
       // Image upload elements
       const imageUploadContainer = document.getElementById(
@@ -1645,7 +1727,7 @@
           description,
           image: imageData,
           items: [],
-          photos: [], // Array untuk foto-foto kategori
+          photos: imageData ? [imageData] : [], // Array untuk foto-foto kategori
         };
 
         wishlist.categories.push(newCategory);
@@ -1711,7 +1793,6 @@
           shopeeLink,
           description,
           achieved: false,
-          purchasedPhotos: [], // Array untuk foto barang yang sudah dibeli
         };
 
         category.items.push(newItem);
@@ -2035,12 +2116,126 @@
             `;
       }
 
-      // Upload photo untuk kategori
-      function uploadCategoryPhoto(wishlistId, categoryId) {
+      // Open category photo management modal
+      function openCategoryPhotoManagement(wishlistId, categoryId) {
+        currentCategoryForPhotoManagement = { wishlistId, categoryId };
+        renderCategoryPhotos();
+        const modal = new bootstrap.Modal(
+          document.getElementById("categoryPhotoManagementModal")
+        );
+        modal.show();
+      }
+
+      // Render category photos in management modal
+      function renderCategoryPhotos() {
+        if (!currentCategoryForPhotoManagement) return;
+
+        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (!category) return;
+
+        categoryPhotosContainer.innerHTML = "";
+
+        if (category.photos && category.photos.length > 0) {
+          category.photos.forEach((photo, index) => {
+            const photoContainer = document.createElement("div");
+            photoContainer.className = "photo-container";
+            photoContainer.draggable = true;
+            photoContainer.setAttribute("data-index", index);
+
+            photoContainer.innerHTML = `
+              <div class="position-relative">
+                <img src="${photo}" class="category-photo-thumbnail" alt="Foto kategori ${
+              index + 1
+            }">
+                ${index === 0 ? '<span class="cover-badge">Cover</span>' : ""}
+                <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
+                        style="width: 20px; height: 20px; font-size: 0.7rem;"
+                        onclick="deleteCategoryPhoto(${index})">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            `;
+
+            // Add drag and drop functionality
+            photoContainer.addEventListener("dragstart", handleDragStart);
+            photoContainer.addEventListener("dragover", handleDragOver);
+            photoContainer.addEventListener("drop", handleDrop);
+            photoContainer.addEventListener("dragend", handleDragEnd);
+
+            categoryPhotosContainer.appendChild(photoContainer);
+          });
+        } else {
+          categoryPhotosContainer.innerHTML = `
+            <div class="text-center text-muted py-3">
+              <i class="fas fa-images fa-2x mb-2"></i>
+              <p>Belum ada foto untuk kategori ini</p>
+            </div>
+          `;
+        }
+      }
+
+      // Drag and drop handlers for photo reordering
+      let draggedItem = null;
+
+      function handleDragStart(e) {
+        draggedItem = this;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", this.innerHTML);
+        this.classList.add("dragging");
+      }
+
+      function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        this.classList.add("drag-over");
+      }
+
+      function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove("drag-over");
+
+        if (draggedItem !== this) {
+          const fromIndex = parseInt(draggedItem.getAttribute("data-index"));
+          const toIndex = parseInt(this.getAttribute("data-index"));
+
+          reorderCategoryPhotos(fromIndex, toIndex);
+        }
+      }
+
+      function handleDragEnd() {
+        this.classList.remove("dragging");
+        document.querySelectorAll(".photo-container").forEach((item) => {
+          item.classList.remove("drag-over");
+        });
+      }
+
+      // Reorder category photos
+      function reorderCategoryPhotos(fromIndex, toIndex) {
+        if (!currentCategoryForPhotoManagement) return;
+
+        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (!category || !category.photos) return;
+
+        const [movedPhoto] = category.photos.splice(fromIndex, 1);
+        category.photos.splice(toIndex, 0, movedPhoto);
+
+        saveToLocalStorage();
+        renderCategoryPhotos();
+        renderWishlists(); // Update the main view to reflect changes
+      }
+
+      // Upload category photos
+      function uploadCategoryPhotos() {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-        input.multiple = true; // Mengizinkan multiple selection
+        input.multiple = true;
         input.onchange = function (e) {
           const files = e.target.files;
           if (!files || files.length === 0) return;
@@ -2061,6 +2256,8 @@
 
             const reader = new FileReader();
             reader.onload = function (e) {
+              const { wishlistId, categoryId } =
+                currentCategoryForPhotoManagement;
               const wishlist = wishlists.find((w) => w.id === wishlistId);
               const category = wishlist.categories.find(
                 (c) => c.id === categoryId
@@ -2076,6 +2273,7 @@
               // Jika semua file telah diproses, simpan dan render ulang
               if (uploadedCount === files.length) {
                 saveToLocalStorage();
+                renderCategoryPhotos();
                 renderWishlists();
 
                 // Show success message
@@ -2095,14 +2293,18 @@
       }
 
       // Delete photo dari kategori
-      function deleteCategoryPhoto(wishlistId, categoryId, photoIndex) {
+      function deleteCategoryPhoto(photoIndex) {
         if (confirm("Apakah Anda yakin ingin menghapus foto ini?")) {
+          if (!currentCategoryForPhotoManagement) return;
+
+          const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
           const wishlist = wishlists.find((w) => w.id === wishlistId);
           const category = wishlist.categories.find((c) => c.id === categoryId);
 
           if (category && category.photos) {
             category.photos.splice(photoIndex, 1);
             saveToLocalStorage();
+            renderCategoryPhotos();
             renderWishlists();
           }
         }
@@ -2344,43 +2546,6 @@
         }
       }
 
-      // Upload purchased photo
-      function uploadPurchasedPhoto(wishlistId, categoryId, itemId) {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        input.onchange = function (e) {
-          const file = e.target.files[0];
-          if (!file || !file.type.startsWith("image/")) {
-            alert("Silakan pilih file gambar yang valid!");
-            return;
-          }
-
-          if (file.size > 2 * 1024 * 1024) {
-            alert("Ukuran file maksimal 2MB!");
-            return;
-          }
-
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            const wishlist = wishlists.find((w) => w.id === wishlistId);
-            const category = wishlist.categories.find(
-              (c) => c.id === categoryId
-            );
-            const item = category.items.find((i) => i.id === itemId);
-
-            if (!item.purchasedPhotos) {
-              item.purchasedPhotos = [];
-            }
-            item.purchasedPhotos.push(e.target.result);
-            saveToLocalStorage();
-            renderWishlists();
-          };
-          reader.readAsDataURL(file);
-        };
-        input.click();
-      }
-
       // View photo in modal
       function viewPhoto(photoSrc) {
         document.getElementById("modalPhoto").src = photoSrc;
@@ -2554,41 +2719,12 @@
                                             categoryAchievedItems ===
                                               categoryTotalItems;
 
-                                          // Galeri foto untuk kategori
-                                          const categoryGallery =
+                                          // Galeri foto untuk kategori - hanya tampilkan foto pertama sebagai cover
+                                          const categoryCoverPhoto =
                                             category.photos &&
                                             category.photos.length > 0
-                                              ? `
-                                              <div class="category-gallery mb-2">
-                                                ${category.photos
-                                                  .map(
-                                                    (photo, index) => `
-                                                  <div class="position-relative d-inline-block">
-                                                    <img src="${photo}" class="category-photo-thumbnail" 
-                                                         onclick="viewCategoryGallery(${
-                                                           wishlist.id
-                                                         }, ${
-                                                      category.id
-                                                    }, ${index})" 
-                                                         alt="Foto kategori ${
-                                                           index + 1
-                                                         }">
-                                                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
-                                                            style="width: 20px; height: 20px; font-size: 0.7rem;"
-                                                            onclick="event.stopPropagation(); deleteCategoryPhoto(${
-                                                              wishlist.id
-                                                            }, ${
-                                                      category.id
-                                                    }, ${index})">
-                                                      <i class="fas fa-times"></i>
-                                                    </button>
-                                                  </div>
-                                                `
-                                                  )
-                                                  .join("")}
-                                              </div>
-                                            `
-                                              : "";
+                                              ? category.photos[0]
+                                              : null;
 
                                           return `
                                         <div class="category-item mb-3 p-3 border rounded">
@@ -2599,8 +2735,24 @@
                                                     <!-- Gambar kategori -->
                                                     <div class="me-3">
                                                         ${
-                                                          category.image
-                                                            ? `<img src="${category.image}" class="item-image" onclick="viewPhoto('${category.image}')" alt="${category.name}">`
+                                                          categoryCoverPhoto
+                                                            ? `<div class="position-relative">
+                                                                <img src="${categoryCoverPhoto}" class="item-image" onclick="viewPhoto('${categoryCoverPhoto}')" alt="${
+                                                                category.name
+                                                              }">
+                                                                ${
+                                                                  category
+                                                                    .photos
+                                                                    .length > 1
+                                                                    ? `<span class="badge bg-primary position-absolute top-0 end-0">+${
+                                                                        category
+                                                                          .photos
+                                                                          .length -
+                                                                        1
+                                                                      }</span>`
+                                                                    : ""
+                                                                }
+                                                              </div>`
                                                             : `<div class="item-image-placeholder"><i class="fas fa-folder"></i></div>`
                                                         }
                                                     </div>
@@ -2641,8 +2793,6 @@
                                                 </div>
                                             </div>
                                             
-                                            ${categoryGallery}
-                                            
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <div class="flex-grow-1 me-3">
                                                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -2669,10 +2819,10 @@
                                                     }, ${category.id})">
                                                         <i class="fas fa-plus me-1"></i>Item
                                                     </button>
-                                                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="uploadCategoryPhoto(${
+                                                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="openCategoryPhotoManagement(${
                                                       wishlist.id
                                                     }, ${category.id})">
-                                                        <i class="fas fa-camera me-1"></i>Foto
+                                                        <i class="fas fa-images me-1"></i>Kelola Foto
                                                     </button>
                                                     <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${
                                                       wishlist.id
@@ -2699,26 +2849,6 @@
                                                                       100
                                                                     )
                                                                   : 0;
-
-                                                              // Photo gallery for purchased items
-                                                              const photoGallery =
-                                                                item.achieved &&
-                                                                item.purchasedPhotos &&
-                                                                item
-                                                                  .purchasedPhotos
-                                                                  .length > 0
-                                                                  ? `
-                                                            <div class="photo-gallery">
-                                                                ${item.purchasedPhotos
-                                                                  .map(
-                                                                    (photo) => `
-                                                                    <img src="${photo}" class="photo-thumbnail" onclick="viewPhoto('${photo}')" alt="Foto Barang">
-                                                                `
-                                                                  )
-                                                                  .join("")}
-                                                            </div>
-                                                        `
-                                                                  : "";
 
                                                               return `
                                                             <div class="item-row p-2 border rounded mb-2" id="item-${
@@ -2799,18 +2929,6 @@
                                                                         ${
                                                                           item.description
                                                                             ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
-                                                                            : ""
-                                                                        }
-                                                                        ${
-                                                                          item.achieved
-                                                                            ? `
-                                                                            <div class="mt-2">
-                                                                                <button class="btn btn-sm btn-outline-primary" onclick="uploadPurchasedPhoto(${wishlist.id}, ${category.id}, ${item.id})">
-                                                                                    <i class="fas fa-camera me-1"></i>Upload Foto Barang
-                                                                                </button>
-                                                                                ${photoGallery}
-                                                                            </div>
-                                                                        `
                                                                             : ""
                                                                         }
                                                                     </div>
