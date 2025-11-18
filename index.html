@@ -2044,8 +2044,17 @@
             }
         }
 
-        // PERBAIKAN: Setup drag and drop functionality
+        // PERBAIKAN: Setup drag and drop functionality yang lebih baik
         function setupDragAndDrop(element) {
+            // Hapus event listener lama jika ada
+            element.removeEventListener('dragstart', handleDragStart);
+            element.removeEventListener('dragover', handleDragOver);
+            element.removeEventListener('dragenter', handleDragEnter);
+            element.removeEventListener('dragleave', handleDragLeave);
+            element.removeEventListener('drop', handleDrop);
+            element.removeEventListener('dragend', handleDragEnd);
+
+            // Tambahkan event listener baru
             element.addEventListener('dragstart', handleDragStart);
             element.addEventListener('dragover', handleDragOver);
             element.addEventListener('dragenter', handleDragEnter);
