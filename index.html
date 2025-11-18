@@ -412,6 +412,7 @@
         border-radius: 8px;
         margin-right: 0.75rem;
         border: 2px solid var(--secondary);
+        cursor: pointer;
       }
 
       .item-image-placeholder {
@@ -522,6 +523,130 @@
         margin-top: 3rem;
       }
 
+      /* Custom Swipe Gallery Styles */
+      .swipe-gallery {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        overflow: hidden;
+        border-radius: 10px;
+      }
+
+      .swipe-gallery-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.3s ease;
+      }
+
+      .swipe-gallery-slide {
+        flex: 0 0 100%;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .swipe-gallery-slide img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      .swipe-gallery-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .swipe-gallery-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .swipe-gallery-indicator.active {
+        background-color: white;
+        transform: scale(1.2);
+      }
+
+      .swipe-gallery-nav {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .swipe-gallery:hover .swipe-gallery-nav {
+        opacity: 1;
+      }
+
+      .swipe-gallery-nav.prev {
+        left: 0;
+      }
+
+      .swipe-gallery-nav.next {
+        right: 0;
+      }
+
+      .swipe-gallery-nav-icon {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+      }
+
+      /* PERBAIKAN: Style untuk tombol hapus foto kategori */
+      .photo-delete-btn {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--danger);
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        z-index: 20;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .photo-delete-btn:hover {
+        background: #c0392b;
+        transform: scale(1.1);
+      }
+
+      .photo-container {
+        position: relative;
+        display: inline-block;
+      }
+
       /* Mobile-specific improvements */
       @media (max-width: 576px) {
         .container {
@@ -573,6 +698,21 @@
 
         .d-flex.justify-content-between > *:last-child {
           margin-bottom: 0;
+        }
+
+        .swipe-gallery {
+          height: 50vh;
+        }
+
+        .swipe-gallery-nav {
+          opacity: 1;
+          width: 40px;
+        }
+
+        .swipe-gallery-nav-icon {
+          width: 35px;
+          height: 35px;
+          font-size: 14px;
         }
       }
 
@@ -650,6 +790,37 @@
       .category-photo-management h6 {
         margin-bottom: 0.75rem;
         color: var(--dark);
+      }
+
+      /* Drag & Drop Styles */
+      .photo-container.dragging {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+
+      .photo-container.drag-over {
+        border: 2px dashed var(--primary);
+        border-radius: 8px;
+        background-color: rgba(108, 92, 231, 0.1);
+      }
+
+      .category-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        min-height: 80px;
+      }
+
+      .photo-container {
+        position: relative;
+        display: inline-block;
+        transition: all 0.3s ease;
+        cursor: grab;
+      }
+
+      .photo-container:active {
+        cursor: grabbing;
       }
     </style>
   </head>
@@ -1431,6 +1602,42 @@
       </div>
     </div>
 
+    <!-- Custom Swipe Gallery Modal -->
+    <div class="modal fade" id="swipeGalleryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Galeri Foto</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="swipe-gallery" id="swipeGallery">
+              <div class="swipe-gallery-container" id="swipeGalleryContainer">
+                <!-- Slides will be added dynamically -->
+              </div>
+              <div class="swipe-gallery-indicators" id="swipeGalleryIndicators">
+                <!-- Indicators will be added dynamically -->
+              </div>
+              <div class="swipe-gallery-nav prev" onclick="swipeGalleryPrev()">
+                <div class="swipe-gallery-nav-icon">
+                  <i class="fas fa-chevron-left"></i>
+                </div>
+              </div>
+              <div class="swipe-gallery-nav next" onclick="swipeGalleryNext()">
+                <div class="swipe-gallery-nav-icon">
+                  <i class="fas fa-chevron-right"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Data storage
@@ -1438,6 +1645,7 @@
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
       let currentCategoryForPhotoManagement = null;
+      let currentSwipeGalleryData = null;
 
       // DOM Elements
       const wishlistsContainer = document.getElementById("wishlistsContainer");
@@ -1487,6 +1695,17 @@
         "categoryImagePreview"
       );
 
+      // Swipe gallery elements
+      const swipeGalleryContainer = document.getElementById(
+        "swipeGalleryContainer"
+      );
+      const swipeGalleryIndicators = document.getElementById(
+        "swipeGalleryIndicators"
+      );
+
+      // Drag and drop variables
+      let draggedItem = null;
+
       // Initialize the app
       document.addEventListener("DOMContentLoaded", function () {
         renderWishlists();
@@ -1496,6 +1715,7 @@
         setupEventListeners();
         setupImageUpload();
         setupCategoryImageUpload();
+        setupSwipeGallery();
       });
 
       // Setup event listeners
@@ -1592,6 +1812,36 @@
         });
       }
 
+      // Setup swipe gallery functionality
+      function setupSwipeGallery() {
+        const swipeGallery = document.getElementById("swipeGallery");
+        let startX = 0;
+        let endX = 0;
+
+        swipeGallery.addEventListener("touchstart", (e) => {
+          startX = e.touches[0].clientX;
+        });
+
+        swipeGallery.addEventListener("touchmove", (e) => {
+          endX = e.touches[0].clientX;
+        });
+
+        swipeGallery.addEventListener("touchend", () => {
+          const diff = startX - endX;
+          const minSwipeDistance = 50;
+
+          if (Math.abs(diff) > minSwipeDistance) {
+            if (diff > 0) {
+              // Swipe left - next photo
+              swipeGalleryNext();
+            } else {
+              // Swipe right - previous photo
+              swipeGalleryPrev();
+            }
+          }
+        });
+      }
+
       // Handle image upload
       function handleImageUpload(file) {
         if (!file || !file.type.startsWith("image/")) {
@@ -1607,11 +1857,11 @@
         const reader = new FileReader();
         reader.onload = function (e) {
           imagePreview.innerHTML = `
-                    <img src="${e.target.result}" class="image-preview" alt="Preview">
-                    <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
-                        <i class="fas fa-times me-1"></i>Hapus Foto
-                    </button>
-                `;
+              <img src="${e.target.result}" class="image-preview" alt="Preview">
+              <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
+                  <i class="fas fa-times me-1"></i>Hapus Foto
+              </button>
+          `;
         };
         reader.readAsDataURL(file);
       }
@@ -1631,11 +1881,11 @@
         const reader = new FileReader();
         reader.onload = function (e) {
           categoryImagePreview.innerHTML = `
-                    <img src="${e.target.result}" class="image-preview" alt="Preview">
-                    <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearCategoryImagePreview()">
-                        <i class="fas fa-times me-1"></i>Hapus Foto
-                    </button>
-                `;
+              <img src="${e.target.result}" class="image-preview" alt="Preview">
+              <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearCategoryImagePreview()">
+                  <i class="fas fa-times me-1"></i>Hapus Foto
+              </button>
+          `;
         };
         reader.readAsDataURL(file);
       }
@@ -2009,16 +2259,16 @@
         const currentName = wishlist.name;
 
         titleElement.innerHTML = `
-                <input type="text" class="form-control" value="${currentName}" id="edit-wishlist-${wishlistId}">
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2" onclick="saveWishlistName(${wishlistId})">
-                        <i class="fas fa-check me-1"></i>Simpan
-                    </button>
-                    <button class="btn btn-sm btn-secondary" onclick="cancelEditWishlistName(${wishlistId}, '${currentName}')">
-                        <i class="fas fa-times me-1"></i>Batal
-                    </button>
-                </div>
-            `;
+          <input type="text" class="form-control" value="${currentName}" id="edit-wishlist-${wishlistId}">
+          <div class="mt-2">
+              <button class="btn btn-sm btn-success me-2" onclick="saveWishlistName(${wishlistId})">
+                  <i class="fas fa-check me-1"></i>Simpan
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditWishlistName(${wishlistId}, '${currentName}')">
+                  <i class="fas fa-times me-1"></i>Batal
+              </button>
+          </div>
+      `;
 
         document.getElementById(`edit-wishlist-${wishlistId}`).focus();
       }
@@ -2047,11 +2297,11 @@
           `wishlist-title-${wishlistId}`
         );
         titleElement.innerHTML = `
-                ${originalName}
-                <button class="btn btn-sm btn-outline-primary ms-2" onclick="editWishlistName(${wishlistId})">
-                    <i class="fas fa-edit"></i>
-                </button>
-            `;
+          ${originalName}
+          <button class="btn btn-sm btn-outline-primary ms-2" onclick="editWishlistName(${wishlistId})">
+              <i class="fas fa-edit"></i>
+          </button>
+      `;
       }
 
       // Edit category name
@@ -2068,16 +2318,16 @@
         const currentName = category.name;
 
         titleElement.innerHTML = `
-                <input type="text" class="form-control" value="${currentName}" id="edit-category-${categoryId}">
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2" onclick="saveCategoryName(${wishlistId}, ${categoryId})">
-                        <i class="fas fa-check me-1"></i>Simpan
-                    </button>
-                    <button class="btn btn-sm btn-secondary" onclick="cancelEditCategoryName(${wishlistId}, ${categoryId}, '${currentName}')">
-                        <i class="fas fa-times me-1"></i>Batal
-                    </button>
-                </div>
-            `;
+          <input type="text" class="form-control" value="${currentName}" id="edit-category-${categoryId}">
+          <div class="mt-2">
+              <button class="btn btn-sm btn-success me-2" onclick="saveCategoryName(${wishlistId}, ${categoryId})">
+                  <i class="fas fa-check me-1"></i>Simpan
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditCategoryName(${wishlistId}, ${categoryId}, '${currentName}')">
+                  <i class="fas fa-times me-1"></i>Batal
+              </button>
+          </div>
+      `;
 
         document.getElementById(`edit-category-${categoryId}`).focus();
       }
@@ -2109,11 +2359,11 @@
           `category-title-${categoryId}`
         );
         titleElement.innerHTML = `
-                ${originalName}
-                <button class="btn btn-sm btn-outline-primary ms-2" onclick="editCategoryName(${wishlistId}, ${categoryId})">
-                    <i class="fas fa-edit"></i>
-                </button>
-            `;
+          ${originalName}
+          <button class="btn btn-sm btn-outline-primary ms-2" onclick="editCategoryName(${wishlistId}, ${categoryId})">
+              <i class="fas fa-edit"></i>
+          </button>
+      `;
       }
 
       // Open category photo management modal
@@ -2126,7 +2376,7 @@
         modal.show();
       }
 
-      // Render category photos in management modal
+      // PERBAIKAN: Render category photos in management modal
       function renderCategoryPhotos() {
         if (!currentCategoryForPhotoManagement) return;
 
@@ -2145,15 +2395,15 @@
             photoContainer.draggable = true;
             photoContainer.setAttribute("data-index", index);
 
+            // PERBAIKAN: Struktur HTML yang lebih baik dengan event.stopPropagation()
             photoContainer.innerHTML = `
               <div class="position-relative">
                 <img src="${photo}" class="category-photo-thumbnail" alt="Foto kategori ${
               index + 1
             }">
                 ${index === 0 ? '<span class="cover-badge">Cover</span>' : ""}
-                <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
-                        style="width: 20px; height: 20px; font-size: 0.7rem;"
-                        onclick="deleteCategoryPhoto(${index})">
+                <button class="photo-delete-btn" 
+                        onclick="event.stopPropagation(); deleteCategoryPhoto(${index})">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -2162,6 +2412,8 @@
             // Add drag and drop functionality
             photoContainer.addEventListener("dragstart", handleDragStart);
             photoContainer.addEventListener("dragover", handleDragOver);
+            photoContainer.addEventListener("dragenter", handleDragEnter);
+            photoContainer.addEventListener("dragleave", handleDragLeave);
             photoContainer.addEventListener("drop", handleDrop);
             photoContainer.addEventListener("dragend", handleDragEnd);
 
@@ -2178,24 +2430,44 @@
       }
 
       // Drag and drop handlers for photo reordering
-      let draggedItem = null;
-
       function handleDragStart(e) {
         draggedItem = this;
         e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setData("text/html", this.innerHTML);
+        e.dataTransfer.setData("text/plain", this.getAttribute("data-index"));
         this.classList.add("dragging");
+
+        // Set a custom drag image
+        const dragImage = this.cloneNode(true);
+        dragImage.style.width = "50px";
+        dragImage.style.height = "50px";
+        dragImage.style.position = "absolute";
+        dragImage.style.top = "-100px";
+        document.body.appendChild(dragImage);
+        e.dataTransfer.setDragImage(dragImage, 25, 25);
+
+        setTimeout(() => {
+          document.body.removeChild(dragImage);
+        }, 0);
       }
 
       function handleDragOver(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = "move";
+        return false;
+      }
+
+      function handleDragEnter(e) {
+        e.preventDefault();
         this.classList.add("drag-over");
+      }
+
+      function handleDragLeave(e) {
+        this.classList.remove("drag-over");
       }
 
       function handleDrop(e) {
         e.preventDefault();
-        this.classList.remove("drag-over");
+        e.stopPropagation();
 
         if (draggedItem !== this) {
           const fromIndex = parseInt(draggedItem.getAttribute("data-index"));
@@ -2203,6 +2475,9 @@
 
           reorderCategoryPhotos(fromIndex, toIndex);
         }
+
+        this.classList.remove("drag-over");
+        return false;
       }
 
       function handleDragEnd() {
@@ -2222,7 +2497,13 @@
 
         if (!category || !category.photos) return;
 
-        const [movedPhoto] = category.photos.splice(fromIndex, 1);
+        // Simpan foto yang akan dipindah
+        const movedPhoto = category.photos[fromIndex];
+
+        // Hapus foto dari posisi asal
+        category.photos.splice(fromIndex, 1);
+
+        // Sisipkan foto ke posisi tujuan
         category.photos.splice(toIndex, 0, movedPhoto);
 
         saveToLocalStorage();
@@ -2360,6 +2641,101 @@
         galleryModal.show();
       }
 
+      // Open swipe gallery modal
+      function openSwipeGallery(photos, startIndex = 0) {
+        currentSwipeGalleryData = {
+          photos: photos,
+          currentIndex: startIndex,
+        };
+
+        renderSwipeGallery();
+        const modal = new bootstrap.Modal(
+          document.getElementById("swipeGalleryModal")
+        );
+        modal.show();
+      }
+
+      // Render swipe gallery
+      function renderSwipeGallery() {
+        if (!currentSwipeGalleryData) return;
+
+        const { photos, currentIndex } = currentSwipeGalleryData;
+
+        // Clear previous content
+        swipeGalleryContainer.innerHTML = "";
+        swipeGalleryIndicators.innerHTML = "";
+
+        // Add slides
+        photos.forEach((photo, index) => {
+          const slide = document.createElement("div");
+          slide.className = "swipe-gallery-slide";
+          slide.innerHTML = `<img src="${photo}" alt="Foto ${index + 1}">`;
+          swipeGalleryContainer.appendChild(slide);
+
+          // Add indicator
+          const indicator = document.createElement("div");
+          indicator.className = `swipe-gallery-indicator ${
+            index === currentIndex ? "active" : ""
+          }`;
+          indicator.setAttribute("data-index", index);
+          indicator.onclick = () => goToSlide(index);
+          swipeGalleryIndicators.appendChild(indicator);
+        });
+
+        // Update position
+        updateSwipeGalleryPosition();
+      }
+
+      // Update swipe gallery position
+      function updateSwipeGalleryPosition() {
+        if (!currentSwipeGalleryData) return;
+        swipeGalleryContainer.style.transform = `translateX(-${
+          currentSwipeGalleryData.currentIndex * 100
+        }%)`;
+      }
+
+      // Go to specific slide
+      function goToSlide(index) {
+        if (!currentSwipeGalleryData) return;
+        currentSwipeGalleryData.currentIndex = index;
+        updateSwipeGalleryPosition();
+        updateSwipeGalleryIndicators();
+      }
+
+      // Update swipe gallery indicators
+      function updateSwipeGalleryIndicators() {
+        if (!currentSwipeGalleryData) return;
+        const indicators = document.querySelectorAll(
+          ".swipe-gallery-indicator"
+        );
+        indicators.forEach((indicator, index) => {
+          if (index === currentSwipeGalleryData.currentIndex) {
+            indicator.classList.add("active");
+          } else {
+            indicator.classList.remove("active");
+          }
+        });
+      }
+
+      // Swipe gallery next
+      function swipeGalleryNext() {
+        if (!currentSwipeGalleryData) return;
+        const nextIndex =
+          (currentSwipeGalleryData.currentIndex + 1) %
+          currentSwipeGalleryData.photos.length;
+        goToSlide(nextIndex);
+      }
+
+      // Swipe gallery previous
+      function swipeGalleryPrev() {
+        if (!currentSwipeGalleryData) return;
+        const prevIndex =
+          currentSwipeGalleryData.currentIndex === 0
+            ? currentSwipeGalleryData.photos.length - 1
+            : currentSwipeGalleryData.currentIndex - 1;
+        goToSlide(prevIndex);
+      }
+
       // Edit item
       function editItem(wishlistId, categoryId, itemId) {
         const wishlist = wishlists.find((w) => w.id === wishlistId);
@@ -2374,60 +2750,60 @@
         const itemElement = document.getElementById(`item-${itemId}`);
 
         itemElement.innerHTML = `
-                <div class="edit-item-form">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Item</label>
-                        <input type="text" class="form-control" id="edit-item-name-${itemId}" value="${
+          <div class="edit-item-form">
+              <div class="mb-3">
+                  <label class="form-label">Nama Item</label>
+                  <input type="text" class="form-control" id="edit-item-name-${itemId}" value="${
           item.name
         }" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Harga (Rp)</label>
-                        <input type="number" class="form-control" id="edit-item-price-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Harga (Rp)</label>
+                  <input type="number" class="form-control" id="edit-item-price-${itemId}" value="${
           item.price
         }" min="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Foto Item</label>
-                        <div class="image-upload-container" onclick="document.getElementById('edit-item-image-${itemId}').click()">
-                            <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
-                            <p class="mb-2">Klik untuk ganti foto</p>
-                            <input type="file" id="edit-item-image-${itemId}" accept="image/*" class="d-none" onchange="handleEditImageUpload(${wishlistId}, ${categoryId}, ${itemId}, this.files[0])" />
-                        </div>
-                        ${
-                          item.image
-                            ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
-                            : ""
-                        }
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link TikTok</label>
-                        <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Foto Item</label>
+                  <div class="image-upload-container" onclick="document.getElementById('edit-item-image-${itemId}').click()">
+                      <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
+                      <p class="mb-2">Klik untuk ganti foto</p>
+                      <input type="file" id="edit-item-image-${itemId}" accept="image/*" class="d-none" onchange="handleEditImageUpload(${wishlistId}, ${categoryId}, ${itemId}, this.files[0])" />
+                  </div>
+                  ${
+                    item.image
+                      ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
+                      : ""
+                  }
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Link TikTok</label>
+                  <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
           item.tiktokLink || ""
         }" placeholder="https://www.tiktok.com/...">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link Shopee</label>
-                        <input type="url" class="form-control" id="edit-item-shopee-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Link Shopee</label>
+                  <input type="url" class="form-control" id="edit-item-shopee-${itemId}" value="${
           item.shopeeLink || ""
         }" placeholder="https://shopee.co.id/...">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="edit-item-description-${itemId}" rows="2">${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Deskripsi</label>
+                  <textarea class="form-control" id="edit-item-description-${itemId}" rows="2">${
           item.description || ""
         }</textarea>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
-                            <i class="fas fa-check me-1"></i>Simpan
-                        </button>
-                        <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
-                            <i class="fas fa-times me-1"></i>Batal
-                        </button>
-                    </div>
-                </div>
-            `;
+              </div>
+              <div class="d-flex justify-content-end">
+                  <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
+                      <i class="fas fa-check me-1"></i>Simpan
+                  </button>
+                  <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
+                      <i class="fas fa-times me-1"></i>Batal
+                  </button>
+              </div>
+          </div>
+      `;
       }
 
       // Handle edit image upload
@@ -2555,7 +2931,7 @@
         photoModal.show();
       }
 
-      // Render wishlists
+      // PERBAIKAN: Render wishlists dengan tombol hapus yang berfungsi
       function renderWishlists(filter = "all") {
         let filteredWishlists = wishlists;
 
@@ -2608,348 +2984,341 @@
             wishlistCard.style.animationDelay = `${index * 0.1}s`;
 
             wishlistCard.innerHTML = `
-                        <div class="wishlist-header" onclick="toggleCategories(${
-                          wishlist.id
-                        })">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h4 class="wishlist-title">
-                                        <span id="wishlist-title-${
-                                          wishlist.id
-                                        }">
-                                            ${wishlist.name}
-                                            <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editWishlistName(${
-                                              wishlist.id
-                                            })">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </span>
-                                        ${
-                                          isCompleted
-                                            ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
-                                            : ""
-                                        }
-                                    </h4>
-                                    <p class="wishlist-meta">${
-                                      wishlist.categories.length
-                                    } kategori, ${totalItems} item</p>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="wishlist-price">Rp ${totalPrice.toLocaleString(
-                                      "id-ID"
-                                    )}</span>
-                                    <i id="toggle-icon-${
+                <div class="wishlist-header" onclick="toggleCategories(${
+                  wishlist.id
+                })">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="wishlist-title">
+                                <span id="wishlist-title-${wishlist.id}">
+                                    ${wishlist.name}
+                                    <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editWishlistName(${
                                       wishlist.id
-                                    }" class="fas fa-chevron-down ms-3"></i>
-                                </div>
-                            </div>
+                                    })">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </span>
+                                ${
+                                  isCompleted
+                                    ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                    : ""
+                                }
+                            </h4>
+                            <p class="wishlist-meta">${
+                              wishlist.categories.length
+                            } kategori, ${totalItems} item</p>
                         </div>
-                        <div class="wishlist-content" id="categories-${
-                          wishlist.id
-                        }" style="display: none;">
-                            ${
-                              wishlist.description
-                                ? `<p class="mb-3">${wishlist.description}</p>`
-                                : ""
-                            }
-                            
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="flex-grow-1 me-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
-                                          "id-ID"
-                                        )} / Rp ${totalPrice.toLocaleString(
+                        <div class="d-flex align-items-center">
+                            <span class="wishlist-price">Rp ${totalPrice.toLocaleString(
+                              "id-ID"
+                            )}</span>
+                            <i id="toggle-icon-${
+                              wishlist.id
+                            }" class="fas fa-chevron-down ms-3"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="wishlist-content" id="categories-${
+                  wishlist.id
+                }" style="display: none;">
+                    ${
+                      wishlist.description
+                        ? `<p class="mb-3">${wishlist.description}</p>`
+                        : ""
+                    }
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="flex-grow-1 me-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                  "id-ID"
+                                )} / Rp ${totalPrice.toLocaleString(
               "id-ID"
             )}</small>
-                                        <small class="text-muted">${progressPercentage.toFixed(
-                                          1
-                                        )}%</small>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar ${
-                                          isCompleted
-                                            ? "bg-success"
-                                            : "bg-primary"
-                                        }" role="progressbar" style="width: ${progressPercentage}%"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddCategoryModal(${
-                                      wishlist.id
-                                    })">
-                                        <i class="fas fa-plus me-1"></i>Kategori
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteWishlist(${
-                                      wishlist.id
-                                    })">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                                <small class="text-muted">${progressPercentage.toFixed(
+                                  1
+                                )}%</small>
                             </div>
-                            
-                            <div class="categories-list">
-                                ${
-                                  wishlist.categories.length > 0
-                                    ? wishlist.categories
-                                        .map((category) => {
-                                          let categoryTotalPrice = 0;
-                                          let categoryTotalItems = 0;
-                                          let categoryAchievedItems = 0;
-
-                                          category.items.forEach((item) => {
-                                            if (!item.achieved) {
-                                              categoryTotalPrice += item.price;
-                                            }
-                                            categoryTotalItems++;
-                                            if (item.achieved)
-                                              categoryAchievedItems++;
-                                          });
-
-                                          const categoryProgress =
-                                            categoryTotalPrice > 0
-                                              ? Math.min(
-                                                  (savings /
-                                                    categoryTotalPrice) *
-                                                    100,
-                                                  100
-                                                )
-                                              : 0;
-                                          const categoryCompleted =
-                                            categoryTotalItems > 0 &&
-                                            categoryAchievedItems ===
-                                              categoryTotalItems;
-
-                                          // Galeri foto untuk kategori - hanya tampilkan foto pertama sebagai cover
-                                          const categoryCoverPhoto =
-                                            category.photos &&
-                                            category.photos.length > 0
-                                              ? category.photos[0]
-                                              : null;
-
-                                          return `
-                                        <div class="category-item mb-3 p-3 border rounded">
-                                            <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
-                                              category.id
-                                            })">
-                                                <div class="d-flex align-items-center">
-                                                    <!-- Gambar kategori -->
-                                                    <div class="me-3">
-                                                        ${
-                                                          categoryCoverPhoto
-                                                            ? `<div class="position-relative">
-                                                                <img src="${categoryCoverPhoto}" class="item-image" onclick="viewPhoto('${categoryCoverPhoto}')" alt="${
-                                                                category.name
-                                                              }">
-                                                                ${
-                                                                  category
-                                                                    .photos
-                                                                    .length > 1
-                                                                    ? `<span class="badge bg-primary position-absolute top-0 end-0">+${
-                                                                        category
-                                                                          .photos
-                                                                          .length -
-                                                                        1
-                                                                      }</span>`
-                                                                    : ""
-                                                                }
-                                                              </div>`
-                                                            : `<div class="item-image-placeholder"><i class="fas fa-folder"></i></div>`
-                                                        }
-                                                    </div>
-                                                    <div>
-                                                        <h5 class="mb-1">
-                                                            <span id="category-title-${
-                                                              category.id
-                                                            }">
-                                                                ${category.name}
-                                                                <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
-                                                                  wishlist.id
-                                                                }, ${
-                                            category.id
-                                          })">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </button>
-                                                            </span>
-                                                            ${
-                                                              categoryCompleted
-                                                                ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
-                                                                : ""
-                                                            }
-                                                        </h5>
-                                                        ${
-                                                          category.description
-                                                            ? `<small class="text-muted">${category.description}</small>`
-                                                            : ""
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="fw-bold">Rp ${categoryTotalPrice.toLocaleString(
-                                                      "id-ID"
-                                                    )}</span>
-                                                    <i id="item-toggle-icon-${
-                                                      category.id
-                                                    }" class="fas fa-chevron-down ms-3"></i>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div class="flex-grow-1 me-3">
-                                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                                        <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
-                                                          "id-ID"
-                                                        )} / Rp ${categoryTotalPrice.toLocaleString(
-                                            "id-ID"
-                                          )}</small>
-                                                        <small class="text-muted">${categoryProgress.toFixed(
-                                                          1
-                                                        )}%</small>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar ${
-                                                          categoryCompleted
-                                                            ? "bg-success"
-                                                            : "bg-info"
-                                                        }" role="progressbar" style="width: ${categoryProgress}%"></div>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddItemModal(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-plus me-1"></i>Item
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="openCategoryPhotoManagement(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-images me-1"></i>Kelola Foto
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="items-container" id="items-${
-                                              category.id
-                                            }" style="display: none;">
-                                                <div class="items-list">
-                                                    ${
-                                                      category.items.length > 0
-                                                        ? category.items
-                                                            .map((item) => {
-                                                              const itemProgress =
-                                                                item.price > 0
-                                                                  ? Math.min(
-                                                                      (savings /
-                                                                        item.price) *
-                                                                        100,
-                                                                      100
-                                                                    )
-                                                                  : 0;
-
-                                                              return `
-                                                            <div class="item-row p-2 border rounded mb-2" id="item-${
-                                                              item.id
-                                                            }">
-                                                                <div class="d-flex align-items-start">
-                                                                    <div class="me-3">
-                                                                        ${
-                                                                          item.image
-                                                                            ? `<img src="${item.image}" class="item-image" onclick="viewPhoto('${item.image}')" alt="${item.name}">`
-                                                                            : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
-                                                                        }
-                                                                    </div>
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                            <h6 class="mb-1">${
-                                                                              item.name
-                                                                            } ${
-                                                                item.achieved
-                                                                  ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Tercapai</span>'
-                                                                  : ""
-                                                              }</h6>
-                                                                            <div>
-                                                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="editItem(${
-                                                                                  wishlist.id
-                                                                                }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas fa-edit"></i>
-                                                                                </button>
-                                                                                <button class="btn btn-sm ${
-                                                                                  item.achieved
-                                                                                    ? "btn-warning"
-                                                                                    : "btn-success"
-                                                                                } me-2" onclick="markItemAchieved(${
-                                                                wishlist.id
-                                                              }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas ${
-                                                                                      item.achieved
-                                                                                        ? "fa-undo"
-                                                                                        : "fa-check"
-                                                                                    }"></i>
-                                                                                </button>
-                                                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${
-                                                                                  wishlist.id
-                                                                                }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas fa-times"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                                                            <small class="text-muted">Rp ${item.price.toLocaleString(
-                                                                              "id-ID"
-                                                                            )}</small>
-                                                                            <small class="text-muted">${itemProgress.toFixed(
-                                                                              1
-                                                                            )}%</small>
-                                                                        </div>
-                                                                        <div class="progress" style="height: 5px;">
-                                                                            <div class="progress-bar" style="width: ${itemProgress}%"></div>
-                                                                        </div>
-                                                                        <div class="mt-1">
-                                                                            ${
-                                                                              item.tiktokLink
-                                                                                ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
-                                                                                : ""
-                                                                            }
-                                                                            ${
-                                                                              item.shopeeLink
-                                                                                ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
-                                                                                : ""
-                                                                            }
-                                                                        </div>
-                                                                        ${
-                                                                          item.description
-                                                                            ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
-                                                                            : ""
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        `;
-                                                            })
-                                                            .join("")
-                                                        : `<div class="text-center py-2 text-muted"><small>Belum ada item</small></div>`
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                        })
-                                        .join("")
-                                    : `<div class="text-center py-3 text-muted"><p>Belum ada kategori</p></div>`
-                                }
+                            <div class="progress">
+                                <div class="progress-bar ${
+                                  isCompleted ? "bg-success" : "bg-primary"
+                                }" role="progressbar" style="width: ${progressPercentage}%"></div>
                             </div>
                         </div>
-                    `;
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation(); openAddCategoryModal(${
+                              wishlist.id
+                            })">
+                                <i class="fas fa-plus me-1"></i>Kategori
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteWishlist(${
+                              wishlist.id
+                            })">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="categories-list">
+                        ${
+                          wishlist.categories.length > 0
+                            ? wishlist.categories
+                                .map((category) => {
+                                  let categoryTotalPrice = 0;
+                                  let categoryTotalItems = 0;
+                                  let categoryAchievedItems = 0;
+
+                                  category.items.forEach((item) => {
+                                    if (!item.achieved) {
+                                      categoryTotalPrice += item.price;
+                                    }
+                                    categoryTotalItems++;
+                                    if (item.achieved) categoryAchievedItems++;
+                                  });
+
+                                  const categoryProgress =
+                                    categoryTotalPrice > 0
+                                      ? Math.min(
+                                          (savings / categoryTotalPrice) * 100,
+                                          100
+                                        )
+                                      : 0;
+                                  const categoryCompleted =
+                                    categoryTotalItems > 0 &&
+                                    categoryAchievedItems ===
+                                      categoryTotalItems;
+
+                                  // PERBAIKAN: Gunakan swipe gallery untuk foto kategori
+                                  const categoryCoverPhoto =
+                                    category.photos &&
+                                    category.photos.length > 0
+                                      ? category.photos[0]
+                                      : null;
+
+                                  return `
+                                <div class="category-item mb-3 p-3 border rounded">
+                                    <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
+                                      category.id
+                                    })">
+                                        <div class="d-flex align-items-center">
+                                            <!-- Gambar kategori -->
+                                            <div class="me-3">
+                                                ${
+                                                  categoryCoverPhoto
+                                                    ? `<div class="position-relative">
+                                                        <img src="${categoryCoverPhoto}" class="item-image" onclick="openSwipeGallery(${JSON.stringify(
+                                                        category.photos
+                                                      ).replace(
+                                                        /"/g,
+                                                        "&quot;"
+                                                      )})" alt="${
+                                                        category.name
+                                                      }">
+                                                        ${
+                                                          category.photos
+                                                            .length > 1
+                                                            ? `<span class="badge bg-primary position-absolute top-0 end-0">+${
+                                                                category.photos
+                                                                  .length - 1
+                                                              }</span>`
+                                                            : ""
+                                                        }
+                                                      </div>`
+                                                    : `<div class="item-image-placeholder"><i class="fas fa-folder"></i></div>`
+                                                }
+                                            </div>
+                                            <div>
+                                                <h5 class="mb-1">
+                                                    <span id="category-title-${
+                                                      category.id
+                                                    }">
+                                                        ${category.name}
+                                                        <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
+                                                          wishlist.id
+                                                        }, ${category.id})">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </span>
+                                                    ${
+                                                      categoryCompleted
+                                                        ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                                        : ""
+                                                    }
+                                                </h5>
+                                                ${
+                                                  category.description
+                                                    ? `<small class="text-muted">${category.description}</small>`
+                                                    : ""
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-bold">Rp ${categoryTotalPrice.toLocaleString(
+                                              "id-ID"
+                                            )}</span>
+                                            <i id="item-toggle-icon-${
+                                              category.id
+                                            }" class="fas fa-chevron-down ms-3"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="flex-grow-1 me-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                                  "id-ID"
+                                                )} / Rp ${categoryTotalPrice.toLocaleString(
+                                    "id-ID"
+                                  )}</small>
+                                                <small class="text-muted">${categoryProgress.toFixed(
+                                                  1
+                                                )}%</small>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar ${
+                                                  categoryCompleted
+                                                    ? "bg-success"
+                                                    : "bg-info"
+                                                }" role="progressbar" style="width: ${categoryProgress}%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation(); openAddItemModal(${
+                                              wishlist.id
+                                            }, ${category.id})">
+                                                <i class="fas fa-plus me-1"></i>Item
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary me-2" onclick="event.stopPropagation(); openCategoryPhotoManagement(${
+                                              wishlist.id
+                                            }, ${category.id})">
+                                                <i class="fas fa-images me-1"></i>Kelola Foto
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteCategory(${
+                                              wishlist.id
+                                            }, ${category.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="items-container" id="items-${
+                                      category.id
+                                    }" style="display: none;">
+                                        <div class="items-list">
+                                            ${
+                                              category.items.length > 0
+                                                ? category.items
+                                                    .map((item) => {
+                                                      const itemProgress =
+                                                        item.price > 0
+                                                          ? Math.min(
+                                                              (savings /
+                                                                item.price) *
+                                                                100,
+                                                              100
+                                                            )
+                                                          : 0;
+
+                                                      return `
+                                                    <div class="item-row p-2 border rounded mb-2" id="item-${
+                                                      item.id
+                                                    }">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="me-3">
+                                                                ${
+                                                                  item.image
+                                                                    ? `<img src="${item.image}" class="item-image" onclick="viewPhoto('${item.image}')" alt="${item.name}">`
+                                                                    : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
+                                                                }
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <h6 class="mb-1">${
+                                                                      item.name
+                                                                    } ${
+                                                        item.achieved
+                                                          ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Tercapai</span>'
+                                                          : ""
+                                                      }</h6>
+                                                                    <div>
+                                                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editItem(${
+                                                                          wishlist.id
+                                                                        }, ${
+                                                        category.id
+                                                      }, ${item.id})">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-sm ${
+                                                                          item.achieved
+                                                                            ? "btn-warning"
+                                                                            : "btn-success"
+                                                                        } me-2" onclick="markItemAchieved(${
+                                                        wishlist.id
+                                                      }, ${category.id}, ${
+                                                        item.id
+                                                      })">
+                                                                            <i class="fas ${
+                                                                              item.achieved
+                                                                                ? "fa-undo"
+                                                                                : "fa-check"
+                                                                            }"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${
+                                                                          wishlist.id
+                                                                        }, ${
+                                                        category.id
+                                                      }, ${item.id})">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <small class="text-muted">Rp ${item.price.toLocaleString(
+                                                                      "id-ID"
+                                                                    )}</small>
+                                                                    <small class="text-muted">${itemProgress.toFixed(
+                                                                      1
+                                                                    )}%</small>
+                                                                </div>
+                                                                <div class="progress" style="height: 5px;">
+                                                                    <div class="progress-bar" style="width: ${itemProgress}%"></div>
+                                                                </div>
+                                                                <div class="mt-1">
+                                                                    ${
+                                                                      item.tiktokLink
+                                                                        ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
+                                                                        : ""
+                                                                    }
+                                                                    ${
+                                                                      item.shopeeLink
+                                                                        ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
+                                                                        : ""
+                                                                    }
+                                                                </div>
+                                                                ${
+                                                                  item.description
+                                                                    ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
+                                                                    : ""
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                                    })
+                                                    .join("")
+                                                : `<div class="text-center py-2 text-muted"><small>Belum ada item</small></div>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                                })
+                                .join("")
+                            : `<div class="text-center py-3 text-muted"><p>Belum ada kategori</p></div>`
+                        }
+                    </div>
+                </div>
+            `;
 
             wishlistsContainer.appendChild(wishlistCard);
           });
@@ -2991,31 +3360,29 @@
               .padStart(2, "0")}`;
 
             transactionItem.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-1">${transaction.description}</h6>
-                                <small class="text-muted">${formattedDate}</small>
-                            </div>
-                            <div class="text-end">
-                                <div class="${
-                                  transaction.type === "deposit"
-                                    ? "text-success"
-                                    : "text-danger"
-                                } fw-bold">
-                                    ${
-                                      transaction.type === "deposit" ? "+" : "-"
-                                    } Rp ${transaction.amount.toLocaleString(
-              "id-ID"
-            )}
-                                </div>
-                                <small class="text-muted">${
-                                  transaction.type === "deposit"
-                                    ? "Tabungan"
-                                    : "Penarikan"
-                                }</small>
-                            </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">${transaction.description}</h6>
+                        <small class="text-muted">${formattedDate}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="${
+                          transaction.type === "deposit"
+                            ? "text-success"
+                            : "text-danger"
+                        } fw-bold">
+                            ${
+                              transaction.type === "deposit" ? "+" : "-"
+                            } Rp ${transaction.amount.toLocaleString("id-ID")}
                         </div>
-                    `;
+                        <small class="text-muted">${
+                          transaction.type === "deposit"
+                            ? "Tabungan"
+                            : "Penarikan"
+                        }</small>
+                    </div>
+                </div>
+            `;
 
             transactionHistory.appendChild(transactionItem);
           });
