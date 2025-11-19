@@ -970,7 +970,7 @@
       <i class="fas fa-plus"></i>
     </div>
 
-    <!-- All Modals remain the same as before -->
+    <!-- All Modals -->
     <!-- Add Wishlist Modal -->
     <div class="modal fade" id="addWishlistModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
@@ -1410,7 +1410,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // JavaScript code remains the same as the previous working version
       // Data storage
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
@@ -1535,6 +1534,265 @@
         previewElement.innerHTML = "";
       }
 
+      // ===== BAGIAN FOTO KATEGORI YANG DIPERBAIKI =====
+
+      // Add a new category - DIPERBAIKI
+      function addCategory() {
+        const wishlistId = parseInt(
+          document.getElementById("categoryWishlistId").value
+        );
+        const name = document.getElementById("categoryName").value;
+        const description = document.getElementById(
+          "categoryDescription"
+        ).value;
+
+        if (!wishlistId || !name) {
+          alert("Nama kategori harus diisi!");
+          return;
+        }
+
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        // Get image data if available - DIPERBAIKI
+        let photos = [];
+        const previewImg = document.querySelector("#categoryImagePreview img");
+        if (previewImg) {
+          photos.push(previewImg.src);
+        }
+
+        const newCategory = {
+          id: Date.now(),
+          name,
+          description,
+          image: photos.length > 0 ? photos[0] : null, // Foto pertama jadi cover
+          photos: photos, // Simpan semua foto di array
+          items: [],
+        };
+
+        wishlist.categories.push(newCategory);
+        saveToLocalStorage();
+        renderWishlists();
+        updateStats();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Kategori berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        document.getElementById("addCategoryForm").reset();
+        clearImagePreview(document.getElementById("categoryImagePreview"));
+        const addCategoryModal = bootstrap.Modal.getInstance(
+          document.getElementById("addCategoryModal")
+        );
+        addCategoryModal.hide();
+      }
+
+      // Upload category photos - DIPERBAIKI
+      function uploadCategoryPhotos() {
+        if (!currentCategoryForPhotoManagement) return;
+
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.multiple = true;
+        input.onchange = function (e) {
+          const files = e.target.files;
+          if (!files || files.length === 0) return;
+
+          const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+          const wishlist = wishlists.find((w) => w.id === wishlistId);
+          const category = wishlist.categories.find((c) => c.id === categoryId);
+
+          if (!category) return;
+
+          let uploadedCount = 0;
+          let newPhotos = [];
+
+          // Process each file
+          Array.from(files).forEach((file) => {
+            if (!file.type.startsWith("image/")) {
+              alert(`File "${file.name}" bukan gambar yang valid!`);
+              return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+              alert(`File "${file.name}" terlalu besar (maksimal 2MB)!`);
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              newPhotos.push(e.target.result);
+              uploadedCount++;
+
+              // Jika semua file telah diproses
+              if (uploadedCount === Array.from(files).length) {
+                // Tambahkan foto baru ke kategori
+                if (!category.photos) {
+                  category.photos = [];
+                }
+
+                category.photos = [...category.photos, ...newPhotos];
+
+                // Update image cover jika belum ada
+                if (!category.image && newPhotos.length > 0) {
+                  category.image = newPhotos[0];
+                }
+
+                saveToLocalStorage();
+                renderCategoryPhotos();
+                renderWishlists();
+
+                // Show success message
+                document.getElementById(
+                  "successMessage"
+                ).textContent = `${newPhotos.length} foto berhasil ditambahkan ke kategori!`;
+                const successModal = new bootstrap.Modal(
+                  document.getElementById("successModal")
+                );
+                successModal.show();
+              }
+            };
+            reader.onerror = function () {
+              alert(`Gagal membaca file "${file.name}"`);
+              uploadedCount++;
+            };
+            reader.readAsDataURL(file);
+          });
+        };
+        input.click();
+      }
+
+      // Delete photo dari kategori - DIPERBAIKI
+      function deleteCategoryPhoto(photoIndex) {
+        if (!confirm("Apakah Anda yakin ingin menghapus foto ini?")) return;
+        if (!currentCategoryForPhotoManagement) return;
+
+        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (!category || !category.photos || category.photos.length === 0)
+          return;
+
+        // Hapus foto
+        category.photos.splice(photoIndex, 1);
+
+        // Update image cover jika foto yang dihapus adalah cover
+        if (photoIndex === 0 && category.photos.length > 0) {
+          category.image = category.photos[0];
+        } else if (category.photos.length === 0) {
+          category.image = null;
+        }
+
+        saveToLocalStorage();
+        renderCategoryPhotos();
+        renderWishlists();
+      }
+
+      // Set sebagai cover photo - FUNGSI BARU
+      function setAsCoverPhoto(photoIndex) {
+        if (!currentCategoryForPhotoManagement) return;
+
+        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (
+          !category ||
+          !category.photos ||
+          category.photos.length <= photoIndex
+        )
+          return;
+
+        // Pindahkan foto ke posisi pertama
+        const photo = category.photos[photoIndex];
+        category.photos.splice(photoIndex, 1);
+        category.photos.unshift(photo);
+        category.image = photo; // Update cover image
+
+        saveToLocalStorage();
+        renderCategoryPhotos();
+        renderWishlists();
+
+        document.getElementById("successMessage").textContent =
+          "Foto cover berhasil diubah!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+      }
+
+      // Render category photos in management modal - DIPERBAIKI
+      function renderCategoryPhotos() {
+        if (!currentCategoryForPhotoManagement) return;
+
+        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+
+        if (!category) return;
+
+        categoryPhotosContainer.innerHTML = "";
+
+        // Pastikan photos array ada
+        if (!category.photos) {
+          category.photos = [];
+        }
+
+        if (category.photos.length > 0) {
+          category.photos.forEach((photo, index) => {
+            const photoContainer = document.createElement("div");
+            photoContainer.className = "photo-container";
+
+            photoContainer.innerHTML = `
+                        <div class="position-relative">
+                            <img src="${photo}" class="category-photo-thumbnail" alt="Foto kategori ${
+              index + 1
+            }" onclick="event.stopPropagation(); viewPhoto('${photo}')">
+                            ${
+                              index === 0
+                                ? '<span class="cover-badge">Cover</span>'
+                                : ""
+                            }
+                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
+                                    style="width: 20px; height: 20px; font-size: 0.7rem;"
+                                    onclick="event.stopPropagation(); deleteCategoryPhoto(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            ${
+                              index !== 0
+                                ? `
+                            <button class="btn btn-sm btn-primary position-absolute bottom-0 start-0 p-0" 
+                                    style="width: 20px; height: 20px; font-size: 0.7rem;"
+                                    onclick="event.stopPropagation(); setAsCoverPhoto(${index})">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            `
+                                : ""
+                            }
+                        </div>
+                    `;
+
+            categoryPhotosContainer.appendChild(photoContainer);
+          });
+        } else {
+          categoryPhotosContainer.innerHTML = `
+                    <div class="text-center text-muted py-3">
+                        <i class="fas fa-images fa-2x mb-2"></i>
+                        <p>Belum ada foto untuk kategori ini</p>
+                    </div>
+                `;
+        }
+      }
+
+      // ===== FUNGSI LAIN YANG TIDAK DIUBAH =====
+
       // Add a new wishlist
       function addWishlist() {
         const name = document.getElementById("wishlistName").value;
@@ -1577,62 +1835,6 @@
 
         // Add confetti animation
         createConfetti();
-      }
-
-      // Add a category to a wishlist
-      function addCategory() {
-        const wishlistId = parseInt(
-          document.getElementById("categoryWishlistId").value
-        );
-        const name = document.getElementById("categoryName").value;
-        const description = document.getElementById(
-          "categoryDescription"
-        ).value;
-
-        if (!wishlistId || !name) {
-          alert("Nama kategori harus diisi!");
-          return;
-        }
-
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        if (!wishlist) return;
-
-        // Get image data if available
-        let imageData = null;
-        const previewImg = document.querySelector("#categoryImagePreview img");
-        if (previewImg) {
-          imageData = previewImg.src;
-        }
-
-        const newCategory = {
-          id: Date.now(),
-          name,
-          description,
-          image: imageData,
-          items: [],
-          photos: imageData ? [imageData] : [],
-        };
-
-        wishlist.categories.push(newCategory);
-        saveToLocalStorage();
-        renderWishlists();
-        updateStats();
-
-        // Show success message
-        document.getElementById("successMessage").textContent =
-          "Kategori berhasil ditambahkan!";
-        const successModal = new bootstrap.Modal(
-          document.getElementById("successModal")
-        );
-        successModal.show();
-
-        // Reset form
-        document.getElementById("addCategoryForm").reset();
-        clearImagePreview(document.getElementById("categoryImagePreview"));
-        const addCategoryModal = bootstrap.Modal.getInstance(
-          document.getElementById("addCategoryModal")
-        );
-        addCategoryModal.hide();
       }
 
       // Add an item to a category
@@ -2009,133 +2211,6 @@
         modal.show();
       }
 
-      // Render category photos in management modal
-      function renderCategoryPhotos() {
-        if (!currentCategoryForPhotoManagement) return;
-
-        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        const category = wishlist.categories.find((c) => c.id === categoryId);
-
-        if (!category) return;
-
-        categoryPhotosContainer.innerHTML = "";
-
-        if (category.photos && category.photos.length > 0) {
-          category.photos.forEach((photo, index) => {
-            const photoContainer = document.createElement("div");
-            photoContainer.className = "photo-container";
-
-            photoContainer.innerHTML = `
-                        <div class="position-relative">
-                            <img src="${photo}" class="category-photo-thumbnail" alt="Foto kategori ${
-              index + 1
-            }" onclick="viewPhoto('${photo}')">
-                            ${
-                              index === 0
-                                ? '<span class="cover-badge">Cover</span>'
-                                : ""
-                            }
-                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
-                                    style="width: 20px; height: 20px; font-size: 0.7rem;"
-                                    onclick="deleteCategoryPhoto(${index})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-
-            categoryPhotosContainer.appendChild(photoContainer);
-          });
-        } else {
-          categoryPhotosContainer.innerHTML = `
-                    <div class="text-center text-muted py-3">
-                        <i class="fas fa-images fa-2x mb-2"></i>
-                        <p>Belum ada foto untuk kategori ini</p>
-                    </div>
-                `;
-        }
-      }
-
-      // Upload category photos
-      function uploadCategoryPhotos() {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        input.multiple = true;
-        input.onchange = function (e) {
-          const files = e.target.files;
-          if (!files || files.length === 0) return;
-
-          let uploadedCount = 0;
-
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (!file.type.startsWith("image/")) {
-              alert("Silakan pilih file gambar yang valid!");
-              continue;
-            }
-
-            if (file.size > 2 * 1024 * 1024) {
-              alert("Ukuran file maksimal 2MB!");
-              continue;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const { wishlistId, categoryId } =
-                currentCategoryForPhotoManagement;
-              const wishlist = wishlists.find((w) => w.id === wishlistId);
-              const category = wishlist.categories.find(
-                (c) => c.id === categoryId
-              );
-
-              if (!category.photos) {
-                category.photos = [];
-              }
-
-              category.photos.push(e.target.result);
-              uploadedCount++;
-
-              // Jika semua file telah diproses, simpan dan render ulang
-              if (uploadedCount === files.length) {
-                saveToLocalStorage();
-                renderCategoryPhotos();
-                renderWishlists();
-
-                // Show success message
-                document.getElementById(
-                  "successMessage"
-                ).textContent = `${uploadedCount} foto berhasil ditambahkan ke kategori!`;
-                const successModal = new bootstrap.Modal(
-                  document.getElementById("successModal")
-                );
-                successModal.show();
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-        };
-        input.click();
-      }
-
-      // Delete photo dari kategori
-      function deleteCategoryPhoto(photoIndex) {
-        if (confirm("Apakah Anda yakin ingin menghapus foto ini?")) {
-          if (!currentCategoryForPhotoManagement) return;
-
-          const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-          const wishlist = wishlists.find((w) => w.id === wishlistId);
-          const category = wishlist.categories.find((c) => c.id === categoryId);
-
-          if (category && category.photos) {
-            category.photos.splice(photoIndex, 1);
-            saveToLocalStorage();
-            renderCategoryPhotos();
-            renderWishlists();
-          }
-        }
-      }
-
       // View photo in modal
       function viewPhoto(photoSrc) {
         document.getElementById("modalPhoto").src = photoSrc;
@@ -2331,7 +2406,7 @@
         }
       }
 
-      // Render wishlists
+      // Render wishlists - DIPERBAIKI DENGAN EVENT.STOPPROPAGATION()
       function renderWishlists(filter = "all") {
         let filteredWishlists = wishlists;
 
@@ -2494,7 +2569,7 @@
                                             categoryAchievedItems ===
                                               categoryTotalItems;
 
-                                          // Foto kategori
+                                          // Foto kategori - DIPERBAIKI DENGAN EVENT.STOPPROPAGATION()
                                           const categoryCoverPhoto =
                                             category.photos &&
                                             category.photos.length > 0
@@ -2512,7 +2587,7 @@
                                                         ${
                                                           categoryCoverPhoto
                                                             ? `<div class="position-relative">
-                                                                <img src="${categoryCoverPhoto}" class="item-image" onclick="viewPhoto('${categoryCoverPhoto}')" alt="${
+                                                                <img src="${categoryCoverPhoto}" class="item-image" onclick="event.stopPropagation(); viewPhoto('${categoryCoverPhoto}')" alt="${
                                                                 category.name
                                                               }">
                                                                 ${
@@ -2633,7 +2708,7 @@
                                                                     <div class="me-3">
                                                                         ${
                                                                           item.image
-                                                                            ? `<img src="${item.image}" class="item-image" onclick="viewPhoto('${item.image}')" alt="${item.name}">`
+                                                                            ? `<img src="${item.image}" class="item-image" onclick="event.stopPropagation(); viewPhoto('${item.image}')" alt="${item.name}">`
                                                                             : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
                                                                         }
                                                                     </div>
@@ -2647,7 +2722,7 @@
                                                                   : ""
                                                               }</h6>
                                                                             <div>
-                                                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="editItem(${
+                                                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation(); editItem(${
                                                                                   wishlist.id
                                                                                 }, ${
                                                                 category.id
@@ -2658,7 +2733,7 @@
                                                                                   item.achieved
                                                                                     ? "btn-warning"
                                                                                     : "btn-success"
-                                                                                } me-2" onclick="markItemAchieved(${
+                                                                                } me-2" onclick="event.stopPropagation(); markItemAchieved(${
                                                                 wishlist.id
                                                               }, ${
                                                                 category.id
@@ -2669,7 +2744,7 @@
                                                                                         : "fa-check"
                                                                                     }"></i>
                                                                                 </button>
-                                                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${
+                                                                                <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteItem(${
                                                                                   wishlist.id
                                                                                 }, ${
                                                                 category.id
