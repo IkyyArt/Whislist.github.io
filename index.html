@@ -39,27 +39,29 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         color: var(--dark);
         overflow-x: hidden;
-        padding-bottom: 80px;
       }
 
-      /* Navbar Mobile */
+      /* Navbar Mobile Friendly */
       .navbar {
-        background: rgba(255, 255, 255, 0.98);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-        padding: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 1rem 0;
       }
 
       .navbar-brand {
         font-weight: 700;
         color: var(--primary) !important;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
       }
 
       .navbar-toggler {
         border: none;
         padding: 0.25rem 0.5rem;
-        font-size: 0.9rem;
+      }
+
+      .navbar-toggler:focus {
+        box-shadow: none;
       }
 
       /* Hero Section Mobile */
@@ -70,11 +72,10 @@
           var(--secondary) 100%
         );
         color: white;
-        padding: 2.5rem 0;
-        border-radius: 0 0 25px 25px;
+        padding: 3rem 0;
+        border-radius: 0 0 30px 30px;
         position: relative;
         overflow: hidden;
-        margin-bottom: 1rem;
       }
 
       .hero-section::before {
@@ -91,50 +92,46 @@
 
       .hero-title {
         font-weight: 800;
-        margin-bottom: 0.8rem;
-        font-size: 1.8rem;
-        line-height: 1.2;
+        margin-bottom: 1rem;
+        font-size: 2rem;
       }
 
       .hero-subtitle {
-        font-size: 0.95rem;
+        font-size: 1rem;
         margin-bottom: 1.5rem;
         opacity: 0.9;
-        line-height: 1.4;
       }
 
       /* Stats Section Mobile */
       .stats-section {
-        margin-top: -1.5rem;
+        margin-top: -2rem;
         position: relative;
         z-index: 10;
-        padding: 0 0.5rem;
       }
 
       .stats-card {
         background: white;
-        border-radius: 12px;
-        padding: 1.2rem 0.8rem;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         text-align: center;
         transition: all 0.3s ease;
         height: 100%;
-        margin-bottom: 0.8rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 1rem;
       }
 
       .stats-number {
-        font-size: 1.6rem;
+        font-size: 2rem;
         font-weight: 800;
         color: var(--primary);
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.5rem;
         line-height: 1;
       }
 
       .stats-label {
         color: #6c757d;
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
       }
 
       /* Savings Section Mobile */
@@ -143,63 +140,55 @@
         color: white;
         border-radius: 15px;
         padding: 1.5rem;
-        box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
         transition: all 0.3s ease;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
       }
 
       .savings-amount {
-        font-size: 1.8rem;
+        font-size: 2rem;
         font-weight: 800;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
       }
 
       .budget-summary {
         background: white;
         border-radius: 15px;
         padding: 1.5rem;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         height: 100%;
-        border: 1px solid rgba(0, 0, 0, 0.05);
       }
 
       /* Main Content Mobile */
       .main-content {
-        padding: 2rem 0;
+        padding: 3rem 0;
       }
 
       .section-title {
         font-weight: 700;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
         color: var(--dark);
-        font-size: 1.4rem;
+        font-size: 1.5rem;
       }
 
       /* Tabs Mobile */
       .nav-tabs {
         border-bottom: 2px solid #e9ecef;
-        margin-bottom: 1.2rem;
+        margin-bottom: 1.5rem;
         flex-wrap: nowrap;
         overflow-x: auto;
         white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 1px;
-      }
-
-      .nav-tabs::-webkit-scrollbar {
-        display: none;
       }
 
       .nav-tabs .nav-link {
         border: none;
         color: #6c757d;
         font-weight: 600;
-        padding: 0.7rem 0.9rem;
+        padding: 0.75rem 1rem;
         border-radius: 10px 10px 0 0;
         transition: all 0.3s;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         min-width: auto;
-        white-space: nowrap;
       }
 
       .nav-tabs .nav-link.active {
@@ -212,14 +201,14 @@
         background: white;
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
-        margin-bottom: 1.2rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        border: 1px solid #f1f3f4;
       }
 
       .wishlist-header {
-        padding: 1.2rem;
+        padding: 1.25rem;
         background: rgba(108, 92, 231, 0.05);
         cursor: pointer;
         transition: background 0.3s;
@@ -228,55 +217,54 @@
       .wishlist-title {
         font-weight: 700;
         color: var(--dark);
-        margin-bottom: 0.2rem;
-        font-size: 1.05rem;
-        line-height: 1.3;
+        margin-bottom: 0.25rem;
+        font-size: 1.1rem;
       }
 
       .wishlist-meta {
         color: #6c757d;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
       }
 
       .wishlist-price {
         font-weight: 700;
         color: var(--primary);
-        font-size: 0.95rem;
+        font-size: 1rem;
       }
 
       .wishlist-content {
-        padding: 1.2rem;
+        padding: 1.25rem;
       }
 
       /* Progress Bars Mobile */
       .progress {
-        height: 6px;
-        border-radius: 8px;
-        margin: 0.6rem 0;
+        height: 8px;
+        border-radius: 10px;
+        margin: 0.75rem 0;
         background: #e9ecef;
       }
 
       .progress-bar {
-        border-radius: 8px;
+        border-radius: 10px;
         transition: width 0.5s ease;
       }
 
       /* Buttons Mobile */
       .btn {
-        border-radius: 12px;
-        padding: 0.7rem 1.2rem;
+        border-radius: 50px;
+        padding: 0.6rem 1.25rem;
         font-weight: 600;
         transition: all 0.3s ease;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         min-height: 44px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: none;
       }
 
       .btn-primary {
         background: var(--primary);
+        border: none;
       }
 
       .btn-primary:hover {
@@ -286,24 +274,19 @@
 
       .btn-success {
         background: var(--success);
+        border: none;
       }
 
       .btn-light {
         background: white;
+        border: none;
         color: var(--dark);
       }
 
       .btn-sm {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
         min-height: 36px;
-        border-radius: 10px;
-      }
-
-      .btn-outline-primary {
-        border: 1.5px solid var(--primary);
-        color: var(--primary);
-        background: transparent;
       }
 
       /* Floating Button Mobile */
@@ -311,86 +294,82 @@
         position: fixed;
         bottom: 1.5rem;
         right: 1.5rem;
-        width: 60px;
-        height: 60px;
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
         background: var(--accent);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.3rem;
-        box-shadow: 0 4px 20px rgba(253, 121, 168, 0.5);
+        font-size: 1.25rem;
+        box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
         z-index: 1000;
         transition: all 0.3s ease;
         animation: pulse 2s infinite;
-        border: none;
       }
 
       .floating-btn:hover {
         transform: scale(1.1);
-        box-shadow: 0 6px 25px rgba(253, 121, 168, 0.7);
+        box-shadow: 0 8px 25px rgba(253, 121, 168, 0.7);
       }
 
       @keyframes pulse {
         0% {
-          box-shadow: 0 4px 20px rgba(253, 121, 168, 0.5);
+          box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
         }
         50% {
-          box-shadow: 0 4px 25px rgba(253, 121, 168, 0.8);
+          box-shadow: 0 5px 30px rgba(253, 121, 168, 0.8);
         }
         100% {
-          box-shadow: 0 4px 20px rgba(253, 121, 168, 0.5);
+          box-shadow: 0 5px 20px rgba(253, 121, 168, 0.5);
         }
       }
 
       /* Empty State Mobile */
       .empty-state {
         text-align: center;
-        padding: 2rem 1rem;
+        padding: 2.5rem 1rem;
         color: #6c757d;
       }
 
       .empty-state i {
-        font-size: 2.5rem;
-        margin-bottom: 0.8rem;
+        font-size: 3rem;
+        margin-bottom: 1rem;
         color: #dee2e6;
       }
 
       .empty-state h3 {
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.75rem;
         color: #6c757d;
-        font-size: 1.2rem;
+        font-size: 1.25rem;
       }
 
       /* Modal Mobile */
       .modal-content {
         border-radius: 15px;
         border: none;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        margin: 1rem;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
       }
 
       .modal-header {
-        padding: 1.2rem;
-        border-bottom: 1px solid #e9ecef;
+        padding: 1.25rem;
       }
 
       .modal-body {
-        padding: 1.2rem;
+        padding: 1.25rem;
       }
 
       .modal-footer {
-        padding: 1rem 1.2rem;
-        border-top: 1px solid #e9ecef;
+        padding: 1rem 1.25rem;
       }
 
       /* Form Controls Mobile */
       .form-control,
       .form-select {
         border-radius: 10px;
-        padding: 0.8rem;
-        border: 1.5px solid #e0e0e0;
+        padding: 0.75rem;
+        border: 1px solid #e0e0e0;
         transition: all 0.3s ease;
         font-size: 1rem;
       }
@@ -398,18 +377,18 @@
       .form-control:focus,
       .form-select:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.15);
+        box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
       }
 
       /* Image Upload Mobile */
       .image-upload-container {
         border: 2px dashed #ddd;
         border-radius: 10px;
-        padding: 1.2rem;
+        padding: 1.5rem;
         text-align: center;
         transition: all 0.3s ease;
         cursor: pointer;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
       }
 
       .image-upload-container:hover {
@@ -419,58 +398,35 @@
 
       .image-preview {
         max-width: 100%;
-        max-height: 180px;
-        border-radius: 8px;
-        margin: 0.6rem auto;
+        max-height: 200px;
+        border-radius: 10px;
+        margin: 0.75rem auto;
         display: block;
         border: 2px solid var(--secondary);
       }
 
       .item-image {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         object-fit: cover;
         border-radius: 8px;
-        margin-right: 0.6rem;
+        margin-right: 0.75rem;
         border: 2px solid var(--secondary);
         cursor: pointer;
       }
 
       .item-image-placeholder {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         background: linear-gradient(135deg, var(--secondary), var(--primary));
         border-radius: 8px;
-        margin-right: 0.6rem;
+        margin-right: 0.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         border: 2px dashed var(--secondary);
-      }
-
-      /* Category Gallery */
-      .category-gallery {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-top: 0.6rem;
-      }
-
-      .category-photo-thumbnail {
-        width: 55px;
-        height: 55px;
-        object-fit: cover;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-      }
-
-      .category-photo-thumbnail:hover {
-        transform: scale(1.1);
-        border-color: var(--primary);
       }
 
       /* Transaction History Mobile */
@@ -480,60 +436,28 @@
       }
 
       .transaction-item {
-        padding: 0.8rem;
+        padding: 0.75rem;
         border-bottom: 1px solid #e9ecef;
         transition: all 0.3s ease;
       }
 
-      .transaction-item:last-child {
-        border-bottom: none;
+      .transaction-item:hover {
+        background: #f8f9fa;
       }
 
       /* Footer Mobile */
       footer {
         background: var(--dark);
         color: white;
-        padding: 1.5rem 0;
-        margin-top: 2rem;
-      }
-
-      /* Cover Photo Indicator */
-      .cover-badge {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: var(--success);
-        color: white;
-        font-size: 0.55rem;
-        padding: 2px 4px;
-        border-radius: 4px 0 4px 0;
-        z-index: 1;
-      }
-
-      .photo-container {
-        position: relative;
-        display: inline-block;
-      }
-
-      /* Category Photo Management */
-      .category-photo-management {
-        margin-top: 1rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 10px;
-      }
-
-      .category-photo-management h6 {
-        margin-bottom: 0.6rem;
-        color: var(--dark);
-        font-size: 0.95rem;
+        padding: 2rem 0;
+        margin-top: 3rem;
       }
 
       /* Animation */
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(15px);
+          transform: translateY(20px);
         }
         to {
           opacity: 1;
@@ -542,25 +466,24 @@
       }
 
       .fade-in {
-        animation: fadeIn 0.4s ease forwards;
+        animation: fadeIn 0.5s ease forwards;
       }
 
       /* Badge styles */
       .badge {
-        font-size: 0.65rem;
-        padding: 0.2rem 0.4rem;
-        border-radius: 6px;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
       }
 
       /* Confetti */
       .confetti {
         position: fixed;
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         background-color: var(--primary);
         top: -10px;
         border-radius: 50%;
-        animation: confetti-fall 4s linear forwards;
+        animation: confetti-fall 5s linear forwards;
         z-index: 10000;
       }
 
@@ -578,33 +501,28 @@
       /* Mobile-specific improvements */
       @media (max-width: 576px) {
         .container {
-          padding-left: 1rem;
-          padding-right: 1rem;
-        }
-
-        .hero-section {
-          padding: 2rem 0;
+          padding-left: 15px;
+          padding-right: 15px;
         }
 
         .hero-title {
-          font-size: 1.6rem;
+          font-size: 1.75rem;
         }
 
         .hero-subtitle {
           font-size: 0.9rem;
-          margin-bottom: 1.2rem;
         }
 
         .stats-number {
-          font-size: 1.4rem;
+          font-size: 1.75rem;
         }
 
         .savings-amount {
-          font-size: 1.6rem;
+          font-size: 1.75rem;
         }
 
         .section-title {
-          font-size: 1.3rem;
+          font-size: 1.25rem;
         }
 
         .wishlist-title {
@@ -626,65 +544,12 @@
         }
 
         .d-flex.justify-content-between > * {
-          margin-bottom: 0.6rem;
+          margin-bottom: 0.75rem;
         }
 
         .d-flex.justify-content-between > *:last-child {
           margin-bottom: 0;
         }
-
-        .modal-content {
-          margin: 0.5rem;
-        }
-
-        /* Improved spacing for mobile */
-        .mb-3 {
-          margin-bottom: 1rem !important;
-        }
-
-        .mb-2 {
-          margin-bottom: 0.5rem !important;
-        }
-
-        .p-3 {
-          padding: 1rem !important;
-        }
-
-        .p-2 {
-          padding: 0.7rem !important;
-        }
-      }
-
-      /* Additional mobile optimizations */
-      @media (max-width: 400px) {
-        .hero-title {
-          font-size: 1.4rem;
-        }
-
-        .stats-card {
-          padding: 1rem 0.5rem;
-        }
-
-        .stats-number {
-          font-size: 1.3rem;
-        }
-
-        .nav-tabs .nav-link {
-          padding: 0.6rem 0.7rem;
-          font-size: 0.8rem;
-        }
-      }
-
-      /* Touch improvements */
-      .btn,
-      .nav-link,
-      .wishlist-header {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      /* Better scrolling */
-      .transaction-history {
-        -webkit-overflow-scrolling: touch;
       }
     </style>
   </head>
@@ -739,7 +604,7 @@
     <!-- Stats Section -->
     <section class="stats-section">
       <div class="container">
-        <div class="row g-2">
+        <div class="row g-3">
           <div class="col-4">
             <div class="stats-card fade-in">
               <div class="stats-number" id="totalWishlists">0</div>
@@ -776,7 +641,7 @@
                   <p class="mb-0">Tabungan untuk semua wishlist</p>
                 </div>
                 <div class="col-12 col-md-6 text-md-end">
-                  <div class="d-grid gap-2 d-md-block">
+                  <div class="d-grid d-md-block gap-2">
                     <button
                       class="btn btn-light me-md-2 mb-2 mb-md-0"
                       data-bs-toggle="modal"
@@ -865,7 +730,7 @@
             id="wishlists-content"
             role="tabpanel"
           >
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="section-title mb-0">Daftar Wishlist Saya</h2>
               <div class="dropdown">
                 <button
@@ -954,7 +819,7 @@
     <!-- Footer -->
     <footer>
       <div class="container text-center">
-        <p class="mb-0">
+        <p>
           &copy; 2023 Wishlist & Tabungan App. Kelola impian dan keuanganmu
           dengan mudah!
         </p>
@@ -970,7 +835,6 @@
       <i class="fas fa-plus"></i>
     </div>
 
-    <!-- All Modals -->
     <!-- Add Wishlist Modal -->
     <div class="modal fade" id="addWishlistModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
@@ -1064,27 +928,6 @@
                   placeholder="Deskripsi tentang kategori ini..."
                 ></textarea>
               </div>
-              <!-- Upload Foto Kategori -->
-              <div class="mb-3">
-                <label class="form-label">Foto Kategori (Opsional)</label>
-                <div
-                  class="image-upload-container"
-                  id="categoryImageUploadContainer"
-                >
-                  <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
-                  <p class="mb-2">Klik untuk upload foto</p>
-                  <small class="text-muted"
-                    >Format: JPG, PNG, GIF (Max 2MB)</small
-                  >
-                  <input
-                    type="file"
-                    id="categoryImage"
-                    accept="image/*"
-                    class="d-none"
-                  />
-                </div>
-                <div id="categoryImagePreview" class="text-center"></div>
-              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -1145,7 +988,7 @@
                 <label class="form-label">Foto Item (Opsional)</label>
                 <div class="image-upload-container" id="imageUploadContainer">
                   <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
-                  <p class="mb-2">Klik untuk upload foto</p>
+                  <p class="mb-2">Klik atau drag & drop untuk upload foto</p>
                   <small class="text-muted"
                     >Format: JPG, PNG, GIF (Max 2MB)</small
                   >
@@ -1324,10 +1167,10 @@
     <div class="modal fade" id="successModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-body text-center p-4">
+          <div class="modal-body text-center p-5">
             <i
               class="fas fa-check-circle text-success mb-3"
-              style="font-size: 3.5rem"
+              style="font-size: 4rem"
             ></i>
             <h3 class="mb-3">Berhasil!</h3>
             <p id="successMessage">Wishlist berhasil ditambahkan!</p>
@@ -1362,59 +1205,12 @@
       </div>
     </div>
 
-    <!-- Category Photo Management Modal -->
-    <div class="modal fade" id="categoryPhotoManagementModal" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Kelola Foto Kategori</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="category-photo-management">
-              <h6>Foto Kategori</h6>
-              <div class="mb-3">
-                <button
-                  class="btn btn-primary btn-sm"
-                  onclick="uploadCategoryPhotos()"
-                >
-                  <i class="fas fa-plus me-1"></i>Tambah Foto
-                </button>
-              </div>
-              <div id="categoryPhotosContainer" class="category-gallery">
-                <!-- Foto kategori akan ditampilkan di sini -->
-              </div>
-              <div class="mt-3">
-                <small class="text-muted"
-                  >Foto pertama akan menjadi foto cover.</small
-                >
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Tutup
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Data storage
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-      let currentCategoryForPhotoManagement = null;
 
       // DOM Elements
       const wishlistsContainer = document.getElementById("wishlistsContainer");
@@ -1423,10 +1219,17 @@
         "emptyTransactionState"
       );
       const transactionHistory = document.getElementById("transactionHistory");
+      const addWishlistForm = document.getElementById("addWishlistForm");
       const saveWishlistBtn = document.getElementById("saveWishlistBtn");
+      const addCategoryForm = document.getElementById("addCategoryForm");
       const saveCategoryBtn = document.getElementById("saveCategoryBtn");
+      const addItemForm = document.getElementById("addItemForm");
       const saveItemBtn = document.getElementById("saveItemBtn");
+      const addSavingsForm = document.getElementById("addSavingsForm");
       const saveSavingsBtn = document.getElementById("saveSavingsBtn");
+      const withdrawSavingsForm = document.getElementById(
+        "withdrawSavingsForm"
+      );
       const saveWithdrawBtn = document.getElementById("saveWithdrawBtn");
       const totalWishlistsEl = document.getElementById("totalWishlists");
       const totalCategoriesEl = document.getElementById("totalCategories");
@@ -1437,9 +1240,13 @@
       const summaryRemainingEl = document.getElementById("summaryRemaining");
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
-      const categoryPhotosContainer = document.getElementById(
-        "categoryPhotosContainer"
+
+      // Image upload elements
+      const imageUploadContainer = document.getElementById(
+        "imageUploadContainer"
       );
+      const itemImageInput = document.getElementById("itemImage");
+      const imagePreview = document.getElementById("imagePreview");
 
       // Initialize the app
       document.addEventListener("DOMContentLoaded", function () {
@@ -1449,17 +1256,26 @@
         renderTransactions();
         setupEventListeners();
         setupImageUpload();
-        setupCategoryImageUpload();
       });
 
       // Setup event listeners
       function setupEventListeners() {
+        // Save wishlist button
         saveWishlistBtn.addEventListener("click", addWishlist);
+
+        // Save category button
         saveCategoryBtn.addEventListener("click", addCategory);
+
+        // Save item button
         saveItemBtn.addEventListener("click", addItem);
+
+        // Save savings button
         saveSavingsBtn.addEventListener("click", addSavings);
+
+        // Save withdraw button
         saveWithdrawBtn.addEventListener("click", withdrawSavings);
 
+        // Filter options
         document.querySelectorAll(".filter-option").forEach((option) => {
           option.addEventListener("click", function (e) {
             e.preventDefault();
@@ -1471,42 +1287,38 @@
 
       // Setup image upload functionality
       function setupImageUpload() {
-        const imageUploadContainer = document.getElementById(
-          "imageUploadContainer"
-        );
-        const itemImageInput = document.getElementById("itemImage");
-        const imagePreview = document.getElementById("imagePreview");
-
+        // Click to upload
         imageUploadContainer.addEventListener("click", function () {
           itemImageInput.click();
         });
 
+        // File selection
         itemImageInput.addEventListener("change", function (e) {
-          handleImageUpload(e.target.files[0], imagePreview);
-        });
-      }
-
-      // Setup category image upload functionality
-      function setupCategoryImageUpload() {
-        const categoryImageUploadContainer = document.getElementById(
-          "categoryImageUploadContainer"
-        );
-        const categoryImageInput = document.getElementById("categoryImage");
-        const categoryImagePreview = document.getElementById(
-          "categoryImagePreview"
-        );
-
-        categoryImageUploadContainer.addEventListener("click", function () {
-          categoryImageInput.click();
+          handleImageUpload(e.target.files[0]);
         });
 
-        categoryImageInput.addEventListener("change", function (e) {
-          handleImageUpload(e.target.files[0], categoryImagePreview);
+        // Drag and drop
+        imageUploadContainer.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          this.classList.add("dragover");
+        });
+
+        imageUploadContainer.addEventListener("dragleave", function (e) {
+          e.preventDefault();
+          this.classList.remove("dragover");
+        });
+
+        imageUploadContainer.addEventListener("drop", function (e) {
+          e.preventDefault();
+          this.classList.remove("dragover");
+          if (e.dataTransfer.files.length) {
+            handleImageUpload(e.dataTransfer.files[0]);
+          }
         });
       }
 
       // Handle image upload
-      function handleImageUpload(file, previewElement) {
+      function handleImageUpload(file) {
         if (!file || !file.type.startsWith("image/")) {
           alert("Silakan pilih file gambar yang valid!");
           return;
@@ -1519,279 +1331,21 @@
 
         const reader = new FileReader();
         reader.onload = function (e) {
-          previewElement.innerHTML = `
-                    <img src="${e.target.result}" class="image-preview" alt="Preview">
-                    <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview(this.parentElement)">
-                        <i class="fas fa-times me-1"></i>Hapus Foto
-                    </button>
-                `;
+          imagePreview.innerHTML = `
+              <img src="${e.target.result}" class="image-preview" alt="Preview">
+              <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
+                  <i class="fas fa-times me-1"></i>Hapus Foto
+              </button>
+          `;
         };
         reader.readAsDataURL(file);
       }
 
       // Clear image preview
-      function clearImagePreview(previewElement) {
-        previewElement.innerHTML = "";
+      function clearImagePreview() {
+        imagePreview.innerHTML = "";
+        itemImageInput.value = "";
       }
-
-      // ===== BAGIAN FOTO KATEGORI YANG DIPERBAIKI =====
-
-      // Add a new category - DIPERBAIKI
-      function addCategory() {
-        const wishlistId = parseInt(
-          document.getElementById("categoryWishlistId").value
-        );
-        const name = document.getElementById("categoryName").value;
-        const description = document.getElementById(
-          "categoryDescription"
-        ).value;
-
-        if (!wishlistId || !name) {
-          alert("Nama kategori harus diisi!");
-          return;
-        }
-
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        if (!wishlist) return;
-
-        // Get image data if available - DIPERBAIKI
-        let photos = [];
-        const previewImg = document.querySelector("#categoryImagePreview img");
-        if (previewImg) {
-          photos.push(previewImg.src);
-        }
-
-        const newCategory = {
-          id: Date.now(),
-          name,
-          description,
-          image: photos.length > 0 ? photos[0] : null, // Foto pertama jadi cover
-          photos: photos, // Simpan semua foto di array
-          items: [],
-        };
-
-        wishlist.categories.push(newCategory);
-        saveToLocalStorage();
-        renderWishlists();
-        updateStats();
-
-        // Show success message
-        document.getElementById("successMessage").textContent =
-          "Kategori berhasil ditambahkan!";
-        const successModal = new bootstrap.Modal(
-          document.getElementById("successModal")
-        );
-        successModal.show();
-
-        // Reset form
-        document.getElementById("addCategoryForm").reset();
-        clearImagePreview(document.getElementById("categoryImagePreview"));
-        const addCategoryModal = bootstrap.Modal.getInstance(
-          document.getElementById("addCategoryModal")
-        );
-        addCategoryModal.hide();
-      }
-
-      // Upload category photos - DIPERBAIKI
-      function uploadCategoryPhotos() {
-        if (!currentCategoryForPhotoManagement) return;
-
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/*";
-        input.multiple = true;
-        input.onchange = function (e) {
-          const files = e.target.files;
-          if (!files || files.length === 0) return;
-
-          const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-          const wishlist = wishlists.find((w) => w.id === wishlistId);
-          const category = wishlist.categories.find((c) => c.id === categoryId);
-
-          if (!category) return;
-
-          let uploadedCount = 0;
-          let newPhotos = [];
-
-          // Process each file
-          Array.from(files).forEach((file) => {
-            if (!file.type.startsWith("image/")) {
-              alert(`File "${file.name}" bukan gambar yang valid!`);
-              return;
-            }
-
-            if (file.size > 2 * 1024 * 1024) {
-              alert(`File "${file.name}" terlalu besar (maksimal 2MB)!`);
-              return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              newPhotos.push(e.target.result);
-              uploadedCount++;
-
-              // Jika semua file telah diproses
-              if (uploadedCount === Array.from(files).length) {
-                // Tambahkan foto baru ke kategori
-                if (!category.photos) {
-                  category.photos = [];
-                }
-
-                category.photos = [...category.photos, ...newPhotos];
-
-                // Update image cover jika belum ada
-                if (!category.image && newPhotos.length > 0) {
-                  category.image = newPhotos[0];
-                }
-
-                saveToLocalStorage();
-                renderCategoryPhotos();
-                renderWishlists();
-
-                // Show success message
-                document.getElementById(
-                  "successMessage"
-                ).textContent = `${newPhotos.length} foto berhasil ditambahkan ke kategori!`;
-                const successModal = new bootstrap.Modal(
-                  document.getElementById("successModal")
-                );
-                successModal.show();
-              }
-            };
-            reader.onerror = function () {
-              alert(`Gagal membaca file "${file.name}"`);
-              uploadedCount++;
-            };
-            reader.readAsDataURL(file);
-          });
-        };
-        input.click();
-      }
-
-      // Delete photo dari kategori - DIPERBAIKI
-      function deleteCategoryPhoto(photoIndex) {
-        if (!confirm("Apakah Anda yakin ingin menghapus foto ini?")) return;
-        if (!currentCategoryForPhotoManagement) return;
-
-        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        const category = wishlist.categories.find((c) => c.id === categoryId);
-
-        if (!category || !category.photos || category.photos.length === 0)
-          return;
-
-        // Hapus foto
-        category.photos.splice(photoIndex, 1);
-
-        // Update image cover jika foto yang dihapus adalah cover
-        if (photoIndex === 0 && category.photos.length > 0) {
-          category.image = category.photos[0];
-        } else if (category.photos.length === 0) {
-          category.image = null;
-        }
-
-        saveToLocalStorage();
-        renderCategoryPhotos();
-        renderWishlists();
-      }
-
-      // Set sebagai cover photo - FUNGSI BARU
-      function setAsCoverPhoto(photoIndex) {
-        if (!currentCategoryForPhotoManagement) return;
-
-        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        const category = wishlist.categories.find((c) => c.id === categoryId);
-
-        if (
-          !category ||
-          !category.photos ||
-          category.photos.length <= photoIndex
-        )
-          return;
-
-        // Pindahkan foto ke posisi pertama
-        const photo = category.photos[photoIndex];
-        category.photos.splice(photoIndex, 1);
-        category.photos.unshift(photo);
-        category.image = photo; // Update cover image
-
-        saveToLocalStorage();
-        renderCategoryPhotos();
-        renderWishlists();
-
-        document.getElementById("successMessage").textContent =
-          "Foto cover berhasil diubah!";
-        const successModal = new bootstrap.Modal(
-          document.getElementById("successModal")
-        );
-        successModal.show();
-      }
-
-      // Render category photos in management modal - DIPERBAIKI
-      function renderCategoryPhotos() {
-        if (!currentCategoryForPhotoManagement) return;
-
-        const { wishlistId, categoryId } = currentCategoryForPhotoManagement;
-        const wishlist = wishlists.find((w) => w.id === wishlistId);
-        const category = wishlist.categories.find((c) => c.id === categoryId);
-
-        if (!category) return;
-
-        categoryPhotosContainer.innerHTML = "";
-
-        // Pastikan photos array ada
-        if (!category.photos) {
-          category.photos = [];
-        }
-
-        if (category.photos.length > 0) {
-          category.photos.forEach((photo, index) => {
-            const photoContainer = document.createElement("div");
-            photoContainer.className = "photo-container";
-
-            photoContainer.innerHTML = `
-                        <div class="position-relative">
-                            <img src="${photo}" class="category-photo-thumbnail" alt="Foto kategori ${
-              index + 1
-            }" onclick="event.stopPropagation(); viewPhoto('${photo}')">
-                            ${
-                              index === 0
-                                ? '<span class="cover-badge">Cover</span>'
-                                : ""
-                            }
-                            <button class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0" 
-                                    style="width: 20px; height: 20px; font-size: 0.7rem;"
-                                    onclick="event.stopPropagation(); deleteCategoryPhoto(${index})">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            ${
-                              index !== 0
-                                ? `
-                            <button class="btn btn-sm btn-primary position-absolute bottom-0 start-0 p-0" 
-                                    style="width: 20px; height: 20px; font-size: 0.7rem;"
-                                    onclick="event.stopPropagation(); setAsCoverPhoto(${index})">
-                                <i class="fas fa-star"></i>
-                            </button>
-                            `
-                                : ""
-                            }
-                        </div>
-                    `;
-
-            categoryPhotosContainer.appendChild(photoContainer);
-          });
-        } else {
-          categoryPhotosContainer.innerHTML = `
-                    <div class="text-center text-muted py-3">
-                        <i class="fas fa-images fa-2x mb-2"></i>
-                        <p>Belum ada foto untuk kategori ini</p>
-                    </div>
-                `;
-        }
-      }
-
-      // ===== FUNGSI LAIN YANG TIDAK DIUBAH =====
 
       // Add a new wishlist
       function addWishlist() {
@@ -1827,7 +1381,7 @@
         successModal.show();
 
         // Reset form
-        document.getElementById("addWishlistForm").reset();
+        addWishlistForm.reset();
         const addWishlistModal = bootstrap.Modal.getInstance(
           document.getElementById("addWishlistModal")
         );
@@ -1835,6 +1389,52 @@
 
         // Add confetti animation
         createConfetti();
+      }
+
+      // Add a category to a wishlist
+      function addCategory() {
+        const wishlistId = parseInt(
+          document.getElementById("categoryWishlistId").value
+        );
+        const name = document.getElementById("categoryName").value;
+        const description = document.getElementById(
+          "categoryDescription"
+        ).value;
+
+        if (!wishlistId || !name) {
+          alert("Nama kategori harus diisi!");
+          return;
+        }
+
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        if (!wishlist) return;
+
+        const newCategory = {
+          id: Date.now(),
+          name,
+          description,
+          items: [],
+        };
+
+        wishlist.categories.push(newCategory);
+        saveToLocalStorage();
+        renderWishlists();
+        updateStats();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Kategori berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addCategoryForm.reset();
+        const addCategoryModal = bootstrap.Modal.getInstance(
+          document.getElementById("addCategoryModal")
+        );
+        addCategoryModal.hide();
       }
 
       // Add an item to a category
@@ -1864,7 +1464,7 @@
 
         // Get image data if available
         let imageData = null;
-        const previewImg = document.querySelector("#imagePreview img");
+        const previewImg = imagePreview.querySelector("img");
         if (previewImg) {
           imageData = previewImg.src;
         }
@@ -1894,8 +1494,8 @@
         successModal.show();
 
         // Reset form
-        document.getElementById("addItemForm").reset();
-        clearImagePreview(document.getElementById("imagePreview"));
+        addItemForm.reset();
+        clearImagePreview();
         const addItemModal = bootstrap.Modal.getInstance(
           document.getElementById("addItemModal")
         );
@@ -1941,7 +1541,7 @@
         successModal.show();
 
         // Reset form
-        document.getElementById("addSavingsForm").reset();
+        addSavingsForm.reset();
         const addSavingsModal = bootstrap.Modal.getInstance(
           document.getElementById("addSavingsModal")
         );
@@ -2001,7 +1601,7 @@
         successModal.show();
 
         // Reset form
-        document.getElementById("withdrawSavingsForm").reset();
+        withdrawSavingsForm.reset();
         const withdrawSavingsModal = bootstrap.Modal.getInstance(
           document.getElementById("withdrawSavingsModal")
         );
@@ -2094,16 +1694,16 @@
         const currentName = wishlist.name;
 
         titleElement.innerHTML = `
-                <input type="text" class="form-control" value="${currentName}" id="edit-wishlist-${wishlistId}">
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2" onclick="saveWishlistName(${wishlistId})">
-                        <i class="fas fa-check me-1"></i>Simpan
-                    </button>
-                    <button class="btn btn-sm btn-secondary" onclick="cancelEditWishlistName(${wishlistId}, '${currentName}')">
-                        <i class="fas fa-times me-1"></i>Batal
-                    </button>
-                </div>
-            `;
+          <input type="text" class="form-control" value="${currentName}" id="edit-wishlist-${wishlistId}">
+          <div class="mt-2">
+              <button class="btn btn-sm btn-success me-2" onclick="saveWishlistName(${wishlistId})">
+                  <i class="fas fa-check me-1"></i>Simpan
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditWishlistName(${wishlistId}, '${currentName}')">
+                  <i class="fas fa-times me-1"></i>Batal
+              </button>
+          </div>
+      `;
 
         document.getElementById(`edit-wishlist-${wishlistId}`).focus();
       }
@@ -2132,11 +1732,11 @@
           `wishlist-title-${wishlistId}`
         );
         titleElement.innerHTML = `
-                ${originalName}
-                <button class="btn btn-sm btn-outline-primary ms-2" onclick="editWishlistName(${wishlistId})">
-                    <i class="fas fa-edit"></i>
-                </button>
-            `;
+          ${originalName}
+          <button class="btn btn-sm btn-outline-primary ms-2" onclick="editWishlistName(${wishlistId})">
+              <i class="fas fa-edit"></i>
+          </button>
+      `;
       }
 
       // Edit category name
@@ -2153,16 +1753,16 @@
         const currentName = category.name;
 
         titleElement.innerHTML = `
-                <input type="text" class="form-control" value="${currentName}" id="edit-category-${categoryId}">
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2" onclick="saveCategoryName(${wishlistId}, ${categoryId})">
-                        <i class="fas fa-check me-1"></i>Simpan
-                    </button>
-                    <button class="btn btn-sm btn-secondary" onclick="cancelEditCategoryName(${wishlistId}, ${categoryId}, '${currentName}')">
-                        <i class="fas fa-times me-1"></i>Batal
-                    </button>
-                </div>
-            `;
+          <input type="text" class="form-control" value="${currentName}" id="edit-category-${categoryId}">
+          <div class="mt-2">
+              <button class="btn btn-sm btn-success me-2" onclick="saveCategoryName(${wishlistId}, ${categoryId})">
+                  <i class="fas fa-check me-1"></i>Simpan
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="cancelEditCategoryName(${wishlistId}, ${categoryId}, '${currentName}')">
+                  <i class="fas fa-times me-1"></i>Batal
+              </button>
+          </div>
+      `;
 
         document.getElementById(`edit-category-${categoryId}`).focus();
       }
@@ -2194,30 +1794,11 @@
           `category-title-${categoryId}`
         );
         titleElement.innerHTML = `
-                ${originalName}
-                <button class="btn btn-sm btn-outline-primary ms-2" onclick="editCategoryName(${wishlistId}, ${categoryId})">
-                    <i class="fas fa-edit"></i>
-                </button>
-            `;
-      }
-
-      // Open category photo management modal
-      function openCategoryPhotoManagement(wishlistId, categoryId) {
-        currentCategoryForPhotoManagement = { wishlistId, categoryId };
-        renderCategoryPhotos();
-        const modal = new bootstrap.Modal(
-          document.getElementById("categoryPhotoManagementModal")
-        );
-        modal.show();
-      }
-
-      // View photo in modal
-      function viewPhoto(photoSrc) {
-        document.getElementById("modalPhoto").src = photoSrc;
-        const photoModal = new bootstrap.Modal(
-          document.getElementById("photoModal")
-        );
-        photoModal.show();
+          ${originalName}
+          <button class="btn btn-sm btn-outline-primary ms-2" onclick="editCategoryName(${wishlistId}, ${categoryId})">
+              <i class="fas fa-edit"></i>
+          </button>
+      `;
       }
 
       // Edit item
@@ -2234,60 +1815,60 @@
         const itemElement = document.getElementById(`item-${itemId}`);
 
         itemElement.innerHTML = `
-                <div class="edit-item-form">
-                    <div class="mb-3">
-                        <label class="form-label">Nama Item</label>
-                        <input type="text" class="form-control" id="edit-item-name-${itemId}" value="${
+          <div class="edit-item-form">
+              <div class="mb-3">
+                  <label class="form-label">Nama Item</label>
+                  <input type="text" class="form-control" id="edit-item-name-${itemId}" value="${
           item.name
         }" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Harga (Rp)</label>
-                        <input type="number" class="form-control" id="edit-item-price-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Harga (Rp)</label>
+                  <input type="number" class="form-control" id="edit-item-price-${itemId}" value="${
           item.price
         }" min="1" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Foto Item</label>
-                        <div class="image-upload-container" onclick="document.getElementById('edit-item-image-${itemId}').click()">
-                            <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
-                            <p class="mb-2">Klik untuk ganti foto</p>
-                            <input type="file" id="edit-item-image-${itemId}" accept="image/*" class="d-none" onchange="handleEditImageUpload(${wishlistId}, ${categoryId}, ${itemId}, this.files[0])" />
-                        </div>
-                        ${
-                          item.image
-                            ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
-                            : ""
-                        }
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link TikTok</label>
-                        <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Foto Item</label>
+                  <div class="image-upload-container" onclick="document.getElementById('edit-item-image-${itemId}').click()">
+                      <i class="fas fa-cloud-upload-alt fa-2x mb-3 text-muted"></i>
+                      <p class="mb-2">Klik untuk ganti foto</p>
+                      <input type="file" id="edit-item-image-${itemId}" accept="image/*" class="d-none" onchange="handleEditImageUpload(${wishlistId}, ${categoryId}, ${itemId}, this.files[0])" />
+                  </div>
+                  ${
+                    item.image
+                      ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
+                      : ""
+                  }
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Link TikTok</label>
+                  <input type="url" class="form-control" id="edit-item-tiktok-${itemId}" value="${
           item.tiktokLink || ""
         }" placeholder="https://www.tiktok.com/...">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Link Shopee</label>
-                        <input type="url" class="form-control" id="edit-item-shopee-${itemId}" value="${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Link Shopee</label>
+                  <input type="url" class="form-control" id="edit-item-shopee-${itemId}" value="${
           item.shopeeLink || ""
         }" placeholder="https://shopee.co.id/...">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="edit-item-description-${itemId}" rows="2">${
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Deskripsi</label>
+                  <textarea class="form-control" id="edit-item-description-${itemId}" rows="2">${
           item.description || ""
         }</textarea>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
-                            <i class="fas fa-check me-1"></i>Simpan
-                        </button>
-                        <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
-                            <i class="fas fa-times me-1"></i>Batal
-                        </button>
-                    </div>
-                </div>
-            `;
+              </div>
+              <div class="d-flex justify-content-end">
+                  <button class="btn btn-sm btn-success me-2" onclick="saveItem(${wishlistId}, ${categoryId}, ${itemId})">
+                      <i class="fas fa-check me-1"></i>Simpan
+                  </button>
+                  <button class="btn btn-sm btn-secondary" onclick="cancelEditItem(${wishlistId}, ${categoryId}, ${itemId})">
+                      <i class="fas fa-times me-1"></i>Batal
+                  </button>
+              </div>
+          </div>
+      `;
       }
 
       // Handle edit image upload
@@ -2406,7 +1987,16 @@
         }
       }
 
-      // Render wishlists - DIPERBAIKI DENGAN EVENT.STOPPROPAGATION()
+      // View photo in modal
+      function viewPhoto(photoSrc) {
+        document.getElementById("modalPhoto").src = photoSrc;
+        const photoModal = new bootstrap.Modal(
+          document.getElementById("photoModal")
+        );
+        photoModal.show();
+      }
+
+      // Render wishlists
       function renderWishlists(filter = "all") {
         let filteredWishlists = wishlists;
 
@@ -2431,6 +2021,7 @@
         } else {
           wishlistsContainer.style.display = "block";
           emptyState.style.display = "none";
+
           wishlistsContainer.innerHTML = "";
 
           filteredWishlists.forEach((wishlist, index) => {
@@ -2458,348 +2049,301 @@
             wishlistCard.style.animationDelay = `${index * 0.1}s`;
 
             wishlistCard.innerHTML = `
-                        <div class="wishlist-header" onclick="toggleCategories(${
-                          wishlist.id
-                        })">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h4 class="wishlist-title">
-                                        <span id="wishlist-title-${
-                                          wishlist.id
-                                        }">
-                                            ${wishlist.name}
-                                            <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editWishlistName(${
-                                              wishlist.id
-                                            })">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </span>
-                                        ${
-                                          isCompleted
-                                            ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
-                                            : ""
-                                        }
-                                    </h4>
-                                    <p class="wishlist-meta">${
-                                      wishlist.categories.length
-                                    } kategori, ${totalItems} item</p>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="wishlist-price">Rp ${totalPrice.toLocaleString(
-                                      "id-ID"
-                                    )}</span>
-                                    <i id="toggle-icon-${
+                <div class="wishlist-header" onclick="toggleCategories(${
+                  wishlist.id
+                })">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="wishlist-title">
+                                <span id="wishlist-title-${wishlist.id}">
+                                    ${wishlist.name}
+                                    <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editWishlistName(${
                                       wishlist.id
-                                    }" class="fas fa-chevron-down ms-3"></i>
-                                </div>
-                            </div>
+                                    })">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </span>
+                                ${
+                                  isCompleted
+                                    ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                    : ""
+                                }
+                            </h4>
+                            <p class="wishlist-meta">${
+                              wishlist.categories.length
+                            } kategori, ${totalItems} item</p>
                         </div>
-                        <div class="wishlist-content" id="categories-${
-                          wishlist.id
-                        }" style="display: none;">
-                            ${
-                              wishlist.description
-                                ? `<p class="mb-3">${wishlist.description}</p>`
-                                : ""
-                            }
-                            
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="flex-grow-1 me-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
-                                          "id-ID"
-                                        )} / Rp ${totalPrice.toLocaleString(
+                        <div class="d-flex align-items-center">
+                            <span class="wishlist-price">Rp ${totalPrice.toLocaleString(
+                              "id-ID"
+                            )}</span>
+                            <i id="toggle-icon-${
+                              wishlist.id
+                            }" class="fas fa-chevron-down ms-3"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="wishlist-content" id="categories-${
+                  wishlist.id
+                }" style="display: none;">
+                    ${
+                      wishlist.description
+                        ? `<p class="mb-3">${wishlist.description}</p>`
+                        : ""
+                    }
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="flex-grow-1 me-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                  "id-ID"
+                                )} / Rp ${totalPrice.toLocaleString(
               "id-ID"
             )}</small>
-                                        <small class="text-muted">${progressPercentage.toFixed(
-                                          1
-                                        )}%</small>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar ${
-                                          isCompleted
-                                            ? "bg-success"
-                                            : "bg-primary"
-                                        }" role="progressbar" style="width: ${progressPercentage}%"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddCategoryModal(${
-                                      wishlist.id
-                                    })">
-                                        <i class="fas fa-plus me-1"></i>Kategori
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteWishlist(${
-                                      wishlist.id
-                                    })">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                                <small class="text-muted">${progressPercentage.toFixed(
+                                  1
+                                )}%</small>
                             </div>
-                            
-                            <div class="categories-list">
-                                ${
-                                  wishlist.categories.length > 0
-                                    ? wishlist.categories
-                                        .map((category) => {
-                                          let categoryTotalPrice = 0;
-                                          let categoryTotalItems = 0;
-                                          let categoryAchievedItems = 0;
-
-                                          category.items.forEach((item) => {
-                                            if (!item.achieved) {
-                                              categoryTotalPrice += item.price;
-                                            }
-                                            categoryTotalItems++;
-                                            if (item.achieved)
-                                              categoryAchievedItems++;
-                                          });
-
-                                          const categoryProgress =
-                                            categoryTotalPrice > 0
-                                              ? Math.min(
-                                                  (savings /
-                                                    categoryTotalPrice) *
-                                                    100,
-                                                  100
-                                                )
-                                              : 0;
-                                          const categoryCompleted =
-                                            categoryTotalItems > 0 &&
-                                            categoryAchievedItems ===
-                                              categoryTotalItems;
-
-                                          // Foto kategori - DIPERBAIKI DENGAN EVENT.STOPPROPAGATION()
-                                          const categoryCoverPhoto =
-                                            category.photos &&
-                                            category.photos.length > 0
-                                              ? category.photos[0]
-                                              : null;
-
-                                          return `
-                                        <div class="category-item mb-3 p-3 border rounded">
-                                            <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
-                                              category.id
-                                            })">
-                                                <div class="d-flex align-items-center">
-                                                    <!-- Gambar kategori -->
-                                                    <div class="me-3">
-                                                        ${
-                                                          categoryCoverPhoto
-                                                            ? `<div class="position-relative">
-                                                                <img src="${categoryCoverPhoto}" class="item-image" onclick="event.stopPropagation(); viewPhoto('${categoryCoverPhoto}')" alt="${
-                                                                category.name
-                                                              }">
-                                                                ${
-                                                                  category
-                                                                    .photos
-                                                                    .length > 1
-                                                                    ? `<span class="badge bg-primary position-absolute top-0 end-0">+${
-                                                                        category
-                                                                          .photos
-                                                                          .length -
-                                                                        1
-                                                                      }</span>`
-                                                                    : ""
-                                                                }
-                                                            </div>`
-                                                            : `<div class="item-image-placeholder"><i class="fas fa-folder"></i></div>`
-                                                        }
-                                                    </div>
-                                                    <div>
-                                                        <h5 class="mb-1">
-                                                            <span id="category-title-${
-                                                              category.id
-                                                            }">
-                                                                ${category.name}
-                                                                <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
-                                                                  wishlist.id
-                                                                }, ${
-                                            category.id
-                                          })">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </button>
-                                                            </span>
-                                                            ${
-                                                              categoryCompleted
-                                                                ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
-                                                                : ""
-                                                            }
-                                                        </h5>
-                                                        ${
-                                                          category.description
-                                                            ? `<small class="text-muted">${category.description}</small>`
-                                                            : ""
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="fw-bold">Rp ${categoryTotalPrice.toLocaleString(
-                                                      "id-ID"
-                                                    )}</span>
-                                                    <i id="item-toggle-icon-${
-                                                      category.id
-                                                    }" class="fas fa-chevron-down ms-3"></i>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <div class="flex-grow-1 me-3">
-                                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                                        <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
-                                                          "id-ID"
-                                                        )} / Rp ${categoryTotalPrice.toLocaleString(
-                                            "id-ID"
-                                          )}</small>
-                                                        <small class="text-muted">${categoryProgress.toFixed(
-                                                          1
-                                                        )}%</small>
-                                                    </div>
-                                                    <div class="progress">
-                                                        <div class="progress-bar ${
-                                                          categoryCompleted
-                                                            ? "bg-success"
-                                                            : "bg-info"
-                                                        }" role="progressbar" style="width: ${categoryProgress}%"></div>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddItemModal(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-plus me-1"></i>Item
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="openCategoryPhotoManagement(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-images me-1"></i>Kelola Foto
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${
-                                                      wishlist.id
-                                                    }, ${category.id})">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="items-container" id="items-${
-                                              category.id
-                                            }" style="display: none;">
-                                                <div class="items-list">
-                                                    ${
-                                                      category.items.length > 0
-                                                        ? category.items
-                                                            .map((item) => {
-                                                              const itemProgress =
-                                                                item.price > 0
-                                                                  ? Math.min(
-                                                                      (savings /
-                                                                        item.price) *
-                                                                        100,
-                                                                      100
-                                                                    )
-                                                                  : 0;
-
-                                                              return `
-                                                            <div class="item-row p-2 border rounded mb-2" id="item-${
-                                                              item.id
-                                                            }">
-                                                                <div class="d-flex align-items-start">
-                                                                    <div class="me-3">
-                                                                        ${
-                                                                          item.image
-                                                                            ? `<img src="${item.image}" class="item-image" onclick="event.stopPropagation(); viewPhoto('${item.image}')" alt="${item.name}">`
-                                                                            : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
-                                                                        }
-                                                                    </div>
-                                                                    <div class="flex-grow-1">
-                                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                            <h6 class="mb-1">${
-                                                                              item.name
-                                                                            } ${
-                                                                item.achieved
-                                                                  ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Tercapai</span>'
-                                                                  : ""
-                                                              }</h6>
-                                                                            <div>
-                                                                                <button class="btn btn-sm btn-outline-primary me-2" onclick="event.stopPropagation(); editItem(${
-                                                                                  wishlist.id
-                                                                                }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas fa-edit"></i>
-                                                                                </button>
-                                                                                <button class="btn btn-sm ${
-                                                                                  item.achieved
-                                                                                    ? "btn-warning"
-                                                                                    : "btn-success"
-                                                                                } me-2" onclick="event.stopPropagation(); markItemAchieved(${
-                                                                wishlist.id
-                                                              }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas ${
-                                                                                      item.achieved
-                                                                                        ? "fa-undo"
-                                                                                        : "fa-check"
-                                                                                    }"></i>
-                                                                                </button>
-                                                                                <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteItem(${
-                                                                                  wishlist.id
-                                                                                }, ${
-                                                                category.id
-                                                              }, ${item.id})">
-                                                                                    <i class="fas fa-times"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
-                                                                            <small class="text-muted">Rp ${item.price.toLocaleString(
-                                                                              "id-ID"
-                                                                            )}</small>
-                                                                            <small class="text-muted">${itemProgress.toFixed(
-                                                                              1
-                                                                            )}%</small>
-                                                                        </div>
-                                                                        <div class="progress" style="height: 5px;">
-                                                                            <div class="progress-bar" style="width: ${itemProgress}%"></div>
-                                                                        </div>
-                                                                        <div class="mt-1">
-                                                                            ${
-                                                                              item.tiktokLink
-                                                                                ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
-                                                                                : ""
-                                                                            }
-                                                                            ${
-                                                                              item.shopeeLink
-                                                                                ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
-                                                                                : ""
-                                                                            }
-                                                                        </div>
-                                                                        ${
-                                                                          item.description
-                                                                            ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
-                                                                            : ""
-                                                                        }
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        `;
-                                                            })
-                                                            .join("")
-                                                        : `<div class="text-center py-2 text-muted"><small>Belum ada item</small></div>`
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                        })
-                                        .join("")
-                                    : `<div class="text-center py-3 text-muted"><p>Belum ada kategori</p></div>`
-                                }
+                            <div class="progress">
+                                <div class="progress-bar ${
+                                  isCompleted ? "bg-success" : "bg-primary"
+                                }" role="progressbar" style="width: ${progressPercentage}%"></div>
                             </div>
                         </div>
-                    `;
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddCategoryModal(${
+                              wishlist.id
+                            })">
+                                <i class="fas fa-plus me-1"></i>Kategori
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteWishlist(${
+                              wishlist.id
+                            })">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="categories-list">
+                        ${
+                          wishlist.categories.length > 0
+                            ? wishlist.categories
+                                .map((category) => {
+                                  let categoryTotalPrice = 0;
+                                  let categoryTotalItems = 0;
+                                  let categoryAchievedItems = 0;
+
+                                  category.items.forEach((item) => {
+                                    if (!item.achieved) {
+                                      categoryTotalPrice += item.price;
+                                    }
+                                    categoryTotalItems++;
+                                    if (item.achieved) categoryAchievedItems++;
+                                  });
+
+                                  const categoryProgress =
+                                    categoryTotalPrice > 0
+                                      ? Math.min(
+                                          (savings / categoryTotalPrice) * 100,
+                                          100
+                                        )
+                                      : 0;
+                                  const categoryCompleted =
+                                    categoryTotalItems > 0 &&
+                                    categoryAchievedItems ===
+                                      categoryTotalItems;
+
+                                  return `
+                                <div class="category-item mb-3 p-3 border rounded">
+                                    <div class="d-flex justify-content-between align-items-center mb-2" onclick="toggleItems(${
+                                      category.id
+                                    })">
+                                        <div>
+                                            <h5 class="mb-1">
+                                                <span id="category-title-${
+                                                  category.id
+                                                }">
+                                                    ${category.name}
+                                                    <button class="btn btn-sm btn-outline-primary ms-2" onclick="event.stopPropagation(); editCategoryName(${
+                                                      wishlist.id
+                                                    }, ${category.id})">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </span>
+                                                ${
+                                                  categoryCompleted
+                                                    ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Selesai</span>'
+                                                    : ""
+                                                }
+                                            </h5>
+                                            ${
+                                              category.description
+                                                ? `<small class="text-muted">${category.description}</small>`
+                                                : ""
+                                            }
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-bold">Rp ${categoryTotalPrice.toLocaleString(
+                                              "id-ID"
+                                            )}</span>
+                                            <i id="item-toggle-icon-${
+                                              category.id
+                                            }" class="fas fa-chevron-down ms-3"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="flex-grow-1 me-3">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <small class="text-muted">Tabungan: Rp ${savings.toLocaleString(
+                                                  "id-ID"
+                                                )} / Rp ${categoryTotalPrice.toLocaleString(
+                                    "id-ID"
+                                  )}</small>
+                                                <small class="text-muted">${categoryProgress.toFixed(
+                                                  1
+                                                )}%</small>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar ${
+                                                  categoryCompleted
+                                                    ? "bg-success"
+                                                    : "bg-info"
+                                                }" role="progressbar" style="width: ${categoryProgress}%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-primary me-2" onclick="openAddItemModal(${
+                                              wishlist.id
+                                            }, ${category.id})">
+                                                <i class="fas fa-plus me-1"></i>Item
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${
+                                              wishlist.id
+                                            }, ${category.id})">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="items-container" id="items-${
+                                      category.id
+                                    }" style="display: none;">
+                                        <div class="items-list">
+                                            ${
+                                              category.items.length > 0
+                                                ? category.items
+                                                    .map((item) => {
+                                                      const itemProgress =
+                                                        item.price > 0
+                                                          ? Math.min(
+                                                              (savings /
+                                                                item.price) *
+                                                                100,
+                                                              100
+                                                            )
+                                                          : 0;
+
+                                                      return `
+                                                    <div class="item-row p-2 border rounded mb-2" id="item-${
+                                                      item.id
+                                                    }">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="me-3">
+                                                                ${
+                                                                  item.image
+                                                                    ? `<img src="${item.image}" class="item-image" onclick="viewPhoto('${item.image}')" alt="${item.name}">`
+                                                                    : `<div class="item-image-placeholder"><i class="fas fa-image"></i></div>`
+                                                                }
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <h6 class="mb-1">${
+                                                                      item.name
+                                                                    } ${
+                                                        item.achieved
+                                                          ? '<span class="badge bg-success ms-2"><i class="fas fa-check me-1"></i>Tercapai</span>'
+                                                          : ""
+                                                      }</h6>
+                                                                    <div>
+                                                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editItem(${
+                                                                          wishlist.id
+                                                                        }, ${
+                                                        category.id
+                                                      }, ${item.id})">
+                                                                            <i class="fas fa-edit"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-sm ${
+                                                                          item.achieved
+                                                                            ? "btn-warning"
+                                                                            : "btn-success"
+                                                                        } me-2" onclick="markItemAchieved(${
+                                                        wishlist.id
+                                                      }, ${category.id}, ${
+                                                        item.id
+                                                      })">
+                                                                            <i class="fas ${
+                                                                              item.achieved
+                                                                                ? "fa-undo"
+                                                                                : "fa-check"
+                                                                            }"></i>
+                                                                        </button>
+                                                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${
+                                                                          wishlist.id
+                                                                        }, ${
+                                                        category.id
+                                                      }, ${item.id})">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                    <small class="text-muted">Rp ${item.price.toLocaleString(
+                                                                      "id-ID"
+                                                                    )}</small>
+                                                                    <small class="text-muted">${itemProgress.toFixed(
+                                                                      1
+                                                                    )}%</small>
+                                                                </div>
+                                                                <div class="progress" style="height: 5px;">
+                                                                    <div class="progress-bar" style="width: ${itemProgress}%"></div>
+                                                                </div>
+                                                                <div class="mt-1">
+                                                                    ${
+                                                                      item.tiktokLink
+                                                                        ? `<a href="${item.tiktokLink}" target="_blank" class="item-link"><i class="fab fa-tiktok me-1"></i>TikTok</a>`
+                                                                        : ""
+                                                                    }
+                                                                    ${
+                                                                      item.shopeeLink
+                                                                        ? `<a href="${item.shopeeLink}" target="_blank" class="item-link"><i class="fas fa-shopping-bag me-1"></i>Shopee</a>`
+                                                                        : ""
+                                                                    }
+                                                                </div>
+                                                                ${
+                                                                  item.description
+                                                                    ? `<div class="mt-1"><small class="text-muted">${item.description}</small></div>`
+                                                                    : ""
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                                    })
+                                                    .join("")
+                                                : `<div class="text-center py-2 text-muted"><small>Belum ada item</small></div>`
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                                })
+                                .join("")
+                            : `<div class="text-center py-3 text-muted"><p>Belum ada kategori</p></div>`
+                        }
+                    </div>
+                </div>
+            `;
 
             wishlistsContainer.appendChild(wishlistCard);
           });
@@ -2819,6 +2363,7 @@
         } else {
           transactionHistory.style.display = "block";
           emptyTransactionState.style.display = "none";
+
           transactionHistory.innerHTML = "";
 
           transactions.forEach((transaction) => {
@@ -2840,31 +2385,29 @@
               .padStart(2, "0")}`;
 
             transactionItem.innerHTML = `
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-1">${transaction.description}</h6>
-                                <small class="text-muted">${formattedDate}</small>
-                            </div>
-                            <div class="text-end">
-                                <div class="${
-                                  transaction.type === "deposit"
-                                    ? "text-success"
-                                    : "text-danger"
-                                } fw-bold">
-                                    ${
-                                      transaction.type === "deposit" ? "+" : "-"
-                                    } Rp ${transaction.amount.toLocaleString(
-              "id-ID"
-            )}
-                                </div>
-                                <small class="text-muted">${
-                                  transaction.type === "deposit"
-                                    ? "Tabungan"
-                                    : "Penarikan"
-                                }</small>
-                            </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">${transaction.description}</h6>
+                        <small class="text-muted">${formattedDate}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="${
+                          transaction.type === "deposit"
+                            ? "text-success"
+                            : "text-danger"
+                        } fw-bold">
+                            ${
+                              transaction.type === "deposit" ? "+" : "-"
+                            } Rp ${transaction.amount.toLocaleString("id-ID")}
                         </div>
-                    `;
+                        <small class="text-muted">${
+                          transaction.type === "deposit"
+                            ? "Tabungan"
+                            : "Penarikan"
+                        }</small>
+                    </div>
+                </div>
+            `;
 
             transactionHistory.appendChild(transactionItem);
           });
