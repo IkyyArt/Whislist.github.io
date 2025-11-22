@@ -1343,7 +1343,65 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Data storage
+      // =============================================
+      // IMAGE COMPRESSION FUNCTIONS - LOCAL STORAGE ONLY
+      // =============================================
+
+      // Compress image function
+      function compressImage(file, maxWidth = 600, quality = 0.6) {
+        return new Promise((resolve, reject) => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const img = new Image();
+
+          img.onload = function () {
+            // Calculate new dimensions
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = (height * maxWidth) / width;
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw and compress
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert to compressed JPEG
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", quality);
+            resolve(compressedDataUrl);
+          };
+
+          img.onerror = reject;
+          img.src = URL.createObjectURL(file);
+        });
+      }
+
+      // Check if image size is reasonable for Local Storage
+      function isImageSizeReasonable(base64String, maxSizeKB = 100) {
+        // Remove data:image/jpeg;base64, part to get pure base64
+        const base64 = base64String.split(",")[1];
+        // Calculate size in bytes: (base64_length * 3) / 4
+        const sizeInBytes = (base64.length * 3) / 4;
+        const sizeInKB = sizeInBytes / 1024;
+        return sizeInKB <= maxSizeKB;
+      }
+
+      // Get image size info
+      function getImageSizeInfo(base64String) {
+        const base64 = base64String.split(",")[1];
+        const sizeInBytes = (base64.length * 3) / 4;
+        const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+        return sizeInKB;
+      }
+
+      // =============================================
+      // DATA STORAGE - LOCAL STORAGE ONLY
+      // =============================================
+
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
@@ -1392,7 +1450,33 @@
         renderTransactions();
         setupEventListeners();
         setupImageUpload();
+
+        // Check Local Storage usage
+        checkLocalStorageUsage();
       });
+
+      // Check Local Storage usage
+      function checkLocalStorageUsage() {
+        let totalSize = 0;
+        for (let key in localStorage) {
+          if (localStorage.hasOwnProperty(key)) {
+            totalSize += localStorage[key].length;
+          }
+        }
+        const totalSizeKB = (totalSize / 1024).toFixed(2);
+        const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2);
+
+        console.log(
+          `Local Storage usage: ${totalSizeKB} KB (${totalSizeMB} MB)`
+        );
+
+        // Warning if approaching limit (4MB is safe threshold)
+        if (totalSize > 4 * 1024 * 1024) {
+          console.warn(
+            "Local Storage approaching limit. Consider cleaning up old data."
+          );
+        }
+      }
 
       // Setup event listeners
       function setupEventListeners() {
@@ -1453,8 +1537,8 @@
         });
       }
 
-      // Handle image upload
-      function handleImageUpload(file) {
+      // Handle image upload dengan kompresi
+      async function handleImageUpload(file) {
         if (!file || !file.type.startsWith("image/")) {
           alert("Silakan pilih file gambar yang valid!");
           return;
@@ -1465,16 +1549,41 @@
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
+        try {
+          // Show loading state
+          imagePreview.innerHTML =
+            '<div class="text-muted">Mengkompresi gambar...</div>';
+
+          // Compress the image
+          const compressedImage = await compressImage(file);
+
+          // Check if compressed size is reasonable
+          const imageSizeKB = getImageSizeInfo(compressedImage);
+          console.log(`Compressed image size: ${imageSizeKB} KB`);
+
+          if (!isImageSizeReasonable(compressedImage, 150)) {
+            alert(
+              "Gambar masih terlalu besar setelah kompresi. Coba gambar yang lebih kecil."
+            );
+            imagePreview.innerHTML = "";
+            return;
+          }
+
+          // Show preview
           imagePreview.innerHTML = `
-              <img src="${e.target.result}" class="image-preview" alt="Preview">
-              <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
-                  <i class="fas fa-times me-1"></i>Hapus Foto
-              </button>
+            <img src="${compressedImage}" class="image-preview" alt="Preview">
+            <div class="mt-2">
+              <small class="text-muted">Ukuran: ${imageSizeKB} KB (terkompresi)</small>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger mt-2" onclick="clearImagePreview()">
+              <i class="fas fa-times me-1"></i>Hapus Foto
+            </button>
           `;
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+          console.error("Error compressing image:", error);
+          alert("Gagal memproses gambar. Silakan coba lagi.");
+          imagePreview.innerHTML = "";
+        }
       }
 
       // Clear image preview
@@ -1573,8 +1682,8 @@
         addCategoryModal.hide();
       }
 
-      // Add an item to a category
-      function addItem() {
+      // Add an item to a category - DENGAN GAMBAR TERKOMPRESI
+      async function addItem() {
         const wishlistId = parseInt(
           document.getElementById("itemWishlistId").value
         );
@@ -1598,18 +1707,18 @@
         const category = wishlist.categories.find((c) => c.id === categoryId);
         if (!category) return;
 
-        // Get image data if available
+        // Get compressed image data if available
         let imageData = null;
         const previewImg = imagePreview.querySelector("img");
         if (previewImg) {
-          imageData = previewImg.src;
+          imageData = previewImg.src; // Ini sudah terkompresi
         }
 
         const newItem = {
           id: Date.now(),
           name,
           price,
-          image: imageData,
+          image: imageData, // Simpan gambar terkompresi langsung di Local Storage
           tiktokLink,
           shopeeLink,
           description,
@@ -1973,7 +2082,10 @@
                   </div>
                   ${
                     item.image
-                      ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image">`
+                      ? `<img src="${item.image}" class="image-preview mt-2" alt="Current Image" style="max-height: 150px;">
+                         <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeItemImage(${wishlistId}, ${categoryId}, ${itemId})">
+                            <i class="fas fa-trash me-1"></i>Hapus Foto
+                         </button>`
                       : ""
                   }
               </div>
@@ -2007,8 +2119,13 @@
       `;
       }
 
-      // Handle edit image upload
-      function handleEditImageUpload(wishlistId, categoryId, itemId, file) {
+      // Handle edit image upload dengan kompresi
+      async function handleEditImageUpload(
+        wishlistId,
+        categoryId,
+        itemId,
+        file
+      ) {
         if (!file || !file.type.startsWith("image/")) {
           alert("Silakan pilih file gambar yang valid!");
           return;
@@ -2019,17 +2136,48 @@
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
+        try {
+          // Compress the image
+          const compressedImage = await compressImage(file);
+
           const wishlist = wishlists.find((w) => w.id === wishlistId);
           const category = wishlist.categories.find((c) => c.id === categoryId);
           const item = category.items.find((i) => i.id === itemId);
 
-          item.image = e.target.result;
+          item.image = compressedImage;
           saveToLocalStorage();
           renderWishlists();
-        };
-        reader.readAsDataURL(file);
+
+          // Show success message
+          document.getElementById("successMessage").textContent =
+            "Foto item berhasil diupdate!";
+          const successModal = new bootstrap.Modal(
+            document.getElementById("successModal")
+          );
+          successModal.show();
+        } catch (error) {
+          console.error("Error compressing image:", error);
+          alert("Gagal memproses gambar. Silakan coba lagi.");
+        }
+      }
+
+      // Remove item image
+      function removeItemImage(wishlistId, categoryId, itemId) {
+        const wishlist = wishlists.find((w) => w.id === wishlistId);
+        const category = wishlist.categories.find((c) => c.id === categoryId);
+        const item = category.items.find((i) => i.id === itemId);
+
+        item.image = null;
+        saveToLocalStorage();
+        renderWishlists();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Foto item berhasil dihapus!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
       }
 
       // Save item changes
@@ -2632,6 +2780,9 @@
         localStorage.setItem("wishlists", JSON.stringify(wishlists));
         localStorage.setItem("savings", savings.toString());
         localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        // Check storage usage after save
+        checkLocalStorageUsage();
       }
 
       // Create confetti animation
@@ -2654,6 +2805,46 @@
             confetti.remove();
           }, 5000);
         }
+      }
+
+      // Clean up Local Storage jika diperlukan
+      function cleanupLocalStorage() {
+        if (
+          confirm(
+            "Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan!"
+          )
+        ) {
+          localStorage.clear();
+          wishlists = [];
+          savings = 0;
+          transactions = [];
+          renderWishlists();
+          updateStats();
+          updateSavingsDisplay();
+          renderTransactions();
+          alert("Semua data berhasil dihapus!");
+        }
+      }
+
+      // Export data backup
+      function exportData() {
+        const data = {
+          wishlists,
+          savings,
+          transactions,
+          exportDate: new Date().toISOString(),
+        };
+
+        const dataStr = JSON.stringify(data, null, 2);
+        const dataBlob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `wishlist-backup-${
+          new Date().toISOString().split("T")[0]
+        }.json`;
+        link.click();
+        URL.revokeObjectURL(url);
       }
     </script>
   </body>
