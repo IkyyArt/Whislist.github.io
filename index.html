@@ -897,13 +897,6 @@
           >
             <i class="fas fa-plus me-2"></i>Buat Wishlist
           </button>
-          <button
-            class="btn btn-light btn-lg"
-            data-bs-toggle="modal"
-            data-bs-target="#addDebtModal"
-          >
-            <i class="fas fa-hand-holding-usd me-2"></i>Tambah Utang
-          </button>
         </div>
       </div>
     </section>
@@ -1614,7 +1607,9 @@
                 />
               </div>
               <div class="mb-3">
-                <label for="debtAmount" class="form-label">Jumlah Utang (Rp)</label>
+                <label for="debtAmount" class="form-label"
+                  >Jumlah Utang (Rp)</label
+                >
                 <input
                   type="number"
                   class="form-control"
@@ -1638,11 +1633,7 @@
                 <label for="debtDueDate" class="form-label"
                   >Tanggal Jatuh Tempo (Opsional)</label
                 >
-                <input
-                  type="date"
-                  class="form-control"
-                  id="debtDueDate"
-                />
+                <input type="date" class="form-control" id="debtDueDate" />
               </div>
               <div class="mb-3">
                 <label for="debtStatus" class="form-label">Status</label>
@@ -1694,7 +1685,9 @@
                 />
               </div>
               <div class="mb-3">
-                <label for="editDebtAmount" class="form-label">Jumlah Utang (Rp)</label>
+                <label for="editDebtAmount" class="form-label"
+                  >Jumlah Utang (Rp)</label
+                >
                 <input
                   type="number"
                   class="form-control"
@@ -1717,11 +1710,7 @@
                 <label for="editDebtDueDate" class="form-label"
                   >Tanggal Jatuh Tempo (Opsional)</label
                 >
-                <input
-                  type="date"
-                  class="form-control"
-                  id="editDebtDueDate"
-                />
+                <input type="date" class="form-control" id="editDebtDueDate" />
               </div>
               <div class="mb-3">
                 <label for="editDebtStatus" class="form-label">Status</label>
@@ -1883,7 +1872,7 @@
       const saveDebtBtn = document.getElementById("saveDebtBtn");
       const editDebtForm = document.getElementById("editDebtForm");
       const updateDebtBtn = document.getElementById("updateDebtBtn");
-      
+
       const totalWishlistsEl = document.getElementById("totalWishlists");
       const totalCategoriesEl = document.getElementById("totalCategories");
       const totalItemsEl = document.getElementById("totalItems");
@@ -2382,8 +2371,12 @@
       function updateDebt() {
         const debtId = parseInt(document.getElementById("editDebtId").value);
         const to = document.getElementById("editDebtTo").value;
-        const amount = parseInt(document.getElementById("editDebtAmount").value);
-        const description = document.getElementById("editDebtDescription").value;
+        const amount = parseInt(
+          document.getElementById("editDebtAmount").value
+        );
+        const description = document.getElementById(
+          "editDebtDescription"
+        ).value;
         const dueDate = document.getElementById("editDebtDueDate").value;
         const status = document.getElementById("editDebtStatus").value;
 
@@ -2433,7 +2426,8 @@
         document.getElementById("editDebtId").value = debt.id;
         document.getElementById("editDebtTo").value = debt.to;
         document.getElementById("editDebtAmount").value = debt.amount;
-        document.getElementById("editDebtDescription").value = debt.description || "";
+        document.getElementById("editDebtDescription").value =
+          debt.description || "";
         document.getElementById("editDebtDueDate").value = debt.dueDate || "";
         document.getElementById("editDebtStatus").value = debt.status;
 
@@ -2461,15 +2455,15 @@
 
         debt.status = debt.status === "paid" ? "unpaid" : "paid";
         debt.updatedAt = new Date().toISOString();
-        
+
         saveToLocalStorage();
         renderDebts();
         updateFinancialSummary();
 
         // Show success message
-        document.getElementById("successMessage").textContent = 
-          debt.status === "paid" 
-            ? "Utang berhasil ditandai sebagai lunas!" 
+        document.getElementById("successMessage").textContent =
+          debt.status === "paid"
+            ? "Utang berhasil ditandai sebagai lunas!"
             : "Status utang diubah menjadi belum lunas!";
         const successModal = new bootstrap.Modal(
           document.getElementById("successModal")
@@ -3313,11 +3307,15 @@
             debtCard.className = "debt-card-item fade-in";
             debtCard.style.animationDelay = `${index * 0.1}s`;
 
-            const dueDateText = debt.dueDate 
+            const dueDateText = debt.dueDate
               ? new Date(debt.dueDate).toLocaleDateString("id-ID")
               : "Tidak ada jatuh tempo";
 
-            const daysRemaining = debt.dueDate ? Math.ceil((new Date(debt.dueDate) - new Date()) / (1000 * 60 * 60 * 24)) : null;
+            const daysRemaining = debt.dueDate
+              ? Math.ceil(
+                  (new Date(debt.dueDate) - new Date()) / (1000 * 60 * 60 * 24)
+                )
+              : null;
             const isOverdue = daysRemaining < 0;
 
             debtCard.innerHTML = `
@@ -3340,7 +3338,9 @@
                     }
                     ${
                       isOverdue
-                        ? `<span class="badge bg-danger ms-2">TERLAMBAT ${Math.abs(daysRemaining)} hari</span>`
+                        ? `<span class="badge bg-danger ms-2">TERLAMBAT ${Math.abs(
+                            daysRemaining
+                          )} hari</span>`
                         : ""
                     }
                   </p>
@@ -3394,10 +3394,12 @@
       // Filter debts
       function filterDebts(filter) {
         renderDebts(filter);
-        
+
         // Switch to debts tab if filtering
         if (filter !== "all") {
-          const debtsTab = new bootstrap.Tab(document.getElementById('debts-tab'));
+          const debtsTab = new bootstrap.Tab(
+            document.getElementById("debts-tab")
+          );
           debtsTab.show();
         }
       }
@@ -3511,7 +3513,7 @@
         let totalDebt = 0;
         let paidDebtCount = 0;
         let unpaidDebtCount = 0;
-        
+
         debts.forEach((debt) => {
           if (debt.status === "unpaid") {
             totalDebt += debt.amount;
@@ -3521,7 +3523,9 @@
           }
         });
 
-        totalDebtAmountEl.textContent = `Rp ${totalDebt.toLocaleString("id-ID")}`;
+        totalDebtAmountEl.textContent = `Rp ${totalDebt.toLocaleString(
+          "id-ID"
+        )}`;
         summaryDebtEl.textContent = `Rp ${totalDebt.toLocaleString("id-ID")}`;
         paidDebtCountEl.textContent = paidDebtCount;
         unpaidDebtCountEl.textContent = unpaidDebtCount;
@@ -3565,7 +3569,14 @@
 
       // Create confetti animation
       function createConfetti() {
-        const colors = ["#2c3e50", "#3498db", "#e74c3c", "#27ae60", "#9b59b6", "#d35400"];
+        const colors = [
+          "#2c3e50",
+          "#3498db",
+          "#e74c3c",
+          "#27ae60",
+          "#9b59b6",
+          "#d35400",
+        ];
 
         for (let i = 0; i < 100; i++) {
           const confetti = document.createElement("div");
@@ -3639,7 +3650,11 @@
           reader.onload = function (e) {
             try {
               const data = JSON.parse(e.target.result);
-              if (confirm("Apakah Anda yakin ingin mengimpor data? Data saat ini akan diganti.")) {
+              if (
+                confirm(
+                  "Apakah Anda yakin ingin mengimpor data? Data saat ini akan diganti."
+                )
+              ) {
                 wishlists = data.wishlists || [];
                 savings = data.savings || 0;
                 transactions = data.transactions || [];
