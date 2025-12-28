@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Wishlist & Tabungan - Kelola Impian dan Keuangan</title>
+    <title>Wishlist & Tabungan - Kelola Impian, Keuangan, dan Utang</title>
     <link rel="icon" type="image/x-icon" href="WHIS.png" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -27,6 +27,7 @@
         --warning: #f39c12;
         --danger: #c0392b;
         --purple: #9b59b6;
+        --debt: #d35400;
       }
 
       * {
@@ -142,13 +143,23 @@
         font-size: 0.9rem;
       }
 
-      /* Savings Section Mobile */
+      /* Savings & Debt Cards Mobile */
       .savings-card {
         background: linear-gradient(135deg, var(--success), #00a085);
         color: white;
         border-radius: 15px;
         padding: 1.5rem;
         box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+      }
+
+      .debt-card {
+        background: linear-gradient(135deg, var(--debt), #e67e22);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(211, 84, 0, 0.3);
         transition: all 0.3s ease;
         margin-bottom: 1.5rem;
       }
@@ -315,6 +326,41 @@
         gap: 0.5rem;
       }
 
+      /* Debt Card Styling */
+      .debt-card-item {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--debt);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+      }
+
+      .debt-card-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .debt-status {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+
+      .status-paid {
+        background: rgba(39, 174, 96, 0.2);
+        color: var(--success);
+      }
+
+      .status-unpaid {
+        background: rgba(231, 76, 60, 0.2);
+        color: var(--danger);
+      }
+
       /* Progress Bars Mobile */
       .progress {
         height: 8px;
@@ -359,6 +405,22 @@
       .btn-warning {
         background: var(--warning);
         border: none;
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        border: none;
+      }
+
+      .btn-debt {
+        background: var(--debt);
+        border: none;
+        color: white;
+      }
+
+      .btn-debt:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
       }
 
       .btn-light {
@@ -771,6 +833,22 @@
         background: #e67e22;
         transform: translateY(-2px);
       }
+
+      /* Tab styling untuk debt */
+      .debt-tab-btn {
+        background: var(--debt);
+        color: white;
+      }
+
+      .debt-tab-btn:hover {
+        background: #c0392b;
+      }
+
+      /* Summary styling */
+      .total-debt {
+        color: var(--debt);
+        font-weight: 700;
+      }
     </style>
   </head>
   <body>
@@ -778,7 +856,7 @@
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
       <div class="container">
         <a class="navbar-brand" href="#">
-          <i class="fas fa-piggy-bank me-2"></i>Wishlist & Tabungan
+          <i class="fas fa-piggy-bank me-2"></i>Wishlist, Tabungan & Utang
         </a>
         <button
           class="navbar-toggler"
@@ -797,7 +875,7 @@
               <a class="nav-link" href="#wishlists">Wishlist Saya</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#budget">Tabungan</a>
+              <a class="nav-link" href="#budget">Keuangan</a>
             </li>
           </ul>
         </div>
@@ -807,17 +885,26 @@
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="container text-center position-relative">
-        <h1 class="hero-title">Wishlist & Tabungan Terpusat</h1>
+        <h1 class="hero-title">Kelola Wishlist, Tabungan & Utang</h1>
         <p class="hero-subtitle">
-          Kelola wishlist dan tabunganmu di satu tempat dengan mudah
+          Kelola impian, keuangan, dan utang piutang di satu tempat dengan mudah
         </p>
-        <button
-          class="btn btn-light btn-lg"
-          data-bs-toggle="modal"
-          data-bs-target="#addWishlistModal"
-        >
-          <i class="fas fa-plus me-2"></i>Buat Wishlist Baru
-        </button>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+          <button
+            class="btn btn-light btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#addWishlistModal"
+          >
+            <i class="fas fa-plus me-2"></i>Buat Wishlist
+          </button>
+          <button
+            class="btn btn-light btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#addDebtModal"
+          >
+            <i class="fas fa-hand-holding-usd me-2"></i>Tambah Utang
+          </button>
+        </div>
       </div>
     </section>
 
@@ -825,42 +912,49 @@
     <section class="stats-section">
       <div class="container">
         <div class="row g-3">
-          <div class="col-4">
+          <div class="col-3">
             <div class="stats-card fade-in">
               <div class="stats-number" id="totalWishlists">0</div>
               <div class="stats-label">Wishlist</div>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <div class="stats-card fade-in" style="animation-delay: 0.1s">
               <div class="stats-number" id="totalCategories">0</div>
               <div class="stats-label">Kategori</div>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <div class="stats-card fade-in" style="animation-delay: 0.2s">
               <div class="stats-number" id="totalItems">0</div>
               <div class="stats-label">Item</div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="stats-card fade-in" style="animation-delay: 0.3s">
+              <div class="stats-number" id="totalDebts">0</div>
+              <div class="stats-label">Utang</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Savings Section -->
+    <!-- Savings & Debt Section -->
     <section class="main-content" id="savings">
       <div class="container">
-        <h2 class="section-title">Tabungan & Budget</h2>
+        <h2 class="section-title">Keuangan & Utang</h2>
         <div class="row g-3">
-          <div class="col-12">
+          <!-- Savings Card -->
+          <div class="col-12 col-md-6">
             <div class="savings-card">
               <div class="row align-items-center">
-                <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="col-12 mb-3">
                   <h3 class="mb-2">Tabungan Saat Ini</h3>
                   <div class="savings-amount" id="currentSavings">Rp 0</div>
-                  <p class="mb-0">Tabungan untuk semua wishlist</p>
+                  <p class="mb-0">Total tabungan yang tersedia</p>
                 </div>
-                <div class="col-12 col-md-6 text-md-end">
+                <div class="col-12">
                   <div class="d-grid d-md-block gap-2">
                     <button
                       class="btn btn-light me-md-2 mb-2 mb-md-0"
@@ -881,20 +975,56 @@
               </div>
             </div>
           </div>
+
+          <!-- Debt Card -->
+          <div class="col-12 col-md-6">
+            <div class="debt-card">
+              <div class="row align-items-center">
+                <div class="col-12 mb-3">
+                  <h3 class="mb-2">Total Utang</h3>
+                  <div class="savings-amount" id="totalDebtAmount">Rp 0</div>
+                  <p class="mb-0">
+                    <span id="paidDebtCount">0</span> lunas /
+                    <span id="unpaidDebtCount">0</span> belum lunas
+                  </p>
+                </div>
+                <div class="col-12">
+                  <div class="d-grid d-md-block gap-2">
+                    <button
+                      class="btn btn-light me-md-2 mb-2 mb-md-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addDebtModal"
+                    >
+                      <i class="fas fa-plus me-2"></i>Tambah Utang
+                    </button>
+                    <button
+                      class="btn btn-light"
+                      onclick="filterDebts('unpaid')"
+                    >
+                      <i class="fas fa-filter me-2"></i>Lihat Belum Lunas
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget Summary -->
           <div class="col-12">
             <div class="budget-summary">
-              <h4 class="mb-3">Ringkasan Budget</h4>
+              <h4 class="mb-3">Ringkasan Keuangan</h4>
               <div class="d-flex justify-content-between mb-2">
-                <span>Total Dibutuhkan:</span>
-                <strong id="summaryNeeded">Rp 0</strong>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <span>Tabungan Saat Ini:</span>
+                <span>Total Tabungan:</span>
                 <strong id="summarySavings">Rp 0</strong>
               </div>
-              <div class="d-flex justify-content-between mb-3">
-                <span>Kekurangan:</span>
-                <strong id="summaryRemaining">Rp 0</strong>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Utang:</span>
+                <strong class="total-debt" id="summaryDebt">Rp 0</strong>
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Wishlist Dibutuhkan:</span>
+                <strong id="summaryNeeded">Rp 0</strong>
               </div>
               <div class="progress mb-2">
                 <div
@@ -927,6 +1057,19 @@
               role="tab"
             >
               <i class="fas fa-th-list me-2"></i>Wishlist
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="debts-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#debts-content"
+              type="button"
+              role="tab"
+            >
+              <i class="fas fa-hand-holding-usd me-2"></i>Utang
+              <span class="badge bg-danger ms-1" id="unpaidDebtBadge">0</span>
             </button>
           </li>
           <li class="nav-item" role="presentation">
@@ -994,7 +1137,7 @@
             </div>
 
             <!-- Empty State -->
-            <div id="emptyState" class="empty-state">
+            <div id="emptyWishlistState" class="empty-state">
               <i class="fas fa-layer-group"></i>
               <h3>Belum Ada Wishlist</h3>
               <p>
@@ -1011,9 +1154,72 @@
             </div>
           </div>
 
+          <!-- Debts Tab -->
+          <div class="tab-pane fade" id="debts-content" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="section-title mb-0">Daftar Utang</h2>
+              <div class="dropdown">
+                <button
+                  class="btn btn-debt btn-sm dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="fas fa-filter me-1"></i>Filter
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item debt-filter"
+                      data-filter="all"
+                      href="#"
+                      >Semua</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item debt-filter"
+                      data-filter="unpaid"
+                      href="#"
+                      >Belum Lunas</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item debt-filter"
+                      data-filter="paid"
+                      href="#"
+                      >Sudah Lunas</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div id="debtsContainer">
+              <!-- Debt items will be dynamically added here -->
+            </div>
+
+            <!-- Empty State for Debts -->
+            <div id="emptyDebtState" class="empty-state">
+              <i class="fas fa-hand-holding-usd"></i>
+              <h3>Belum Ada Utang</h3>
+              <p>
+                Catat utang Anda untuk memantau kewajiban keuangan dengan lebih
+                baik!
+              </p>
+              <button
+                class="btn btn-debt mt-3"
+                data-bs-toggle="modal"
+                data-bs-target="#addDebtModal"
+              >
+                <i class="fas fa-plus me-2"></i>Tambah Utang Pertama
+              </button>
+            </div>
+          </div>
+
           <!-- Transactions Tab -->
           <div class="tab-pane fade" id="transactions-content" role="tabpanel">
-            <h2 class="section-title">Riwayat Transaksi Tabungan</h2>
+            <h2 class="section-title">Riwayat Transaksi</h2>
 
             <div class="card border-0 shadow-sm">
               <div class="card-body p-0">
@@ -1040,8 +1246,8 @@
     <footer>
       <div class="container text-center">
         <p>
-          &copy; 2023 Wishlist & Tabungan App. Kelola impian dan keuanganmu
-          dengan mudah!
+          &copy; 2023 Wishlist, Tabungan & Utang App. Kelola impian dan
+          keuanganmu dengan mudah!
         </p>
       </div>
     </footer>
@@ -1383,6 +1589,165 @@
       </div>
     </div>
 
+    <!-- Add Debt Modal -->
+    <div class="modal fade" id="addDebtModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Utang</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addDebtForm">
+              <div class="mb-3">
+                <label for="debtTo" class="form-label">Kepada Siapa</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="debtTo"
+                  placeholder="Contoh: Teman, Bank, Keluarga, dll"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="debtAmount" class="form-label">Jumlah Utang (Rp)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="debtAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="debtDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="debtDescription"
+                  placeholder="Contoh: Pinjaman untuk modal usaha, dll"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="debtDueDate" class="form-label"
+                  >Tanggal Jatuh Tempo (Opsional)</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="debtDueDate"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="debtStatus" class="form-label">Status</label>
+                <select class="form-select" id="debtStatus" required>
+                  <option value="unpaid">Belum Lunas</option>
+                  <option value="paid">Sudah Lunas</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-debt" id="saveDebtBtn">
+              Simpan Utang
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Debt Modal -->
+    <div class="modal fade" id="editDebtModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Utang</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editDebtForm">
+              <input type="hidden" id="editDebtId" />
+              <div class="mb-3">
+                <label for="editDebtTo" class="form-label">Kepada Siapa</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editDebtTo"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editDebtAmount" class="form-label">Jumlah Utang (Rp)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="editDebtAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editDebtDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editDebtDescription"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editDebtDueDate" class="form-label"
+                  >Tanggal Jatuh Tempo (Opsional)</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="editDebtDueDate"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editDebtStatus" class="form-label">Status</label>
+                <select class="form-select" id="editDebtStatus" required>
+                  <option value="unpaid">Belum Lunas</option>
+                  <option value="paid">Sudah Lunas</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-debt" id="updateDebtBtn">
+              Update Utang
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
@@ -1491,10 +1856,13 @@
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
       let savings = parseInt(localStorage.getItem("savings")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+      let debts = JSON.parse(localStorage.getItem("debts")) || [];
 
       // DOM Elements
       const wishlistsContainer = document.getElementById("wishlistsContainer");
-      const emptyState = document.getElementById("emptyState");
+      const debtsContainer = document.getElementById("debtsContainer");
+      const emptyWishlistState = document.getElementById("emptyWishlistState");
+      const emptyDebtState = document.getElementById("emptyDebtState");
       const emptyTransactionState = document.getElementById(
         "emptyTransactionState"
       );
@@ -1511,13 +1879,23 @@
         "withdrawSavingsForm"
       );
       const saveWithdrawBtn = document.getElementById("saveWithdrawBtn");
+      const addDebtForm = document.getElementById("addDebtForm");
+      const saveDebtBtn = document.getElementById("saveDebtBtn");
+      const editDebtForm = document.getElementById("editDebtForm");
+      const updateDebtBtn = document.getElementById("updateDebtBtn");
+      
       const totalWishlistsEl = document.getElementById("totalWishlists");
       const totalCategoriesEl = document.getElementById("totalCategories");
       const totalItemsEl = document.getElementById("totalItems");
+      const totalDebtsEl = document.getElementById("totalDebts");
       const currentSavingsEl = document.getElementById("currentSavings");
+      const totalDebtAmountEl = document.getElementById("totalDebtAmount");
+      const paidDebtCountEl = document.getElementById("paidDebtCount");
+      const unpaidDebtCountEl = document.getElementById("unpaidDebtCount");
+      const unpaidDebtBadgeEl = document.getElementById("unpaidDebtBadge");
       const summaryNeededEl = document.getElementById("summaryNeeded");
       const summarySavingsEl = document.getElementById("summarySavings");
-      const summaryRemainingEl = document.getElementById("summaryRemaining");
+      const summaryDebtEl = document.getElementById("summaryDebt");
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
 
@@ -1531,8 +1909,9 @@
       // Initialize the app
       document.addEventListener("DOMContentLoaded", function () {
         renderWishlists();
+        renderDebts();
         updateStats();
-        updateSavingsDisplay();
+        updateFinancialSummary();
         renderTransactions();
         setupEventListeners();
         setupImageUpload();
@@ -1581,12 +1960,27 @@
         // Save withdraw button
         saveWithdrawBtn.addEventListener("click", withdrawSavings);
 
-        // Filter options
+        // Save debt button
+        saveDebtBtn.addEventListener("click", addDebt);
+
+        // Update debt button
+        updateDebtBtn.addEventListener("click", updateDebt);
+
+        // Filter options for wishlists
         document.querySelectorAll(".filter-option").forEach((option) => {
           option.addEventListener("click", function (e) {
             e.preventDefault();
             const filter = this.getAttribute("data-filter");
             filterWishlists(filter);
+          });
+        });
+
+        // Filter options for debts
+        document.querySelectorAll(".debt-filter").forEach((option) => {
+          option.addEventListener("click", function (e) {
+            e.preventDefault();
+            const filter = this.getAttribute("data-filter");
+            filterDebts(filter);
           });
         });
       }
@@ -1857,7 +2251,7 @@
         transactions.unshift(transaction);
 
         saveToLocalStorage();
-        updateSavingsDisplay();
+        updateFinancialSummary();
         renderTransactions();
 
         // Show success message
@@ -1917,7 +2311,7 @@
         transactions.unshift(transaction);
 
         saveToLocalStorage();
-        updateSavingsDisplay();
+        updateFinancialSummary();
         renderTransactions();
 
         // Show success message
@@ -1937,6 +2331,150 @@
           document.getElementById("withdrawSavingsModal")
         );
         withdrawSavingsModal.hide();
+      }
+
+      // Add a new debt
+      function addDebt() {
+        const to = document.getElementById("debtTo").value;
+        const amount = parseInt(document.getElementById("debtAmount").value);
+        const description = document.getElementById("debtDescription").value;
+        const dueDate = document.getElementById("debtDueDate").value;
+        const status = document.getElementById("debtStatus").value;
+
+        if (!to || !amount || amount <= 0) {
+          alert("Data utang harus diisi dengan lengkap!");
+          return;
+        }
+
+        const newDebt = {
+          id: Date.now(),
+          to,
+          amount,
+          description,
+          dueDate,
+          status,
+          createdAt: new Date().toISOString(),
+        };
+
+        debts.push(newDebt);
+        saveToLocalStorage();
+        renderDebts();
+        updateStats();
+        updateFinancialSummary();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Utang berhasil ditambahkan!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addDebtForm.reset();
+        const addDebtModal = bootstrap.Modal.getInstance(
+          document.getElementById("addDebtModal")
+        );
+        addDebtModal.hide();
+      }
+
+      // Update debt
+      function updateDebt() {
+        const debtId = parseInt(document.getElementById("editDebtId").value);
+        const to = document.getElementById("editDebtTo").value;
+        const amount = parseInt(document.getElementById("editDebtAmount").value);
+        const description = document.getElementById("editDebtDescription").value;
+        const dueDate = document.getElementById("editDebtDueDate").value;
+        const status = document.getElementById("editDebtStatus").value;
+
+        if (!to || !amount || amount <= 0) {
+          alert("Data utang harus diisi dengan lengkap!");
+          return;
+        }
+
+        const debtIndex = debts.findIndex((d) => d.id === debtId);
+        if (debtIndex === -1) return;
+
+        debts[debtIndex] = {
+          ...debts[debtIndex],
+          to,
+          amount,
+          description,
+          dueDate,
+          status,
+          updatedAt: new Date().toISOString(),
+        };
+
+        saveToLocalStorage();
+        renderDebts();
+        updateFinancialSummary();
+
+        // Show success message
+        document.getElementById("successMessage").textContent =
+          "Utang berhasil diupdate!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        editDebtForm.reset();
+        const editDebtModal = bootstrap.Modal.getInstance(
+          document.getElementById("editDebtModal")
+        );
+        editDebtModal.hide();
+      }
+
+      // Open edit debt modal
+      function openEditDebtModal(debtId) {
+        const debt = debts.find((d) => d.id === debtId);
+        if (!debt) return;
+
+        document.getElementById("editDebtId").value = debt.id;
+        document.getElementById("editDebtTo").value = debt.to;
+        document.getElementById("editDebtAmount").value = debt.amount;
+        document.getElementById("editDebtDescription").value = debt.description || "";
+        document.getElementById("editDebtDueDate").value = debt.dueDate || "";
+        document.getElementById("editDebtStatus").value = debt.status;
+
+        const editDebtModal = new bootstrap.Modal(
+          document.getElementById("editDebtModal")
+        );
+        editDebtModal.show();
+      }
+
+      // Delete a debt
+      function deleteDebt(debtId) {
+        if (confirm("Apakah Anda yakin ingin menghapus utang ini?")) {
+          debts = debts.filter((d) => d.id !== debtId);
+          saveToLocalStorage();
+          renderDebts();
+          updateStats();
+          updateFinancialSummary();
+        }
+      }
+
+      // Toggle debt status
+      function toggleDebtStatus(debtId) {
+        const debt = debts.find((d) => d.id === debtId);
+        if (!debt) return;
+
+        debt.status = debt.status === "paid" ? "unpaid" : "paid";
+        debt.updatedAt = new Date().toISOString();
+        
+        saveToLocalStorage();
+        renderDebts();
+        updateFinancialSummary();
+
+        // Show success message
+        document.getElementById("successMessage").textContent = 
+          debt.status === "paid" 
+            ? "Utang berhasil ditandai sebagai lunas!" 
+            : "Status utang diubah menjadi belum lunas!";
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
       }
 
       // Delete a wishlist
@@ -2340,7 +2878,7 @@
         item.achieved = !item.achieved;
         saveToLocalStorage();
         renderWishlists();
-        updateSavingsDisplay();
+        updateFinancialSummary();
 
         // Show success message
         if (item.achieved) {
@@ -2399,10 +2937,10 @@
 
         if (filteredWishlists.length === 0) {
           wishlistsContainer.style.display = "none";
-          emptyState.style.display = "block";
+          emptyWishlistState.style.display = "block";
         } else {
           wishlistsContainer.style.display = "block";
-          emptyState.style.display = "none";
+          emptyWishlistState.style.display = "none";
 
           wishlistsContainer.innerHTML = "";
 
@@ -2751,9 +3289,117 @@
         }
       }
 
+      // Render debts
+      function renderDebts(filter = "all") {
+        let filteredDebts = debts;
+
+        if (filter === "paid") {
+          filteredDebts = debts.filter((d) => d.status === "paid");
+        } else if (filter === "unpaid") {
+          filteredDebts = debts.filter((d) => d.status === "unpaid");
+        }
+
+        if (filteredDebts.length === 0) {
+          debtsContainer.style.display = "none";
+          emptyDebtState.style.display = "block";
+        } else {
+          debtsContainer.style.display = "block";
+          emptyDebtState.style.display = "none";
+
+          debtsContainer.innerHTML = "";
+
+          filteredDebts.forEach((debt, index) => {
+            const debtCard = document.createElement("div");
+            debtCard.className = "debt-card-item fade-in";
+            debtCard.style.animationDelay = `${index * 0.1}s`;
+
+            const dueDateText = debt.dueDate 
+              ? new Date(debt.dueDate).toLocaleDateString("id-ID")
+              : "Tidak ada jatuh tempo";
+
+            const daysRemaining = debt.dueDate ? Math.ceil((new Date(debt.dueDate) - new Date()) / (1000 * 60 * 60 * 24)) : null;
+            const isOverdue = daysRemaining < 0;
+
+            debtCard.innerHTML = `
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h5 class="mb-1">
+                    Utang kepada: <strong>${debt.to}</strong>
+                    <span class="debt-status status-${debt.status} ${
+              debt.status === "paid" ? "status-paid" : "status-unpaid"
+            }">
+                      ${debt.status === "paid" ? "LUNAS" : "BELUM LUNAS"}
+                    </span>
+                  </h5>
+                  <p class="text-muted mb-1">
+                    <small>Jatuh tempo: ${dueDateText}</small>
+                    ${
+                      daysRemaining !== null && !isOverdue
+                        ? `<span class="badge bg-warning ms-2">${daysRemaining} hari lagi</span>`
+                        : ""
+                    }
+                    ${
+                      isOverdue
+                        ? `<span class="badge bg-danger ms-2">TERLAMBAT ${Math.abs(daysRemaining)} hari</span>`
+                        : ""
+                    }
+                  </p>
+                  ${
+                    debt.description
+                      ? `<p class="mb-2"><small>${debt.description}</small></p>`
+                      : ""
+                  }
+                </div>
+                <div class="text-end">
+                  <h4 class="text-danger">Rp ${debt.amount.toLocaleString(
+                    "id-ID"
+                  )}</h4>
+                  <small class="text-muted">${new Date(
+                    debt.createdAt
+                  ).toLocaleDateString("id-ID")}</small>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-sm ${
+                  debt.status === "paid" ? "btn-warning" : "btn-success"
+                }" onclick="toggleDebtStatus(${debt.id})">
+                  <i class="fas ${
+                    debt.status === "paid" ? "fa-undo" : "fa-check"
+                  } me-1"></i>
+                  ${debt.status === "paid" ? "Belum Lunas" : "Tandai Lunas"}
+                </button>
+                <button class="btn btn-sm btn-outline-primary" onclick="openEditDebtModal(${
+                  debt.id
+                })">
+                  <i class="fas fa-edit me-1"></i>Edit
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteDebt(${
+                  debt.id
+                })">
+                  <i class="fas fa-trash me-1"></i>Hapus
+                </button>
+              </div>
+            `;
+
+            debtsContainer.appendChild(debtCard);
+          });
+        }
+      }
+
       // Filter wishlists
       function filterWishlists(filter) {
         renderWishlists(filter);
+      }
+
+      // Filter debts
+      function filterDebts(filter) {
+        renderDebts(filter);
+        
+        // Switch to debts tab if filtering
+        if (filter !== "all") {
+          const debtsTab = new bootstrap.Tab(document.getElementById('debts-tab'));
+          debtsTab.show();
+        }
       }
 
       // Render transactions
@@ -2847,13 +3493,41 @@
           });
         });
 
+        const totalDebts = debts.length;
+
         totalWishlistsEl.textContent = totalWishlists;
         totalCategoriesEl.textContent = totalCategories;
         totalItemsEl.textContent = totalItems;
+        totalDebtsEl.textContent = totalDebts;
       }
 
-      // Update savings display
-      function updateSavingsDisplay() {
+      // Update financial summary
+      function updateFinancialSummary() {
+        // Calculate total savings
+        currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+        summarySavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+
+        // Calculate total debt
+        let totalDebt = 0;
+        let paidDebtCount = 0;
+        let unpaidDebtCount = 0;
+        
+        debts.forEach((debt) => {
+          if (debt.status === "unpaid") {
+            totalDebt += debt.amount;
+            unpaidDebtCount++;
+          } else {
+            paidDebtCount++;
+          }
+        });
+
+        totalDebtAmountEl.textContent = `Rp ${totalDebt.toLocaleString("id-ID")}`;
+        summaryDebtEl.textContent = `Rp ${totalDebt.toLocaleString("id-ID")}`;
+        paidDebtCountEl.textContent = paidDebtCount;
+        unpaidDebtCountEl.textContent = unpaidDebtCount;
+        unpaidDebtBadgeEl.textContent = unpaidDebtCount;
+
+        // Calculate wishlist summary
         let totalNeeded = 0;
         wishlists.forEach((wishlist) => {
           wishlist.categories.forEach((category) => {
@@ -2865,17 +3539,11 @@
           });
         });
 
-        currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
         summaryNeededEl.textContent = `Rp ${totalNeeded.toLocaleString(
           "id-ID"
         )}`;
-        summarySavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
 
         const remaining = Math.max(0, totalNeeded - savings);
-        summaryRemainingEl.textContent = `Rp ${remaining.toLocaleString(
-          "id-ID"
-        )}`;
-
         const progressPercentage =
           totalNeeded > 0 ? Math.min((savings / totalNeeded) * 100, 100) : 0;
         summaryProgressEl.style.width = `${progressPercentage}%`;
@@ -2889,6 +3557,7 @@
         localStorage.setItem("wishlists", JSON.stringify(wishlists));
         localStorage.setItem("savings", savings.toString());
         localStorage.setItem("transactions", JSON.stringify(transactions));
+        localStorage.setItem("debts", JSON.stringify(debts));
 
         // Check storage usage after save
         checkLocalStorageUsage();
@@ -2896,7 +3565,7 @@
 
       // Create confetti animation
       function createConfetti() {
-        const colors = ["#2c3e50", "#3498db", "#e74c3c", "#27ae60", "#9b59b6"];
+        const colors = ["#2c3e50", "#3498db", "#e74c3c", "#27ae60", "#9b59b6", "#d35400"];
 
         for (let i = 0; i < 100; i++) {
           const confetti = document.createElement("div");
@@ -2927,9 +3596,11 @@
           wishlists = [];
           savings = 0;
           transactions = [];
+          debts = [];
           renderWishlists();
+          renderDebts();
           updateStats();
-          updateSavingsDisplay();
+          updateFinancialSummary();
           renderTransactions();
           alert("Semua data berhasil dihapus!");
         }
@@ -2941,6 +3612,7 @@
           wishlists,
           savings,
           transactions,
+          debts,
           exportDate: new Date().toISOString(),
         };
 
@@ -2949,11 +3621,44 @@
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `wishlist-backup-${
+        link.download = `wishlist-debt-backup-${
           new Date().toISOString().split("T")[0]
         }.json`;
         link.click();
         URL.revokeObjectURL(url);
+      }
+
+      // Import data backup
+      function importData() {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".json";
+        input.onchange = function (e) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            try {
+              const data = JSON.parse(e.target.result);
+              if (confirm("Apakah Anda yakin ingin mengimpor data? Data saat ini akan diganti.")) {
+                wishlists = data.wishlists || [];
+                savings = data.savings || 0;
+                transactions = data.transactions || [];
+                debts = data.debts || [];
+                saveToLocalStorage();
+                renderWishlists();
+                renderDebts();
+                updateStats();
+                updateFinancialSummary();
+                renderTransactions();
+                alert("Data berhasil diimpor!");
+              }
+            } catch (error) {
+              alert("Gagal membaca file. Pastikan file valid.");
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
       }
     </script>
   </body>
