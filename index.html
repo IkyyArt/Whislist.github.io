@@ -28,6 +28,7 @@
         --danger: #c0392b;
         --purple: #9b59b6;
         --debt: #d35400;
+        --jar: #9b59b6;
       }
 
       * {
@@ -150,6 +151,16 @@
         border-radius: 15px;
         padding: 1.5rem;
         box-shadow: 0 10px 30px rgba(0, 184, 148, 0.3);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+      }
+
+      .jar-card {
+        background: linear-gradient(135deg, var(--jar), #8e44ad);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3);
         transition: all 0.3s ease;
         margin-bottom: 1.5rem;
       }
@@ -420,6 +431,17 @@
 
       .btn-debt:hover {
         background: #c0392b;
+        transform: translateY(-2px);
+      }
+
+      .btn-jar {
+        background: var(--jar);
+        border: none;
+        color: white;
+      }
+
+      .btn-jar:hover {
+        background: #8e44ad;
         transform: translateY(-2px);
       }
 
@@ -849,6 +871,25 @@
         color: var(--debt);
         font-weight: 700;
       }
+
+      /* Jar specific styling */
+      .jar-card .btn-light {
+        background: rgba(255, 255, 255, 0.9);
+        color: #8e44ad;
+      }
+
+      .jar-card .btn-light:hover {
+        background: white;
+      }
+
+      /* Transaction type colors */
+      .text-info {
+        color: #3498db !important;
+      }
+
+      .text-purple {
+        color: #9b59b6 !important;
+      }
     </style>
   </head>
   <body>
@@ -929,6 +970,18 @@
               <div class="stats-label">Utang</div>
             </div>
           </div>
+          <div class="col-3">
+            <div class="stats-card fade-in" style="animation-delay: 0.4s">
+              <div class="stats-number" id="walletBalance">Rp 0</div>
+              <div class="stats-label">Dompet</div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="stats-card fade-in" style="animation-delay: 0.5s">
+              <div class="stats-number" id="jarBalance">Rp 0</div>
+              <div class="stats-label">Tabungan Toples</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -938,30 +991,75 @@
       <div class="container">
         <h2 class="section-title">Keuangan & Utang</h2>
         <div class="row g-3">
-          <!-- Savings Card -->
+          <!-- Wallet Card -->
           <div class="col-12 col-md-6">
             <div class="savings-card">
               <div class="row align-items-center">
                 <div class="col-12 mb-3">
-                  <h3 class="mb-2">Tabungan Saat Ini</h3>
-                  <div class="savings-amount" id="currentSavings">Rp 0</div>
-                  <p class="mb-0">Total tabungan yang tersedia</p>
+                  <h3 class="mb-2">Dompet</h3>
+                  <div class="savings-amount" id="currentWallet">Rp 0</div>
+                  <p class="mb-0">Uang siap pakai</p>
                 </div>
                 <div class="col-12">
                   <div class="d-grid d-md-block gap-2">
                     <button
                       class="btn btn-light me-md-2 mb-2 mb-md-0"
                       data-bs-toggle="modal"
-                      data-bs-target="#addSavingsModal"
+                      data-bs-target="#addWalletModal"
                     >
                       <i class="fas fa-plus me-2"></i>Tambah
                     </button>
                     <button
                       class="btn btn-light"
                       data-bs-toggle="modal"
-                      data-bs-target="#withdrawSavingsModal"
+                      data-bs-target="#withdrawWalletModal"
                     >
                       <i class="fas fa-minus me-2"></i>Kurangi
+                    </button>
+                    <button
+                      class="btn btn-light"
+                      data-bs-toggle="modal"
+                      data-bs-target="#transferToJarModal"
+                    >
+                      <i class="fas fa-exchange-alt me-2"></i>Ke Toples
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Jar Card -->
+          <div class="col-12 col-md-6">
+            <div class="jar-card">
+              <div class="row align-items-center">
+                <div class="col-12 mb-3">
+                  <h3 class="mb-2">Tabungan Toples</h3>
+                  <div class="savings-amount" id="currentJar">Rp 0</div>
+                  <p class="mb-0">Uang untuk menabung</p>
+                </div>
+                <div class="col-12">
+                  <div class="d-grid d-md-block gap-2">
+                    <button
+                      class="btn btn-light me-md-2 mb-2 mb-md-0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addJarModal"
+                    >
+                      <i class="fas fa-plus me-2"></i>Tambah
+                    </button>
+                    <button
+                      class="btn btn-light"
+                      data-bs-toggle="modal"
+                      data-bs-target="#withdrawJarModal"
+                    >
+                      <i class="fas fa-minus me-2"></i>Kurangi
+                    </button>
+                    <button
+                      class="btn btn-light"
+                      data-bs-toggle="modal"
+                      data-bs-target="#transferToWalletModal"
+                    >
+                      <i class="fas fa-exchange-alt me-2"></i>Ke Dompet
                     </button>
                   </div>
                 </div>
@@ -1003,13 +1101,22 @@
           </div>
 
           <!-- Budget Summary -->
-          <div class="col-12">
+          <div class="col-12 col-md-6">
             <div class="budget-summary">
               <h4 class="mb-3">Ringkasan Keuangan</h4>
               <div class="d-flex justify-content-between mb-2">
-                <span>Total Tabungan:</span>
-                <strong id="summarySavings">Rp 0</strong>
+                <span>Dompet:</span>
+                <strong id="summaryWallet">Rp 0</strong>
               </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Tabungan Toples:</span>
+                <strong id="summaryJar">Rp 0</strong>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Total Tabungan:</span>
+                <strong id="summaryTotalSavings">Rp 0</strong>
+              </div>
+              <hr />
               <div class="d-flex justify-content-between mb-2">
                 <span>Total Utang:</span>
                 <strong class="total-debt" id="summaryDebt">Rp 0</strong>
@@ -1472,12 +1579,12 @@
       </div>
     </div>
 
-    <!-- Add Savings Modal -->
-    <div class="modal fade" id="addSavingsModal" tabindex="-1">
+    <!-- Add Wallet Modal -->
+    <div class="modal fade" id="addWalletModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Tambah Tabungan</h5>
+            <h5 class="modal-title">Tambah Uang ke Dompet</h5>
             <button
               type="button"
               class="btn-close"
@@ -1485,28 +1592,26 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form id="addSavingsForm">
+            <form id="addWalletForm">
               <div class="mb-3">
-                <label for="savingsAmount" class="form-label"
-                  >Jumlah Tabungan (Rp)</label
-                >
+                <label for="walletAmount" class="form-label">Jumlah (Rp)</label>
                 <input
                   type="number"
                   class="form-control"
-                  id="savingsAmount"
+                  id="walletAmount"
                   min="1"
                   required
                 />
               </div>
               <div class="mb-3">
-                <label for="savingsDescription" class="form-label"
+                <label for="walletDescription" class="form-label"
                   >Keterangan (Opsional)</label
                 >
                 <input
                   type="text"
                   class="form-control"
-                  id="savingsDescription"
-                  placeholder="Contoh: Gaji bulanan, Hadiah, dll"
+                  id="walletDescription"
+                  placeholder="Contoh: Gaji, Hadiah, dll"
                 />
               </div>
             </form>
@@ -1519,20 +1624,20 @@
             >
               Batal
             </button>
-            <button type="button" class="btn btn-success" id="saveSavingsBtn">
-              Tambah Tabungan
+            <button type="button" class="btn btn-success" id="saveWalletBtn">
+              Tambah ke Dompet
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Withdraw Savings Modal -->
-    <div class="modal fade" id="withdrawSavingsModal" tabindex="-1">
+    <!-- Withdraw Wallet Modal -->
+    <div class="modal fade" id="withdrawWalletModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Kurangi Tabungan</h5>
+            <h5 class="modal-title">Kurangi Uang dari Dompet</h5>
             <button
               type="button"
               class="btn-close"
@@ -1540,28 +1645,28 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form id="withdrawSavingsForm">
+            <form id="withdrawWalletForm">
               <div class="mb-3">
-                <label for="withdrawAmount" class="form-label"
-                  >Jumlah Penarikan (Rp)</label
+                <label for="withdrawWalletAmount" class="form-label"
+                  >Jumlah (Rp)</label
                 >
                 <input
                   type="number"
                   class="form-control"
-                  id="withdrawAmount"
+                  id="withdrawWalletAmount"
                   min="1"
                   required
                 />
               </div>
               <div class="mb-3">
-                <label for="withdrawDescription" class="form-label"
+                <label for="withdrawWalletDescription" class="form-label"
                   >Keterangan (Opsional)</label
                 >
                 <input
                   type="text"
                   class="form-control"
-                  id="withdrawDescription"
-                  placeholder="Contoh: Keperluan mendadak, Beli kebutuhan, dll"
+                  id="withdrawWalletDescription"
+                  placeholder="Contoh: Belanja, Bayar Tagihan, dll"
                 />
               </div>
             </form>
@@ -1574,8 +1679,230 @@
             >
               Batal
             </button>
-            <button type="button" class="btn btn-warning" id="saveWithdrawBtn">
-              Kurangi Tabungan
+            <button
+              type="button"
+              class="btn btn-warning"
+              id="saveWithdrawWalletBtn"
+            >
+              Kurangi dari Dompet
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Jar Modal -->
+    <div class="modal fade" id="addJarModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Uang ke Tabungan Toples</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addJarForm">
+              <div class="mb-3">
+                <label for="jarAmount" class="form-label">Jumlah (Rp)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="jarAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="jarDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="jarDescription"
+                  placeholder="Contoh: Tabungan rutin, Bonus, dll"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveJarBtn">
+              Tambah ke Toples
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Withdraw Jar Modal -->
+    <div class="modal fade" id="withdrawJarModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Kurangi Uang dari Tabungan Toples</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="withdrawJarForm">
+              <div class="mb-3">
+                <label for="withdrawJarAmount" class="form-label"
+                  >Jumlah (Rp)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="withdrawJarAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="withdrawJarDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="withdrawJarDescription"
+                  placeholder="Contoh: Diperlukan untuk keperluan mendadak"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-warning" id="saveWithdrawJarBtn">
+              Kurangi dari Toples
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer to Jar Modal -->
+    <div class="modal fade" id="transferToJarModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Transfer dari Dompet ke Toples</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="transferToJarForm">
+              <div class="mb-3">
+                <label for="transferToJarAmount" class="form-label"
+                  >Jumlah (Rp)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="transferToJarAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="transferToJarDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="transferToJarDescription"
+                  placeholder="Contoh: Alokasi tabungan bulanan"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveTransferToJarBtn">
+              Transfer ke Toples
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer to Wallet Modal -->
+    <div class="modal fade" id="transferToWalletModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Transfer dari Toples ke Dompet</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="transferToWalletForm">
+              <div class="mb-3">
+                <label for="transferToWalletAmount" class="form-label"
+                  >Jumlah (Rp)</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="transferToWalletAmount"
+                  min="1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="transferToWalletDescription" class="form-label"
+                  >Keterangan (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="transferToWalletDescription"
+                  placeholder="Contoh: Diambil untuk kebutuhan"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-success" id="saveTransferToWalletBtn">
+              Transfer ke Dompet
             </button>
           </div>
         </div>
@@ -1843,7 +2170,8 @@
       // =============================================
 
       let wishlists = JSON.parse(localStorage.getItem("wishlists")) || [];
-      let savings = parseInt(localStorage.getItem("savings")) || 0;
+      let wallet = parseInt(localStorage.getItem("wallet")) || 0;
+      let jar = parseInt(localStorage.getItem("jar")) || 0;
       let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
       let debts = JSON.parse(localStorage.getItem("debts")) || [];
 
@@ -1862,12 +2190,18 @@
       const saveCategoryBtn = document.getElementById("saveCategoryBtn");
       const addItemForm = document.getElementById("addItemForm");
       const saveItemBtn = document.getElementById("saveItemBtn");
-      const addSavingsForm = document.getElementById("addSavingsForm");
-      const saveSavingsBtn = document.getElementById("saveSavingsBtn");
-      const withdrawSavingsForm = document.getElementById(
-        "withdrawSavingsForm"
-      );
-      const saveWithdrawBtn = document.getElementById("saveWithdrawBtn");
+      const addWalletForm = document.getElementById("addWalletForm");
+      const saveWalletBtn = document.getElementById("saveWalletBtn");
+      const withdrawWalletForm = document.getElementById("withdrawWalletForm");
+      const saveWithdrawWalletBtn = document.getElementById("saveWithdrawWalletBtn");
+      const addJarForm = document.getElementById("addJarForm");
+      const saveJarBtn = document.getElementById("saveJarBtn");
+      const withdrawJarForm = document.getElementById("withdrawJarForm");
+      const saveWithdrawJarBtn = document.getElementById("saveWithdrawJarBtn");
+      const transferToJarForm = document.getElementById("transferToJarForm");
+      const saveTransferToJarBtn = document.getElementById("saveTransferToJarBtn");
+      const transferToWalletForm = document.getElementById("transferToWalletForm");
+      const saveTransferToWalletBtn = document.getElementById("saveTransferToWalletBtn");
       const addDebtForm = document.getElementById("addDebtForm");
       const saveDebtBtn = document.getElementById("saveDebtBtn");
       const editDebtForm = document.getElementById("editDebtForm");
@@ -1877,13 +2211,18 @@
       const totalCategoriesEl = document.getElementById("totalCategories");
       const totalItemsEl = document.getElementById("totalItems");
       const totalDebtsEl = document.getElementById("totalDebts");
-      const currentSavingsEl = document.getElementById("currentSavings");
+      const walletBalanceEl = document.getElementById("walletBalance");
+      const jarBalanceEl = document.getElementById("jarBalance");
+      const currentWalletEl = document.getElementById("currentWallet");
+      const currentJarEl = document.getElementById("currentJar");
       const totalDebtAmountEl = document.getElementById("totalDebtAmount");
       const paidDebtCountEl = document.getElementById("paidDebtCount");
       const unpaidDebtCountEl = document.getElementById("unpaidDebtCount");
       const unpaidDebtBadgeEl = document.getElementById("unpaidDebtBadge");
       const summaryNeededEl = document.getElementById("summaryNeeded");
-      const summarySavingsEl = document.getElementById("summarySavings");
+      const summaryWalletEl = document.getElementById("summaryWallet");
+      const summaryJarEl = document.getElementById("summaryJar");
+      const summaryTotalSavingsEl = document.getElementById("summaryTotalSavings");
       const summaryDebtEl = document.getElementById("summaryDebt");
       const summaryProgressEl = document.getElementById("summaryProgress");
       const summaryPercentageEl = document.getElementById("summaryPercentage");
@@ -1943,11 +2282,23 @@
         // Save item button
         saveItemBtn.addEventListener("click", addItem);
 
-        // Save savings button
-        saveSavingsBtn.addEventListener("click", addSavings);
+        // Save wallet button
+        saveWalletBtn.addEventListener("click", addWallet);
 
-        // Save withdraw button
-        saveWithdrawBtn.addEventListener("click", withdrawSavings);
+        // Save withdraw wallet button
+        saveWithdrawWalletBtn.addEventListener("click", withdrawWallet);
+
+        // Save jar button
+        saveJarBtn.addEventListener("click", addJar);
+
+        // Save withdraw jar button
+        saveWithdrawJarBtn.addEventListener("click", withdrawJar);
+
+        // Save transfer to jar button
+        saveTransferToJarBtn.addEventListener("click", transferToJar);
+
+        // Save transfer to wallet button
+        saveTransferToWalletBtn.addEventListener("click", transferToWallet);
 
         // Save debt button
         saveDebtBtn.addEventListener("click", addDebt);
@@ -2216,29 +2567,28 @@
         addItemModal.hide();
       }
 
-      // Add savings
-      function addSavings() {
-        const amount = parseInt(document.getElementById("savingsAmount").value);
-        const description = document.getElementById("savingsDescription").value;
+      // Add to wallet
+      function addWallet() {
+        const amount = parseInt(document.getElementById("walletAmount").value);
+        const description = document.getElementById("walletDescription").value;
 
         if (!amount || amount <= 0) {
-          alert("Jumlah tabungan harus diisi dengan angka positif!");
+          alert("Jumlah harus diisi dengan angka positif!");
           return;
         }
 
-        savings += amount;
+        wallet += amount;
 
         // Add transaction
         const transaction = {
           id: Date.now(),
-          type: "deposit",
+          type: "wallet_deposit",
           amount,
-          description: description || "Tabungan",
+          description: description || "Tambah dompet",
           date: new Date().toISOString(),
         };
 
         transactions.unshift(transaction);
-
         saveToLocalStorage();
         updateFinancialSummary();
         renderTransactions();
@@ -2246,7 +2596,7 @@
         // Show success message
         document.getElementById(
           "successMessage"
-        ).textContent = `Tabungan berhasil ditambahkan sebesar Rp ${amount.toLocaleString(
+        ).textContent = `Dompet bertambah sebesar Rp ${amount.toLocaleString(
           "id-ID"
         )}!`;
         const successModal = new bootstrap.Modal(
@@ -2255,50 +2605,40 @@
         successModal.show();
 
         // Reset form
-        addSavingsForm.reset();
-        const addSavingsModal = bootstrap.Modal.getInstance(
-          document.getElementById("addSavingsModal")
+        addWalletForm.reset();
+        const addWalletModal = bootstrap.Modal.getInstance(
+          document.getElementById("addWalletModal")
         );
-        addSavingsModal.hide();
-
-        // Add confetti animation for large deposits
-        if (amount >= 100000) {
-          createConfetti();
-        }
+        addWalletModal.hide();
       }
 
-      // Withdraw savings
-      function withdrawSavings() {
-        const amount = parseInt(
-          document.getElementById("withdrawAmount").value
-        );
-        const description = document.getElementById(
-          "withdrawDescription"
-        ).value;
+      // Withdraw from wallet
+      function withdrawWallet() {
+        const amount = parseInt(document.getElementById("withdrawWalletAmount").value);
+        const description = document.getElementById("withdrawWalletDescription").value;
 
         if (!amount || amount <= 0) {
-          alert("Jumlah penarikan harus diisi dengan angka positif!");
+          alert("Jumlah harus diisi dengan angka positif!");
           return;
         }
 
-        if (amount > savings) {
-          alert("Jumlah penarikan melebihi tabungan yang tersedia!");
+        if (amount > wallet) {
+          alert("Jumlah penarikan melebihi saldo dompet!");
           return;
         }
 
-        savings -= amount;
+        wallet -= amount;
 
         // Add transaction
         const transaction = {
           id: Date.now(),
-          type: "withdrawal",
+          type: "wallet_withdrawal",
           amount,
-          description: description || "Penarikan",
+          description: description || "Kurangi dompet",
           date: new Date().toISOString(),
         };
 
         transactions.unshift(transaction);
-
         saveToLocalStorage();
         updateFinancialSummary();
         renderTransactions();
@@ -2306,7 +2646,7 @@
         // Show success message
         document.getElementById(
           "successMessage"
-        ).textContent = `Tabungan berhasil dikurangi sebesar Rp ${amount.toLocaleString(
+        ).textContent = `Dompet berkurang sebesar Rp ${amount.toLocaleString(
           "id-ID"
         )}!`;
         const successModal = new bootstrap.Modal(
@@ -2315,11 +2655,208 @@
         successModal.show();
 
         // Reset form
-        withdrawSavingsForm.reset();
-        const withdrawSavingsModal = bootstrap.Modal.getInstance(
-          document.getElementById("withdrawSavingsModal")
+        withdrawWalletForm.reset();
+        const withdrawWalletModal = bootstrap.Modal.getInstance(
+          document.getElementById("withdrawWalletModal")
         );
-        withdrawSavingsModal.hide();
+        withdrawWalletModal.hide();
+      }
+
+      // Add to jar
+      function addJar() {
+        const amount = parseInt(document.getElementById("jarAmount").value);
+        const description = document.getElementById("jarDescription").value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah harus diisi dengan angka positif!");
+          return;
+        }
+
+        jar += amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "jar_deposit",
+          amount,
+          description: description || "Tambah toples",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+        saveToLocalStorage();
+        updateFinancialSummary();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Tabungan toples bertambah sebesar Rp ${amount.toLocaleString(
+          "id-ID"
+        )}!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        addJarForm.reset();
+        const addJarModal = bootstrap.Modal.getInstance(
+          document.getElementById("addJarModal")
+        );
+        addJarModal.hide();
+      }
+
+      // Withdraw from jar
+      function withdrawJar() {
+        const amount = parseInt(document.getElementById("withdrawJarAmount").value);
+        const description = document.getElementById("withdrawJarDescription").value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah harus diisi dengan angka positif!");
+          return;
+        }
+
+        if (amount > jar) {
+          alert("Jumlah penarikan melebihi saldo toples!");
+          return;
+        }
+
+        jar -= amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "jar_withdrawal",
+          amount,
+          description: description || "Kurangi toples",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+        saveToLocalStorage();
+        updateFinancialSummary();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Tabungan toples berkurang sebesar Rp ${amount.toLocaleString(
+          "id-ID"
+        )}!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        withdrawJarForm.reset();
+        const withdrawJarModal = bootstrap.Modal.getInstance(
+          document.getElementById("withdrawJarModal")
+        );
+        withdrawJarModal.hide();
+      }
+
+      // Transfer from wallet to jar
+      function transferToJar() {
+        const amount = parseInt(document.getElementById("transferToJarAmount").value);
+        const description = document.getElementById("transferToJarDescription").value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah harus diisi dengan angka positif!");
+          return;
+        }
+
+        if (amount > wallet) {
+          alert("Jumlah transfer melebihi saldo dompet!");
+          return;
+        }
+
+        wallet -= amount;
+        jar += amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "transfer_wallet_to_jar",
+          amount,
+          description: description || "Transfer ke toples",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+        saveToLocalStorage();
+        updateFinancialSummary();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Berhasil transfer Rp ${amount.toLocaleString(
+          "id-ID"
+        )} dari dompet ke toples!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        transferToJarForm.reset();
+        const transferToJarModal = bootstrap.Modal.getInstance(
+          document.getElementById("transferToJarModal")
+        );
+        transferToJarModal.hide();
+      }
+
+      // Transfer from jar to wallet
+      function transferToWallet() {
+        const amount = parseInt(document.getElementById("transferToWalletAmount").value);
+        const description = document.getElementById("transferToWalletDescription").value;
+
+        if (!amount || amount <= 0) {
+          alert("Jumlah harus diisi dengan angka positif!");
+          return;
+        }
+
+        if (amount > jar) {
+          alert("Jumlah transfer melebihi saldo toples!");
+          return;
+        }
+
+        jar -= amount;
+        wallet += amount;
+
+        // Add transaction
+        const transaction = {
+          id: Date.now(),
+          type: "transfer_jar_to_wallet",
+          amount,
+          description: description || "Transfer ke dompet",
+          date: new Date().toISOString(),
+        };
+
+        transactions.unshift(transaction);
+        saveToLocalStorage();
+        updateFinancialSummary();
+        renderTransactions();
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).textContent = `Berhasil transfer Rp ${amount.toLocaleString(
+          "id-ID"
+        )} dari toples ke dompet!`;
+        const successModal = new bootstrap.Modal(
+          document.getElementById("successModal")
+        );
+        successModal.show();
+
+        // Reset form
+        transferToWalletForm.reset();
+        const transferToWalletModal = bootstrap.Modal.getInstance(
+          document.getElementById("transferToWalletModal")
+        );
+        transferToWalletModal.hide();
       }
 
       // Add a new debt
@@ -2461,14 +2998,14 @@
         updateFinancialSummary();
 
         // Show success message
-        document.getElementById("successMessage").textContent =
-          debt.status === "paid"
-            ? "Utang berhasil ditandai sebagai lunas!"
-            : "Status utang diubah menjadi belum lunas!";
-        const successModal = new bootstrap.Modal(
-          document.getElementById("successModal")
-        );
-        successModal.show();
+        if (debt.status === "paid") {
+          document.getElementById("successMessage").textContent =
+            "Utang berhasil ditandai sebagai lunas!";
+          const successModal = new bootstrap.Modal(
+            document.getElementById("successModal")
+          );
+          successModal.show();
+        }
       }
 
       // Delete a wishlist
@@ -2954,8 +3491,9 @@
               });
             });
 
+            const totalSavings = wallet + jar;
             const progressPercentage =
-              totalPrice > 0 ? Math.min((savings / totalPrice) * 100, 100) : 0;
+              totalPrice > 0 ? Math.min((totalSavings / totalPrice) * 100, 100) : 0;
             const isCompleted = totalItems > 0 && achievedItems === totalItems;
 
             const wishlistCard = document.createElement("div");
@@ -3052,7 +3590,7 @@
                                   const categoryProgress =
                                     categoryTotalPrice > 0
                                       ? Math.min(
-                                          (savings / categoryTotalPrice) * 100,
+                                          (totalSavings / categoryTotalPrice) * 100,
                                           100
                                         )
                                       : 0;
@@ -3144,7 +3682,7 @@
                                                       const itemProgress =
                                                         item.price > 0
                                                           ? Math.min(
-                                                              (savings /
+                                                              (totalSavings /
                                                                 item.price) *
                                                                 100,
                                                               100
@@ -3440,26 +3978,60 @@
                         <small class="text-muted">${formattedDate}</small>
                     </div>
                     <div class="text-end">
-                        <div class="${
-                          transaction.type === "deposit"
-                            ? "text-success"
-                            : "text-danger"
-                        } fw-bold">
-                            ${
-                              transaction.type === "deposit" ? "+" : "-"
-                            } Rp ${transaction.amount.toLocaleString("id-ID")}
+                        <div class="${getTransactionColor(transaction.type)} fw-bold">
+                            ${getTransactionSymbol(transaction.type)} Rp ${transaction.amount.toLocaleString("id-ID")}
                         </div>
-                        <small class="text-muted">${
-                          transaction.type === "deposit"
-                            ? "Tabungan"
-                            : "Penarikan"
-                        }</small>
+                        <small class="text-muted">${getTransactionTypeLabel(transaction.type)}</small>
                     </div>
                 </div>
             `;
 
             transactionHistory.appendChild(transactionItem);
           });
+        }
+      }
+
+      // Helper functions for transaction display
+      function getTransactionColor(type) {
+        switch(type) {
+          case 'wallet_deposit':
+          case 'jar_deposit':
+          case 'transfer_jar_to_wallet':
+            return 'text-success';
+          case 'wallet_withdrawal':
+          case 'jar_withdrawal':
+            return 'text-danger';
+          case 'transfer_wallet_to_jar':
+            return 'text-info';
+          default:
+            return 'text-primary';
+        }
+      }
+
+      function getTransactionSymbol(type) {
+        switch(type) {
+          case 'wallet_deposit':
+          case 'jar_deposit':
+          case 'transfer_jar_to_wallet':
+            return '+';
+          case 'wallet_withdrawal':
+          case 'jar_withdrawal':
+          case 'transfer_wallet_to_jar':
+            return '-';
+          default:
+            return '';
+        }
+      }
+
+      function getTransactionTypeLabel(type) {
+        switch(type) {
+          case 'wallet_deposit': return 'Tambah Dompet';
+          case 'wallet_withdrawal': return 'Kurangi Dompet';
+          case 'jar_deposit': return 'Tambah Toples';
+          case 'jar_withdrawal': return 'Kurangi Toples';
+          case 'transfer_wallet_to_jar': return 'Transfer ke Toples';
+          case 'transfer_jar_to_wallet': return 'Transfer ke Dompet';
+          default: return 'Transaksi';
         }
       }
 
@@ -3501,13 +4073,24 @@
         totalCategoriesEl.textContent = totalCategories;
         totalItemsEl.textContent = totalItems;
         totalDebtsEl.textContent = totalDebts;
+        walletBalanceEl.textContent = `Rp ${wallet.toLocaleString("id-ID")}`;
+        jarBalanceEl.textContent = `Rp ${jar.toLocaleString("id-ID")}`;
       }
 
       // Update financial summary
       function updateFinancialSummary() {
-        // Calculate total savings
-        currentSavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
-        summarySavingsEl.textContent = `Rp ${savings.toLocaleString("id-ID")}`;
+        const totalSavings = wallet + jar;
+        
+        // Update wallet display
+        currentWalletEl.textContent = `Rp ${wallet.toLocaleString("id-ID")}`;
+        summaryWalletEl.textContent = `Rp ${wallet.toLocaleString("id-ID")}`;
+        
+        // Update jar display
+        currentJarEl.textContent = `Rp ${jar.toLocaleString("id-ID")}`;
+        summaryJarEl.textContent = `Rp ${jar.toLocaleString("id-ID")}`;
+        
+        // Update total savings
+        summaryTotalSavingsEl.textContent = `Rp ${totalSavings.toLocaleString("id-ID")}`;
 
         // Calculate total debt
         let totalDebt = 0;
@@ -3531,7 +4114,7 @@
         unpaidDebtCountEl.textContent = unpaidDebtCount;
         unpaidDebtBadgeEl.textContent = unpaidDebtCount;
 
-        // Calculate wishlist summary
+        // Calculate wishlist summary (menggunakan total tabungan: wallet + jar)
         let totalNeeded = 0;
         wishlists.forEach((wishlist) => {
           wishlist.categories.forEach((category) => {
@@ -3543,23 +4126,18 @@
           });
         });
 
-        summaryNeededEl.textContent = `Rp ${totalNeeded.toLocaleString(
-          "id-ID"
-        )}`;
+        summaryNeededEl.textContent = `Rp ${totalNeeded.toLocaleString("id-ID")}`;
 
-        const remaining = Math.max(0, totalNeeded - savings);
-        const progressPercentage =
-          totalNeeded > 0 ? Math.min((savings / totalNeeded) * 100, 100) : 0;
+        const progressPercentage = totalNeeded > 0 ? Math.min((totalSavings / totalNeeded) * 100, 100) : 0;
         summaryProgressEl.style.width = `${progressPercentage}%`;
-        summaryPercentageEl.textContent = `${progressPercentage.toFixed(
-          1
-        )}% tercapai`;
+        summaryPercentageEl.textContent = `${progressPercentage.toFixed(1)}% tercapai`;
       }
 
       // Save to localStorage
       function saveToLocalStorage() {
         localStorage.setItem("wishlists", JSON.stringify(wishlists));
-        localStorage.setItem("savings", savings.toString());
+        localStorage.setItem("wallet", wallet.toString());
+        localStorage.setItem("jar", jar.toString());
         localStorage.setItem("transactions", JSON.stringify(transactions));
         localStorage.setItem("debts", JSON.stringify(debts));
 
@@ -3605,7 +4183,8 @@
         ) {
           localStorage.clear();
           wishlists = [];
-          savings = 0;
+          wallet = 0;
+          jar = 0;
           transactions = [];
           debts = [];
           renderWishlists();
@@ -3621,7 +4200,8 @@
       function exportData() {
         const data = {
           wishlists,
-          savings,
+          wallet,
+          jar,
           transactions,
           debts,
           exportDate: new Date().toISOString(),
@@ -3656,7 +4236,8 @@
                 )
               ) {
                 wishlists = data.wishlists || [];
-                savings = data.savings || 0;
+                wallet = data.wallet || 0;
+                jar = data.jar || 0;
                 transactions = data.transactions || [];
                 debts = data.debts || [];
                 saveToLocalStorage();
